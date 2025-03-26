@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -11,14 +12,41 @@ class AdminController extends Controller
     {
         $search = request('search');
 
+        // Get users with search functionality
         $users = User::when($search, function ($query) use ($search) {
             $query->where('name', 'like', '%' . $search . '%')
                 ->orWhere('email', 'like', '%' . $search . '%');
         })
             ->orderBy('created_at', 'desc')
-            ->paginate(5); // 5 users per page
+            ->paginate(5);
 
-        return view('admin.users', compact('users'));
+        // Get active users statistics
+        $activeUsers = $this->getActiveUsersStats();
+
+        return view('admin.users', compact('users', 'activeUsers'));
+    }
+
+    // Helper method to get active users statistics
+    protected function getActiveUsersStats()
+    {
+        return cache()->remember('active_users_stats', now()->addMinutes(1), function () {
+            $activeToday = User::where('last_login_at', '>=', Carbon::now()->subDay())->count();
+            $activeYesterday = User::whereBetween('last_login_at', [
+                Carbon::now()->subDays(2),
+                Carbon::now()->subDay()
+            ])->count();
+
+            $percentageChange = 0;
+            if ($activeYesterday > 0) {
+                $percentageChange = (($activeToday - $activeYesterday) / $activeYesterday) * 100;
+            }
+
+            return [
+                'count' => $activeToday,
+                'percentage_change' => $percentageChange,
+                'trend' => $percentageChange >= 0 ? 'up' : 'down'
+            ];
+        });
     }
 
     public function edit(User $user)

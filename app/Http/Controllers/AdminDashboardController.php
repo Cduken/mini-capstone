@@ -15,8 +15,7 @@ class AdminDashboardController extends Controller
         $totalProducts = Product::count();
         $totalOrders = Order::count();
         $totalUsers = User::count();
-        $recentOrders = Order::latest()->paginate(5);
-        // dd($recentOrders->total()); // Should show total order count
+        $recentOrders = Order::orderBy('created_at', 'desc')->get();
         $averageOrderValue = Order::avg('total');
         $conversionRate = $totalUsers > 0 ? ($totalOrders / $totalUsers) * 100 : 0;
         $newUsersCount = User::where('created_at', '>=', Carbon::now()->subDays(5))->count();

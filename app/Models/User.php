@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -43,22 +44,39 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'password' => 'hashed',
+
         ];
+    }
+
+    public static function getActiveUsersStats()
+    {
+        $activeToday = self::where('last_login_at', '>=', now()->subDay())->count();
+        $activeYesterday = self::whereBetween('last_login_at', [
+            now()->subDays(2),
+            now()->subDay()
+        ])->count();
+
+        $percentageChange = 0;
+        if ($activeYesterday > 0) {
+            $percentageChange = (($activeToday - $activeYesterday) / $activeYesterday) * 100;
+        }
+
+        return [
+            'count' => $activeToday,
+            'percentage_change' => $percentageChange,
+            'trend' => $percentageChange >= 0 ? 'up' : 'down'
+        ];
+    }
+
+    public function getLastLoginAtAttribute($value)
+    {
+        return $value ? \Carbon\Carbon::parse($value) : null;
     }
 
     public function carts(): HasMany
     {
         return $this->hasMany(Cart::class);
-    }
-
-    public function wishlists()
-    {
-        return $this->hasMany(Wishlist::class);
-    }
-
-    public function wishlistProducts()
-    {
-        return $this->belongsToMany(Product::class, 'wishlists');
     }
 }

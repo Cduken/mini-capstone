@@ -142,7 +142,7 @@
                                                 </td>
                                                 <td class="py-4 px-5">
                                                     <a href="#">
-                                                        <!-- Using the correct route name -->
+
                                                         <button class="text-blue-600 hover:text-blue-800">
                                                             <i class='bx bx-show text-xl'></i>
                                                         </button>
@@ -154,11 +154,7 @@
                                 </table>
                             </div>
 
-                            {{-- <div class="px-5 py-3 border-t border-black">
-                                @if ($recentOrders->hasPages())
-                                    {{ $recentOrders->links('vendor.pagination.tailwind') }}
-                                @endif
-                            </div> --}}
+
                         @endif
                     </div>
                 </div>

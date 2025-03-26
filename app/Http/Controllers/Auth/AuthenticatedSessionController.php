@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,7 +29,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if($request->user()->userType === 'admin') {
+        // Update last login timestamp
+        $user = $request->user();
+        $user->last_login_at = Carbon::now();
+        $user->save();
+
+        if ($user->userType === 'admin') {
             return redirect('admin/dashboard');
         }
 

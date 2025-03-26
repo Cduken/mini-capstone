@@ -39,7 +39,10 @@ class Order extends Model
         ][$this->status] ?? 'gray-500';
     }
 
-    public function products() {
+    public function products()
+    {
         $this->belongsTo(Product::class)->withPivot('quantity', 'price');
     }
+
+
 }
