@@ -44,18 +44,8 @@
         </div>
 
         <div class="w-full sm:max-w-md px-6 py-8 relative z-10">
-            <!-- Logo with icon -->
-            {{-- <div class="text-center mb-8">
-                <a href="/" class="inline-flex flex-col items-center">
-                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg mb-3">
-                        <i class='bx bxs-shield-alt text-2xl text-indigo-600'></i>
-                    </div>
-                    <h1 class="text-2xl font-bold text-white">{{ config('app.name', 'Laravel') }}</h1>
-                </a>
-            </div> --}}
 
-            <!-- Card -->
-            <div class="bg-white rounded-xl card-shadow overflow-hidden " >
+            <div class="bg-white rounded-xl card-shadow overflow-hidden ">
                 <div class="px-8 py-6">
                     <!-- Card header with decorative element -->
                     <div class="mb-6 relative">
@@ -64,7 +54,11 @@
                         </div>
                         <h2 class="text-xl font-semibold text-gray-800">
                             @if (Request::is('login'))
-                                <i class='bx bx-log-in-circle align-middle mr-2'></i> Welcome Back
+                                <div class="flex items-center">
+                                    <i class='bx bx-log-in-circle align-middle mr-2'></i>
+                                     <x-application-logo
+                                        />
+                                </div>
                             @elseif(Request::is('register'))
                                 <i class='bx bx-user-plus align-middle mr-2'></i> Create Account
                             @elseif(Request::is('forgot-password'))
@@ -94,11 +88,6 @@
                         New to our platform? <a href="{{ route('register') }}"
                             class="text-indigo-600 hover:text-indigo-800 font-medium">Create an account</a>
                     </div>
-                {{-- @elseif(Request::is('register'))
-                    <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center text-sm text-gray-500">
-                        Already have an account? <a href="{{ route('login') }}"
-                            class="text-indigo-600 hover:text-indigo-800 font-medium">Sign in here</a>
-                    </div> --}}
                 @endif
             </div>
 

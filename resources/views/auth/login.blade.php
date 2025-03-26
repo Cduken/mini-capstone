@@ -59,16 +59,7 @@
             </x-primary-button>
         </div>
 
-        <!-- Sign Up Link -->
-        {{-- <div class="text-center text-sm text-gray-600 mt-4">
-            {{ __("Don't have an account?") }}
-            <a href="{{ route('register') }}"
-                class="font-medium text-indigo-600 hover:text-indigo-800 ml-1 transition duration-150">
-                {{ __('Sign up') }}
-            </a>
-        </div> --}}
 
-        <!-- Social Login (Optional) -->
         <div class="mt-6">
             <div class="relative">
                 <div class="absolute inset-0 flex items-center">

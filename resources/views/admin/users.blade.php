@@ -14,13 +14,13 @@
 
                 <div class="flex items-center space-x-3">
                     <!-- Search Bar -->
-                    <div class="relative w-full md:w-64">
+                    {{-- <div class="relative w-full md:w-64">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class='bx bx-search text-gray-400'></i>
                         </div>
                         <input type="text" placeholder="Search users..."
                             class="block w-full pl-10 pr-3 py-2.5 border border-gray-200 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
-                    </div>
+                    </div> --}}
 
                     <!-- Add User Button -->
                     {{-- <button class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium py-2.5 px-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center whitespace-nowrap">
@@ -68,11 +68,10 @@
                     </div>
                 </div>
 
-                <!-- Verified Users -->
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Verified</p>
+                            <p class="text-sm font-medium text-gray-500">Verified Users</p>
                             <h3 class="text-2xl font-bold text-gray-800 mt-1">
                                 {{ $users->whereNotNull('email_verified_at')->count() }}</h3>
                         </div>
@@ -92,16 +91,21 @@
                         <div>
                             <p class="text-sm font-medium text-gray-500">Administrators</p>
                             <h3 class="text-2xl font-bold text-gray-800 mt-1">
-                                {{ $users->where('userType', 'admin')->count() }}</h3>
+                                @php
+                                    $adminCount = $users->where('userType', 'admin')->count();
+                                    echo $adminCount >= 0 ? $adminCount : '0';
+                                @endphp
+                            </h3>
                         </div>
                         <div class="p-3 rounded-lg bg-red-50 text-red-600">
                             <i class='bx bx-shield-alt-2 text-2xl'></i>
                         </div>
                     </div>
-                    <div class="mt-3 flex items-center text-sm text-gray-500">
-                        {{ number_format(($users->where('userType', 'admin')->count() / $users->count()) * 100, 1) }}%
-                        of total
-                    </div>
+                    @if ($users->count() > 0)
+                        <div class="mt-3 flex items-center text-sm text-gray-500">
+                            {{ number_format(($adminCount / $users->count()) * 100, 1) }}% of total
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -121,38 +125,34 @@
                     </div>
 
                     <div class="flex items-center space-x-3">
-                        <!-- Filter Dropdown -->
+
                         <div class="relative">
                             <button
-                                class="flex items-center space-x-1 px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                class="flex items-center space-x-1 px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                id="filter-dropdown-button">
                                 <i class='bx bx-filter-alt text-gray-500'></i>
                                 <span>Filter</span>
                                 <i class='bx bx-chevron-down text-gray-400'></i>
                             </button>
                             <!-- Dropdown menu -->
-                            <div
-                                class="hidden absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10">
+                            <div class="hidden absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10"
+                                id="filter-dropdown-menu">
                                 <div class="py-1">
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">All Users</a>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Verified
+                                    <a href="{{ route('admin.users', ['filter' => 'all'] + request()->except('filter', 'page')) }}"
+                                        class="block px-4 py-2 text-sm {{ request('filter', 'all') === 'all' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">All
+                                        Users</a>
+                                    <a href="{{ route('admin.users', ['filter' => 'verified'] + request()->except('filter', 'page')) }}"
+                                        class="block px-4 py-2 text-sm {{ request('filter') === 'verified' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">Verified
                                         Only</a>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admins Only</a>
-                                    <a href="#"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pending
+                                    <a href="{{ route('admin.users', ['filter' => 'admins'] + request()->except('filter', 'page')) }}"
+                                        class="block px-4 py-2 text-sm {{ request('filter') === 'admins' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">Admins
+                                        Only</a>
+                                    <a href="{{ route('admin.users', ['filter' => 'pending'] + request()->except('filter', 'page')) }}"
+                                        class="block px-4 py-2 text-sm {{ request('filter') === 'pending' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">Pending
                                         Verification</a>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Export Button -->
-                        <button
-                            class="flex items-center space-x-1 px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                            <i class='bx bx-export text-gray-500'></i>
-                            <span>Export</span>
-                        </button>
                     </div>
                 </div>
 
@@ -217,14 +217,17 @@
                                     <!-- Status Column -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium flex items-center
+                                            <span
+                                                class="px-2.5 py-0.5 rounded-full text-xs font-medium flex items-center
                                                   {{ $user->email_verified_at ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                                <i class='bx {{ $user->email_verified_at ? 'bx-check-circle' : 'bx-time' }} mr-1'></i>
+                                                <i
+                                                    class='bx {{ $user->email_verified_at ? 'bx-check-circle' : 'bx-time' }} mr-1'></i>
                                                 {{ $user->email_verified_at ? 'Verified' : 'Pending' }}
                                             </span>
                                             @if ($user->last_login_at)
                                                 <span class="ml-2 text-xs text-gray-500">
-                                                    Last seen {{ \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() }}
+                                                    Last seen
+                                                    {{ \Carbon\Carbon::parse($user->last_login_at)->diffForHumans() }}
                                                 </span>
                                             @endif
                                         </div>
@@ -276,7 +279,7 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
+
                 <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
                     <div class="text-sm text-gray-600">
                         Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of
@@ -284,14 +287,15 @@
                     </div>
 
                     <div class="flex items-center space-x-1">
-                        {{ $users->appends(['search' => request('search')])->onEachSide(1)->links('vendor.pagination.custom') }}
+
+                        {{ $users->appends(request()->query())->onEachSide(1)->links('vendor.pagination.custom') }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Empty State (for when no users exist) -->
+
     @if ($users->isEmpty())
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center max-w-2xl mx-auto mt-8">
             <div
@@ -306,6 +310,24 @@
             </button>
         </div>
     @endif
+
+    <script>
+        // Toggle filter dropdown
+        document.getElementById('filter-dropdown-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('filter-dropdown-menu').classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('filter-dropdown-menu');
+            const button = document.getElementById('filter-dropdown-button');
+
+            if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
 
     <style>
         .tooltip-text {

@@ -8,22 +8,42 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    // app/Http/Controllers/AdminController.php
+
     public function index()
     {
         $search = request('search');
+        $filter = request('filter', 'all');
 
-        // Get users with search functionality
-        $users = User::when($search, function ($query) use ($search) {
+
+        $query = User::query();
+
+
+        if ($search) {
             $query->where('name', 'like', '%' . $search . '%')
                 ->orWhere('email', 'like', '%' . $search . '%');
-        })
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+        }
 
-        // Get active users statistics
+
+        switch ($filter) {
+            case 'verified':
+                $query->whereNotNull('email_verified_at');
+                break;
+            case 'admins':
+                $query->where('userType', 'admin');
+                break;
+            case 'pending':
+                $query->whereNull('email_verified_at');
+                break;
+
+        }
+
+        $users = $query->orderBy('created_at', 'desc')->paginate(5);
         $activeUsers = $this->getActiveUsersStats();
 
-        return view('admin.users', compact('users', 'activeUsers'));
+
+
+        return view('admin.users', compact('users', 'activeUsers', 'filter'));
     }
 
     // Helper method to get active users statistics
