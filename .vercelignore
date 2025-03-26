@@ -1,9 +1,3 @@
 /node_modules
 /vendor
-/storage/*.key
 /.git
-/.github
-/.idea
-.env
-.env.*
-.DS_Store

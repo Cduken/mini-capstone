@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "vercel-build": "composer install --no-dev && php artisan config:cache && npm run build"
+        "vercel-build": "rm -rf .vercel && composer install --no-dev && php artisan config:cache && npm run build"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",

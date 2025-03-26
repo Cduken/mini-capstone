@@ -2,23 +2,14 @@
     "version": 2,
     "builds": [
       {
-        "src": "public/**/*.php",
+        "src": "public/index.php",
         "use": "@vercel/php"
-      },
-      {
-        "src": "public/**/*",
-        "use": "@vercel/static"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "/public/$1"
+        "dest": "/public/index.php"
       }
-    ],
-    "build": {
-      "env": {
-        "VITE_APP_ENV": "production"
-      }
-    }
+    ]
   }
