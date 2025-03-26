@@ -17,7 +17,7 @@ class ProductController extends Controller
                 ->orWhere('category', 'like', '%' . $search . '%');
         })
             ->latest()
-            ->paginate(5);
+            ->paginate(6);
 
         return view('admin.products.index', compact('products'));
     }

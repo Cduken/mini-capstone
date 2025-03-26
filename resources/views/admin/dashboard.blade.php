@@ -6,12 +6,12 @@
         <!-- Main Content -->
         <div class="flex-1 p-4">
             <!-- Header -->
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex justify-between items-center mb-4">
                 <h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
             </div>
 
             <!-- Dashboard Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
                 <!-- Products Card -->
                 <div
                     class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer hover:shadow-blue-300 hover:transform hover:scale-105 transition duration-300">
@@ -20,10 +20,19 @@
                             <span class="text-gray-500 text-sm font-medium">Total Products</span>
                             <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $totalProducts }}</h3>
                             <div class="flex items-center mt-3">
-                                <span
-                                    class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                    <i class='bx bx-up-arrow-alt mr-1'></i> 12%
-                                </span>
+                                @if ($productsPercentageChange >= 0)
+                                    <span
+                                        class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-up-arrow-alt mr-1'></i>
+                                        {{ round($productsPercentageChange, 0) }}%
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-down-arrow-alt mr-1'></i>
+                                        {{ round(abs($productsPercentageChange), 0) }}%
+                                    </span>
+                                @endif
                                 <span class="text-gray-500 text-xs ml-2">vs last month</span>
                             </div>
                         </div>
@@ -32,7 +41,8 @@
                         </div>
                     </div>
                     <div class="h-1 bg-blue-200 w-full">
-                        <div class="h-1 bg-blue-500" style="width: 70%"></div>
+                        <div class="h-1 bg-blue-500" style="width: {{ min($productsPercentageChange + 50, 100) }}%">
+                        </div>
                     </div>
                 </div>
 
@@ -44,10 +54,18 @@
                             <span class="text-gray-500 text-sm font-medium">Total Orders</span>
                             <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $totalOrders }}</h3>
                             <div class="flex items-center mt-3">
-                                <span
-                                    class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                    <i class='bx bx-up-arrow-alt mr-1'></i> 24%
-                                </span>
+                                @if ($ordersPercentageChange >= 0)
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-up-arrow-alt mr-1'></i> {{ round($ordersPercentageChange, 0) }}%
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-down-arrow-alt mr-1'></i>
+                                        {{ round(abs($ordersPercentageChange), 0) }}%
+                                    </span>
+                                @endif
                                 <span class="text-gray-500 text-xs ml-2">vs last month</span>
                             </div>
                         </div>
@@ -68,10 +86,18 @@
                             <span class="text-gray-500 text-sm font-medium">Total Users</span>
                             <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $totalUsers }}</h3>
                             <div class="flex items-center mt-3">
-                                <span
-                                    class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                    <i class='bx bx-up-arrow-alt mr-1'></i> 8%
-                                </span>
+                                @if ($usersPercentageChange >= 0)
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-up-arrow-alt mr-1'></i> {{ round($usersPercentageChange, 0) }}%
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-down-arrow-alt mr-1'></i>
+                                        {{ round(abs($usersPercentageChange), 0) }}%
+                                    </span>
+                                @endif
                                 <span class="text-gray-500 text-xs ml-2">vs last month</span>
                             </div>
                         </div>
@@ -87,8 +113,6 @@
 
             <!-- Content Area -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Recent Orders -->
-                <!-- Recent Orders -->
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden">
                         <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
@@ -105,7 +129,7 @@
                                 <p class="text-gray-500">No recent orders found</p>
                             </div>
                         @else
-                            <div class="overflow-y-auto max-h-[400px]">
+                            <div class="overflow-y-auto max-h-[350px]">
                                 <table class="w-full" id="orders-table">
                                     <thead class="bg-gray-50 text-gray-600 text-left text-sm">
                                         <tr>
@@ -128,25 +152,24 @@
                                                     <div class="font-medium">{{ $order->name }}</div>
                                                     <div class="text-xs text-gray-500">{{ $order->email }}</div>
                                                 </td>
-                                                <td class="py-4 px-5 font-medium">${{ number_format($order->total, 2) }}
+                                                <td class="py-4 px-5 font-medium">
+                                                    ${{ number_format($order->total, 2) }}
                                                 </td>
                                                 <td class="py-4 px-5">
                                                     <span
                                                         class="px-2.5 py-1 rounded-full text-xs font-medium
-                                        @if ($order->status === 'completed') bg-green-100 text-green-800
-                                        @elseif($order->status === 'pending') bg-yellow-100 text-yellow-800
-                                        @elseif($order->status === 'cancelled') bg-red-100 text-red-800
-                                        @else bg-gray-100 text-gray-800 @endif">
+                                                        @if ($order->status === 'completed') bg-green-100 text-green-800
+                                                        @elseif($order->status === 'pending') bg-yellow-100 text-yellow-800
+                                                        @elseif($order->status === 'cancelled') bg-red-100 text-red-800
+                                                        @else bg-gray-100 text-gray-800 @endif">
                                                         {{ ucfirst($order->status) }}
                                                     </span>
                                                 </td>
                                                 <td class="py-4 px-5">
-                                                    <a href="#">
-
-                                                        <button class="text-blue-600 hover:text-blue-800">
-                                                            <i class='bx bx-show text-xl'></i>
-                                                        </button>
-                                                    </a>
+                                                    <button data-order-id="{{ $order->id }}"
+                                                        class="text-blue-600 hover:text-blue-800">
+                                                        <i class='bx bx-show text-xl'></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -154,7 +177,64 @@
                                 </table>
                             </div>
 
+                            <!-- Pagination -->
+                            <div class="px-5 py-4 border-t border-gray-100">
+                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                    <div class="text-sm text-gray-500">
+                                        Showing
+                                        <span class="font-semibold">{{ $recentOrders->firstItem() }}</span>
+                                        to
+                                        <span class="font-semibold">{{ $recentOrders->lastItem() }}</span>
+                                        of
+                                        <span class="font-semibold">{{ $recentOrders->total() }}</span> Results
+                                    </div>
 
+                                    @if ($recentOrders->hasPages())
+                                        <nav class="flex items-center space-x-1">
+                                            {{-- Previous Page Link --}}
+                                            @if ($recentOrders->onFirstPage())
+                                                <span
+                                                    class="p-2 rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
+                                                    <i class='bx bx-chevron-left text-xl'></i>
+                                                </span>
+                                            @else
+                                                <a href="{{ $recentOrders->previousPageUrl() }}"
+                                                    class="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                                                    <i class='bx bx-chevron-left text-xl'></i>
+                                                </a>
+                                            @endif
+
+                                            {{-- Pagination Elements --}}
+                                            @foreach ($recentOrders->getUrlRange(1, $recentOrders->lastPage()) as $page => $url)
+                                                @if ($page == $recentOrders->currentPage())
+                                                    <span
+                                                        class="px-3 py-1 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 font-medium">
+                                                        {{ $page }}
+                                                    </span>
+                                                @else
+                                                    <a href="{{ $url }}"
+                                                        class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                                                        {{ $page }}
+                                                    </a>
+                                                @endif
+                                            @endforeach
+
+                                            {{-- Next Page Link --}}
+                                            @if ($recentOrders->hasMorePages())
+                                                <a href="{{ $recentOrders->nextPageUrl() }}"
+                                                    class="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
+                                                    <i class='bx bx-chevron-right text-xl'></i>
+                                                </a>
+                                            @else
+                                                <span
+                                                    class="p-2 rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
+                                                    <i class='bx bx-chevron-right text-xl'></i>
+                                                </span>
+                                            @endif
+                                        </nav>
+                                    @endif
+                                </div>
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -165,29 +245,32 @@
                         <h3 class="font-semibold text-gray-800">Performance Metrics</h3>
                         <span class="text-xs text-gray-500">Updated just now</span>
                     </div>
-                    <div class="p-5 grid grid-cols-2 gap-4">
+                    <div class="p-2 grid grid-cols-2 gap-6 mt-6">
                         <!-- Avg Order Value Card -->
                         <div
                             class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-4 border border-blue-100 hover:shadow-lg transition-all duration-300">
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div
-                                        class="p-2 rounded-lg bg-white shadow-xs border border-blue-200 inline-block mb-3">
+                                        class="p-2 rounded-lg bg-white shadow-xs border border-blue-200 inline-flex items-center justify-center mb-3 w-10 h-10">
                                         <i class='bx bx-dollar-circle text-xl text-blue-600'></i>
                                     </div>
-                                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Avg. Order</p>
+                                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Avg. Order
+                                    </p>
                                     <p class="text-2xl font-bold text-gray-800 mt-1">
                                         ${{ number_format($averageOrderValue, 2) }}</p>
-                                    <div class="flex items-center mt-2">
-                                        <span
-                                            class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full flex items-center">
-                                            <i class='bx bx-trending-up mr-1'></i> 5.2%
-                                        </span>
-                                    </div>
                                 </div>
-                                <div class="text-blue-400 opacity-20">
-                                    <i class='bx bx-trending-up text-4xl'></i>
+                                <div class="text-blue-400 opacity-20 self-start mt-1">
+                                    <i
+                                        class='bx bx-{{ $avgOrderPercentageChange >= 0 ? 'trending-up' : 'trending-down' }} text-3xl'></i>
                                 </div>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <span
+                                    class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full flex items-center">
+                                    {{ $avgOrderPercentageChange >= 0 ? '↑' : '↓' }}
+                                    {{ number_format(abs($avgOrderPercentageChange), 1) }}%
+                                </span>
                             </div>
                         </div>
 
@@ -197,23 +280,25 @@
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div
-                                        class="p-2 rounded-lg bg-white shadow-xs border border-green-200 inline-block mb-3">
-                                        <i class='bx bx-refresh text-xl text-green-600'></i>
+                                        class="p-2 rounded-lg bg-white shadow-xs border border-green-200 inline-flex items-center justify-center mb-3 w-10 h-10">
+                                        <i class='bx bx-transfer text-xl text-green-600'></i>
                                     </div>
                                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Conversion
                                     </p>
                                     <p class="text-2xl font-bold text-gray-800 mt-1">
                                         {{ number_format($conversionRate, 1) }}%</p>
-                                    <div class="flex items-center mt-2">
-                                        <span
-                                            class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full flex items-center">
-                                            <i class='bx bx-trending-up mr-1'></i> 1.8%
-                                        </span>
-                                    </div>
                                 </div>
-                                <div class="text-green-400 opacity-20">
-                                    <i class='bx bx-bar-chart-alt text-4xl'></i>
+                                <div class="text-green-400 opacity-20 self-start mt-1">
+                                    <i
+                                        class='bx bx-{{ $conversionPercentageChange >= 0 ? 'bar-chart-alt' : 'bar-chart-square' }} text-3xl'></i>
                                 </div>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <span
+                                    class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full flex items-center">
+                                    {{ $conversionPercentageChange >= 0 ? '↑' : '↓' }}
+                                    {{ number_format(abs($conversionPercentageChange), 1) }}%
+                                </span>
                             </div>
                         </div>
 
@@ -223,21 +308,23 @@
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div
-                                        class="p-2 rounded-lg bg-white shadow-xs border border-purple-200 inline-block mb-3">
+                                        class="p-2 rounded-lg bg-white shadow-xs border border-purple-200 inline-flex items-center justify-center mb-3 w-10 h-10">
                                         <i class='bx bx-user-plus text-xl text-purple-600'></i>
                                     </div>
                                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">New Users</p>
                                     <p class="text-2xl font-bold text-gray-800 mt-1">{{ $newUsersCount }}</p>
-                                    <div class="flex items-center mt-2">
-                                        <span
-                                            class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full flex items-center">
-                                            <i class='bx bx-trending-up mr-1'></i> 12.4%
-                                        </span>
-                                    </div>
                                 </div>
-                                <div class="text-purple-400 opacity-20">
-                                    <i class='bx bx-group text-4xl'></i>
+                                <div class="text-purple-400 opacity-20 self-start mt-1">
+                                    <i
+                                        class='bx bx-{{ $newUsersPercentageChange >= 0 ? 'group' : 'user-x' }} text-3xl'></i>
                                 </div>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <span
+                                    class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full flex items-center">
+                                    {{ $newUsersPercentageChange >= 0 ? '↑' : '↓' }}
+                                    {{ number_format(abs($newUsersPercentageChange), 1) }}%
+                                </span>
                             </div>
                         </div>
 
@@ -247,21 +334,23 @@
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div
-                                        class="p-2 rounded-lg bg-white shadow-xs border border-yellow-200 inline-block mb-3">
+                                        class="p-2 rounded-lg bg-white shadow-xs border border-yellow-200 inline-flex items-center justify-center mb-3 w-10 h-10">
                                         <i class='bx bx-time-five text-xl text-yellow-600'></i>
                                     </div>
                                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Pending</p>
                                     <p class="text-2xl font-bold text-gray-800 mt-1">{{ $pendingOrdersCount }}</p>
-                                    <div class="flex items-center mt-2">
-                                        <span
-                                            class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full flex items-center">
-                                            <i class='bx bx-trending-down mr-1'></i> 3.1%
-                                        </span>
-                                    </div>
                                 </div>
-                                <div class="text-yellow-400 opacity-20">
-                                    <i class='bx bx-alarm-exclamation text-4xl'></i>
+                                <div class="text-yellow-400 opacity-20 self-start mt-1">
+                                    <i
+                                        class='bx bx-{{ $pendingPercentageChange >= 0 ? 'timer' : 'alarm' }} text-3xl'></i>
                                 </div>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <span
+                                    class="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full flex items-center">
+                                    {{ $pendingPercentageChange >= 0 ? '↑' : '↓' }}
+                                    {{ number_format(abs($pendingPercentageChange), 1) }}%
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -269,4 +358,355 @@
             </div>
         </div>
     </div>
+
+    <!-- Order Details Modal -->
+    <div id="orderModal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden overflow-y-auto transition-opacity duration-300 ease-in-out opacity-0">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div
+                class="inline-block w-full max-w-3xl bg-white rounded-xl shadow-xl overflow-hidden transform transition-all duration-300 ease-in-out scale-95">
+                <!-- Modal header -->
+                <div class="px-6 py-4 bg-gray-50 flex justify-between items-center border-b border-gray-200">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800">Order #<span id="modalOrderId"></span></h3>
+                        <span id="modalOrderStatus"
+                            class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium"></span>
+                    </div>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition-colors">
+                        <i class='bx bx-x text-2xl'></i>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="p-5 space-y-5">
+                    <!-- Customer & Order Summary -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Customer Information -->
+                        <div class="space-y-3">
+                            <h4 class="flex items-center text-md font-medium text-gray-800">
+                                <i class='bx bx-user mr-2 text-blue-500'></i>
+                                Customer Details
+                            </h4>
+                            <div class="space-y-2">
+                                <div>
+                                    <p class="text-xs text-gray-500">Name</p>
+                                    <p id="modalCustomerName" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Email</p>
+                                    <p id="modalCustomerEmail" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Payment Method</p>
+                                    <p id="modalPaymentMethod" class="font-medium text-gray-800"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Summary -->
+                        <div class="space-y-3">
+                            <h4 class="flex items-center text-md font-medium text-gray-800">
+                                <i class='bx bx-receipt mr-2 text-blue-500'></i>
+                                Order Summary
+                            </h4>
+                            <div class="space-y-2">
+                                <div>
+                                    <p class="text-xs text-gray-500">Date</p>
+                                    <p id="modalOrderDate" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Shipping Method</p>
+                                    <p id="modalShippingMethod" class="font-medium text-gray-800"></p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Total Amount</p>
+                                    <p id="modalOrderTotal" class="text-lg font-bold text-blue-600"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Information -->
+                    <div class="space-y-3">
+                        <h4 class="flex items-center text-md font-medium text-gray-800">
+                            <i class='bx bx-map mr-2 text-blue-500'></i>
+                            Shipping Address
+                        </h4>
+                        <div class="p-3 bg-gray-50 rounded-lg transition-colors duration-200 hover:bg-gray-100">
+                            <p id="modalShippingAddress" class="text-gray-800 text-sm"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="px-6 py-3 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                    <button type="button" id="printOrderBtn"
+                        class="flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors">
+                        <i class='bx bx-printer mr-2'></i> Print Receipt
+                    </button>
+                    <button type="button" id="closeModalBtn"
+                        class="px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('orderModal');
+            const modalContent = modal.querySelector('div > div'); // The inner content div
+            const closeModal = document.getElementById('closeModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const printOrderBtn = document.getElementById('printOrderBtn');
+
+            // Show modal with animation
+            async function showModal() {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modalContent.classList.remove('scale-95');
+                }, 10);
+            }
+
+            // Hide modal with animation
+            function hideModal() {
+                modal.classList.add('opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            // Show modal when any show button is clicked
+            document.querySelectorAll('[data-order-id]').forEach(button => {
+                button.addEventListener('click', async function() {
+                    const orderId = this.getAttribute('data-order-id');
+                    await fetchOrderDetails(orderId);
+                });
+            });
+
+            async function fetchOrderDetails(orderId) {
+                try {
+                    // Show loading state
+                    document.getElementById('modalOrderId').textContent = 'Loading...';
+
+                    const response = await fetch(`/admin/orders/${orderId}`, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Failed to load order details');
+                    }
+
+                    const order = await response.json();
+
+                    if (order.error) {
+                        throw new Error(order.message || order.error);
+                    }
+
+                    populateModal(order);
+                    showModal();
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert(error.message || 'Error loading order details');
+                    document.getElementById('modalOrderId').textContent = 'Error';
+                }
+            }
+
+            function populateModal(order) {
+                // Basic order info
+                document.getElementById('modalOrderId').textContent = order.id;
+                document.getElementById('modalCustomerName').textContent = order.name || 'N/A';
+                document.getElementById('modalCustomerEmail').textContent = order.email || 'N/A';
+                document.getElementById('modalShippingMethod').textContent = order.shipping_method ||
+                    'Standard Shipping';
+
+                // Format order date
+                const orderDate = order.created_at ? new Date(order.created_at) : new Date();
+                document.getElementById('modalOrderDate').textContent = orderDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                // Set status with appropriate color
+                const statusElement = document.getElementById('modalOrderStatus');
+                const status = order.status || 'pending';
+                statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+                statusElement.className = 'inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium ' +
+                    (status === 'completed' ? 'bg-green-100 text-green-800' :
+                        status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                        'bg-gray-100 text-gray-800');
+
+                // Format amounts
+                document.getElementById('modalOrderTotal').textContent =
+                    `$${parseFloat(order.total || 0).toFixed(2)}`;
+
+                // Shipping information
+                document.getElementById('modalShippingAddress').textContent =
+                    `${order.address || ''}, ${order.city || ''}, ${order.state || ''} ${order.zip_code || ''}, ${order.country || ''}`
+                    .trim();
+
+                // Payment method display
+                let paymentDetails = order.payment_details || {};
+                let paymentMethodDisplay = '';
+
+                switch (order.payment_method) {
+                    case 'card':
+                        paymentMethodDisplay = 'Credit Card';
+                        if (paymentDetails.last_four) {
+                            paymentMethodDisplay += ` (•••• ${paymentDetails.last_four})`;
+                        }
+                        break;
+                    case 'gcash':
+                        paymentMethodDisplay = 'GCash';
+                        if (paymentDetails.number) {
+                            paymentMethodDisplay += ` (${paymentDetails.number})`;
+                        }
+                        break;
+                    case 'cod':
+                        paymentMethodDisplay = 'Cash on Delivery';
+                        break;
+                    default:
+                        paymentMethodDisplay = order.payment_method || 'Unknown';
+                }
+                document.getElementById('modalPaymentMethod').textContent = paymentMethodDisplay;
+            }
+
+            // Close modal handlers
+            closeModal.addEventListener('click', hideModal);
+            closeModalBtn.addEventListener('click', hideModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    hideModal();
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    hideModal();
+                }
+            });
+
+            // Print order handler - Matches modal design exactly
+            printOrderBtn.addEventListener('click', () => {
+                const statusElement = document.getElementById('modalOrderStatus');
+                const statusColor = statusElement.className.includes('bg-green-100') ? '#D1FAE5' :
+                    statusElement.className.includes('bg-yellow-100') ? '#FEF3C7' :
+                    statusElement.className.includes('bg-red-100') ? '#FEE2E2' : '#F3F4F6';
+                const statusTextColor = statusElement.className.includes('text-green-800') ? '#065F46' :
+                    statusElement.className.includes('text-yellow-800') ? '#92400E' :
+                    statusElement.className.includes('text-red-800') ? '#991B1B' : '#374151';
+
+                const printContent = `
+            <html>
+                <head>
+                    <title>Order #${document.getElementById('modalOrderId').textContent}</title>
+                    <style>
+                        @import url('https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css');
+                        body { font-family: 'Inter', Arial, sans-serif; margin: 0; padding: 20px; color: #1f2937; }
+                        .receipt-container { max-width: 600px; margin: 0 auto; }
+                        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
+                        .order-title { font-size: 20px; font-weight: 600; color: #111827; }
+                        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 500; margin-top: 4px; }
+                        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+                        .section { margin-bottom: 20px; }
+                        .section-title { display: flex; align-items: center; font-size: 16px; font-weight: 500; color: #111827; margin-bottom: 12px; }
+                        .section-content { background: #f9fafb; padding: 16px; border-radius: 8px; }
+                        .info-item { margin-bottom: 8px; }
+                        .info-label { font-size: 12px; color: #6b7280; margin-bottom: 2px; }
+                        .info-value { font-size: 14px; font-weight: 500; color: #111827; }
+                        .total-amount { font-size: 18px; font-weight: 600; color: #2563eb; }
+                        .shipping-address { background: #f9fafb; padding: 16px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
+                        .footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
+                        .icon { margin-right: 8px; color: #3b82f6; }
+                    </style>
+                </head>
+                <body>
+                    <div class="receipt-container">
+                        <div class="header">
+                            <h1 class="order-title">Order #${document.getElementById('modalOrderId').textContent}</h1>
+                            <span class="status-badge" style="background: ${statusColor}; color: ${statusTextColor}">
+                                ${document.getElementById('modalOrderStatus').textContent}
+                            </span>
+                        </div>
+
+                        <div class="grid">
+                            <!-- Customer Information -->
+                            <div class="section">
+                                <h3 class="section-title"><i class='bx bx-user icon'></i>Customer Details</h3>
+                                <div class="section-content">
+                                    <div class="info-item">
+                                        <div class="info-label">Name</div>
+                                        <div class="info-value">${document.getElementById('modalCustomerName').textContent}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Email</div>
+                                        <div class="info-value">${document.getElementById('modalCustomerEmail').textContent}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Payment Method</div>
+                                        <div class="info-value">${document.getElementById('modalPaymentMethod').textContent}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Summary -->
+                            <div class="section">
+                                <h3 class="section-title"><i class='bx bx-receipt icon'></i>Order Summary</h3>
+                                <div class="section-content">
+                                    <div class="info-item">
+                                        <div class="info-label">Date</div>
+                                        <div class="info-value">${document.getElementById('modalOrderDate').textContent}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Shipping Method</div>
+                                        <div class="info-value">${document.getElementById('modalShippingMethod').textContent}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Total Amount</div>
+                                        <div class="info-value total-amount">${document.getElementById('modalOrderTotal').textContent}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shipping Information -->
+                        <div class="section">
+                            <h3 class="section-title"><i class='bx bx-map icon'></i>Shipping Address</h3>
+                            <div class="shipping-address">
+                                ${document.getElementById('modalShippingAddress').textContent}
+                            </div>
+                        </div>
+
+                        <div class="footer">
+                            <p>Printed on ${new Date().toLocaleString()}</p>
+                        </div>
+                    </div>
+                </body>
+            </html>
+        `;
+
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+
+                // Wait for content to load before printing
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                        printWindow.close();
+                    }, 200);
+                };
+            });
+        });
+    </script>
 </x-app-layout>

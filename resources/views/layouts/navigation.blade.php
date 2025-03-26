@@ -56,7 +56,7 @@
                     <div class=" flex items-center gap-4 relative">
                         @auth
                             @if (Auth::user()->userType !== 'admin')
-                                <a href="#"><i class='bx bx-heart text-2xl hover:text-red-600 transition ease-in-out duration-300'></i></a>
+
                                 <a href="{{ route('cart.index') }}"><i class='bx bx-cart-alt text-2xl hover:text-purple-600 transition ease-in-out duration-300'></i></a>
                             @endif
 

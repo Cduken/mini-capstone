@@ -293,76 +293,97 @@
     <x-footer />
 
     <!-- Success Modal (hidden by default) -->
-    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden max-w-md w-full mx-4">
+    <div id="successModal"
+        class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-md h-auto max-h-[100vh] flex flex-col">
             <!-- Modal Header -->
-            <div class="bg-gradient-to-r from-green-400 to-green-600 p-6 text-center">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-white shadow-lg">
-                    <i class='bx bx-check text-green-500 text-4xl'></i>
+            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-center relative">
+                <div class="absolute top-2 left-1/2 transform -translate-x-1/2">
+                    <div class="h-10 w-10 bg-white rounded-full shadow-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-500" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
                 </div>
-                <h1 class="mt-4 text-2xl font-bold text-white">Payment Successful!</h1>
+                <h1 class="mt-6 text-xl font-bold text-white">Payment Successful!</h1>
+                <p class="mt-1 text-emerald-100 text-sm">Order #<span id="orderNumber">{{ rand(1000, 9999) }}</span>
+                </p>
             </div>
 
-            <!-- Modal Content -->
-            <div class="px-6 py-8">
-                <div class="text-center">
-                    <h2 class="text-xl font-semibold text-gray-800">Thank you for your order!</h2>
-                    <p class="mt-2 text-gray-600">Order #<span id="orderNumber">{{ rand(1, 100) }}</span> has
-                        been placed.</p>
+            <!-- Modal Content - Compact Layout -->
+            <div class="p-6 flex-1 flex flex-col overflow-hidden">
+                <div class="text-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800">Thank you for your order!</h2>
 
-                    <div class="mt-6 bg-blue-50 rounded-lg p-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-700">Estimated delivery</span>
-                            <span class="font-medium">{{ now()->addDays(3)->format('l, F jS') }}</span>
-                        </div>
+                    <!-- Delivery Estimate - More Compact -->
+                    <div class="mt-3 bg-emerald-50/50 rounded-lg p-2 inline-flex items-center mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-500 mr-1"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                            <path
+                                d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1v-1h3.05a2.5 2.5 0 014.9 0H19a1 1 0 001-1v-2a1 1 0 00-.293-.707l-3-3A1 1 0 0016 7h-1V5a1 1 0 00-1-1H3z" />
+                        </svg>
+                        <span class="text-xs font-medium text-gray-700">Delivery:
+                            {{ now()->addDays(3)->format('M j') }}</span>
                     </div>
                 </div>
 
-                <!-- Order Summary -->
-                <div class="mt-6 border-t border-gray-200 pt-6">
-                    <h3 class="text-sm font-medium text-gray-500 mb-4">ORDER SUMMARY</h3>
-                    <div class="space-y-3">
+                <!-- Order Summary - More Compact -->
+                <div class="border-t border-gray-100 pt-4 flex-1 overflow-y-auto">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Receipt</h3>
+                    <div class="space-y-2 text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-medium">$<span
-                                    id="modalSubtotal">{{ number_format($subtotal, 2) }}</span></span>
+                            <span>$<span id="modalSubtotal">{{ number_format($subtotal, 2) }}</span></span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Shipping</span>
-                            <span class="font-medium">$<span
-                                    id="modalShipping">{{ number_format($shipping, 2) }}</span></span>
+                            <span>$<span id="modalShipping">{{ number_format($shipping, 2) }}</span></span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Tax</span>
-                            <span class="font-medium">$<span
-                                    id="modalTax">{{ number_format($tax, 2) }}</span></span>
+                            <span>$<span id="modalTax">{{ number_format($tax, 2) }}</span></span>
                         </div>
-                        <div class="flex justify-between pt-3 border-t border-gray-200 font-bold">
-                            <span>Total</span>
-                            <span>$<span id="modalTotal">{{ number_format($total, 2) }}</span></span>
+                        <div class="flex justify-between pt-2 mt-2 border-t border-gray-100 font-bold">
+                            <span class="text-gray-800">Total</span>
+                            <span class="text-emerald-600">$<span
+                                    id="modalTotal">{{ number_format($total, 2) }}</span></span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <!-- In your success modal -->
-                <div class="mt-8 flex flex-col gap-3">
+                <!-- Action Buttons - Compact Layout -->
+                <div class="mt-4 space-y-2">
                     <a href="{{ route('home') }}"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center">
-                        Back to Home
+                        class="block px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-center text-sm font-medium">
+                        Continue Shopping
                     </a>
-                    <a href="#" id="orderDetailsLink"
-                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-center">
-                        View Order Details
-                    </a>
-                    <button onclick="window.print()"
-                        class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        Print Receipt
-                    </button>
+                    <div class="flex space-x-2">
+                        <a href="#" id="orderDetailsLink"
+                            class="flex-1 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-center text-sm font-medium">
+                            Details
+                        </a>
+                        <button onclick="window.print()"
+                            class="flex-1 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            </svg>
+                            Print
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+
 
 
 
@@ -408,7 +429,7 @@
 
                             // Update the "View Order Details" button link
                             const orderDetailsLink = document.getElementById(
-                            'orderDetailsLink');
+                                'orderDetailsLink');
                             orderDetailsLink.href = `/my-orders/${data.order_id}`;
 
                             // Clear cart and session data

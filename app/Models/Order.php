@@ -26,7 +26,7 @@ class Order extends Model
         'status'
     ];
     protected $casts = [
-        'items' => 'array',
+        'items' => 'array'
     ];
 
 
@@ -43,6 +43,8 @@ class Order extends Model
     {
         $this->belongsTo(Product::class)->withPivot('quantity', 'price');
     }
+
+
 
 
 }

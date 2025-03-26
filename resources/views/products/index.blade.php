@@ -287,7 +287,7 @@
                                             </a>
 
                                             <!-- Quick Actions -->
-                                            <div
+                                            {{-- <div
                                                 class="absolute inset-x-0 bottom-0 bg-white bg-opacity-90 backdrop-blur-sm p-3 flex justify-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                 <button
                                                     class="p-2 rounded-full bg-white shadow-md hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
@@ -301,7 +301,7 @@
                                                     class="p-2 rounded-full bg-white shadow-md hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
                                                     <i class='bx bx-zoom-in text-xl'></i>
                                                 </button>
-                                            </div>
+                                            </div> --}}
                                         </div>
 
                                         <!-- Product Info -->

@@ -57,11 +57,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/process', [CheckoutController::class, 'processPayment'])->name('payment.process');
     Route::get('/order/success', [CheckoutController::class, 'orderSuccess'])->name('order.success');
 
-    // Add this in your authenticated routes
     Route::get('/my-orders/{order}', [OrderController::class, 'showCustomerOrder'])
         ->name('customer.orders.show')
         ->middleware('auth');
+    // Add this in your authenticated routes
+
 });
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -97,16 +102,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show');
     });
 
-
-
-    // View Order Details
-    // Route::get('/orders/{order}/details', [ViewOrderDetails::class, 'view'])->name('admin.view.details');
-
-    // Make sure you have this route (either in admin or regular routes)
-    Route::get('/orders/{order}', [OrderController::class, 'show'])
-        ->name('orders.show') // Changed from 'admin.orders.show' to match your view
-        ->middleware('auth');
-         // Add 'admin' middleware if needed
+    Route::get('/admin/orders/{order}', [OrderController::class, 'show'])
+        ->name('admin.orders.show')
+        ->middleware('auth'); // Or your admin middleware
 });
 
 require __DIR__ . '/auth.php';

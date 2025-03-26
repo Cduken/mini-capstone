@@ -4,11 +4,11 @@
         <x-admin-sidebar />
 
         <!-- Main Content -->
-        <div class="flex-1 p-6">
+        <div class="flex-1 p-4">
             <!-- Header Section -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-4">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-800">User Management</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">User Management</h2>
 
                 </div>
 
@@ -30,82 +30,134 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-6">
-                <!-- Total Users -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between">
+            <!-- Stats Cards - Updated to Match Dashboard Style -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-[9px]">
+                <!-- Total Users Card -->
+                <div
+                    class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer hover:shadow-purple-300 hover:transform hover:scale-105 transition duration-300">
+                    <div class="p-5 flex items-start justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Total Users</p>
+                            <span class="text-gray-500 text-sm font-medium">Total Users</span>
                             <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $users->total() }}</h3>
+                            <div class="flex items-center mt-3">
+                                @if ($usersPercentageChange >= 0)
+                                    <span
+                                        class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-up-arrow-alt mr-1'></i> {{ round($usersPercentageChange, 0) }}%
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-down-arrow-alt mr-1'></i>
+                                        {{ round(abs($usersPercentageChange), 0) }}%
+                                    </span>
+                                @endif
+                                <span class="text-gray-500 text-xs ml-2">vs last month</span>
+                            </div>
                         </div>
-                        <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
+                        <div class="p-3 rounded-lg bg-purple-50 text-purple-600">
                             <i class='bx bx-group text-2xl'></i>
                         </div>
                     </div>
-                    <div class="mt-3 flex items-center text-sm text-green-600">
-                        <i class='bx bx-up-arrow-alt mr-1'></i> 12% from last month
+                    <div class="h-1 bg-purple-200 w-full">
+                        <div class="h-1 bg-purple-500" style="width: {{ min($usersPercentageChange + 50, 100) }}%">
+                        </div>
                     </div>
                 </div>
 
-                <!-- Active Users -->
                 <!-- Active Users Card -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between">
+                <div
+                    class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer hover:shadow-green-300 hover:transform hover:scale-105 transition duration-300">
+                    <div class="p-5 flex items-start justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Active Today</p>
-                            <h3 class="text-2xl font-bold text-gray-800 mt-1">
-                                {{ number_format($activeUsers['count']) }}
+                            <span class="text-gray-500 text-sm font-medium">Active Today</span>
+                            <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ number_format($activeUsers['count']) }}
                             </h3>
+                            <div class="flex items-center mt-3">
+                                @if ($activeUsers['trend'] === 'up')
+                                    <span
+                                        class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-up-arrow-alt mr-1'></i>
+                                        {{ number_format(abs($activeUsers['percentage_change']), 1) }}%
+                                    </span>
+                                @else
+                                    <span
+                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-down-arrow-alt mr-1'></i>
+                                        {{ number_format(abs($activeUsers['percentage_change']), 1) }}%
+                                    </span>
+                                @endif
+                                <span class="text-gray-500 text-xs ml-2">vs yesterday</span>
+                            </div>
                         </div>
                         <div class="p-3 rounded-lg bg-green-50 text-green-600">
                             <i class='bx bx-user-check text-2xl'></i>
                         </div>
                     </div>
-                    <div
-                        class="mt-3 flex items-center text-sm {{ $activeUsers['trend'] === 'up' ? 'text-green-600' : 'text-red-600' }}">
-                        <i class='bx bx-{{ $activeUsers['trend'] === 'up' ? 'up' : 'down' }}-arrow-alt mr-1'></i>
-                        {{ number_format(abs($activeUsers['percentage_change']), 1) }}% from yesterday
+                    <div class="h-1 bg-green-200 w-full">
+                        <div class="h-1 bg-green-500"
+                            style="width: {{ min($activeUsers['percentage_change'] + 50, 100) }}%"></div>
                     </div>
                 </div>
 
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between">
+                <!-- Verified Users Card -->
+                <div
+                    class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer hover:shadow-blue-300 hover:transform hover:scale-105 transition duration-300">
+                    <div class="p-5 flex items-start justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Verified Users</p>
+                            <span class="text-gray-500 text-sm font-medium">Verified Users</span>
                             <h3 class="text-2xl font-bold text-gray-800 mt-1">
                                 {{ $users->whereNotNull('email_verified_at')->count() }}</h3>
+                            <div class="flex items-center mt-3">
+                                <span
+                                    class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                    {{ number_format(($users->whereNotNull('email_verified_at')->count() / $users->count()) * 100, 1) }}%
+                                </span>
+                                <span class="text-gray-500 text-xs ml-2">of total</span>
+                            </div>
                         </div>
-                        <div class="p-3 rounded-lg bg-purple-50 text-purple-600">
+                        <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
                             <i class='bx bx-badge-check text-2xl'></i>
                         </div>
                     </div>
-                    <div class="mt-3 flex items-center text-sm text-gray-500">
-                        {{ number_format(($users->whereNotNull('email_verified_at')->count() / $users->count()) * 100, 1) }}%
-                        of total
+                    <div class="h-1 bg-blue-200 w-full">
+                        <div class="h-1 bg-blue-500"
+                            style="width: {{ ($users->whereNotNull('email_verified_at')->count() / $users->count()) * 100 }}%">
+                        </div>
                     </div>
                 </div>
 
-                <!-- Admin Users -->
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex items-center justify-between">
+                <!-- Admin Users Card -->
+                <div
+                    class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer hover:shadow-red-300 hover:transform hover:scale-105 transition duration-300">
+                    <div class="p-5 flex items-start justify-between">
                         <div>
-                            <p class="text-sm font-medium text-gray-500">Administrators</p>
+                            <span class="text-gray-500 text-sm font-medium">Administrators</span>
                             <h3 class="text-2xl font-bold text-gray-800 mt-1">
                                 @php
                                     $adminCount = $users->where('userType', 'admin')->count();
                                     echo $adminCount >= 0 ? $adminCount : '0';
                                 @endphp
                             </h3>
+                            @if ($users->count() > 0)
+                                <div class="flex items-center mt-3">
+                                    <span
+                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
+                                        {{ number_format(($adminCount / $users->count()) * 100, 1) }}%
+                                    </span>
+                                    <span class="text-gray-500 text-xs ml-2">of total</span>
+                                </div>
+                            @endif
                         </div>
                         <div class="p-3 rounded-lg bg-red-50 text-red-600">
                             <i class='bx bx-shield-alt-2 text-2xl'></i>
                         </div>
                     </div>
-                    @if ($users->count() > 0)
-                        <div class="mt-3 flex items-center text-sm text-gray-500">
-                            {{ number_format(($adminCount / $users->count()) * 100, 1) }}% of total
+                    <div class="h-1 bg-red-200 w-full">
+                        <div class="h-1 bg-red-500"
+                            style="width: {{ $users->count() > 0 ? ($adminCount / $users->count()) * 100 : 0 }}%">
                         </div>
-                    @endif
+                    </div>
                 </div>
             </div>
 
@@ -113,7 +165,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <!-- Table Header with Filters -->
                 <div
-                    class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-50">
+                    class="px-4 py-[14px] border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-50">
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
                             <i class='bx bx-group text-xl'></i>
@@ -141,9 +193,7 @@
                                     <a href="{{ route('admin.users', ['filter' => 'all'] + request()->except('filter', 'page')) }}"
                                         class="block px-4 py-2 text-sm {{ request('filter', 'all') === 'all' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">All
                                         Users</a>
-                                    <a href="{{ route('admin.users', ['filter' => 'verified'] + request()->except('filter', 'page')) }}"
-                                        class="block px-4 py-2 text-sm {{ request('filter') === 'verified' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">Verified
-                                        Only</a>
+
                                     <a href="{{ route('admin.users', ['filter' => 'admins'] + request()->except('filter', 'page')) }}"
                                         class="block px-4 py-2 text-sm {{ request('filter') === 'admins' ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100' }}">Admins
                                         Only</a>
@@ -280,14 +330,13 @@
                 </div>
 
 
-                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+                <div class="px-4 py-[12px] border-t border-gray-200 bg-gray-50 flex items-center justify-between">
                     <div class="text-sm text-gray-600">
                         Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of
                         {{ $users->total() }} users
                     </div>
 
                     <div class="flex items-center space-x-1">
-
                         {{ $users->appends(request()->query())->onEachSide(1)->links('vendor.pagination.custom') }}
                     </div>
                 </div>

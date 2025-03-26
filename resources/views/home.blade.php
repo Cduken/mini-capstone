@@ -98,15 +98,15 @@
                                 <!-- Wishlist & Stock Badge Container -->
                                 <div class="absolute top-3 left-3 right-3 z-10 flex justify-between">
                                     <!-- Wishlist Button -->
-                                    <button
+                                    {{-- <button
                                         class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-gray-100 transition-colors group/wishlist">
                                         <i
                                             class='bx bx-heart text-xl text-gray-500 group-hover/wishlist:text-red-500 transition-colors'></i>
-                                    </button>
+                                    </button> --}}
 
                                     <!-- Stock Status Badge -->
                                     <span
-                                        class="px-3 py-1 rounded-full text-xs font-semibold shadow-sm {{ $product->inStock ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
+                                        class="px-3 py-1 text-center rounded-full text-xs font-semibold shadow-sm {{ $product->inStock ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
                                         {{ $product->inStock ? 'In Stock' : 'Out of Stock' }}
                                     </span>
                                 </div>

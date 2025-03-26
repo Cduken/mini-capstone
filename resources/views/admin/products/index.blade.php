@@ -6,14 +6,14 @@
         <!-- Main Content -->
         <div class="flex-1 p-4">
             <!-- Header with Add Product Button -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-[26px] gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-gray-800">Product Management</h2>
-                    {{-- <p class="text-sm text-gray-500 mt-1">Manage your product inventory</p> --}}
+
                 </div>
 
                 <button onclick="openModal('add-product-modal')"
-                    class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center w-full md:w-auto">
+                    class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center w-full md:w-auto">
                     <i class='bx bx-plus-circle text-xl mr-2'></i>
                     Add New Product
                 </button>
@@ -39,7 +39,7 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                     <!-- Table Header with Search -->
                     <div
-                        class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-50">
+                        class="px-4 py-2 border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-50">
                         <div class="flex items-center gap-3">
                             <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
                                 <i class='bx bx-package text-xl'></i>
@@ -56,7 +56,7 @@
                                 <i class='bx bx-search text-gray-400'></i>
                             </div>
                             <input type="text" name="search" value="{{ request('search') }}"
-                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-white shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                                 placeholder="Search products...">
                             @if (request('search'))
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -69,7 +69,7 @@
                         </form>
                     </div>
 
-                    <!-- Responsive Table -->
+
                     <div class="overflow-y-auto max-h-[500px]">
                         <table class="w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
@@ -163,7 +163,7 @@
                     </div>
 
 
-                    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+                    <div class="px-4 py-2 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
                         <div class="text-sm text-gray-600">
                             Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of
                             {{ $products->total() }} results

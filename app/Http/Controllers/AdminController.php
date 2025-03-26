@@ -15,15 +15,12 @@ class AdminController extends Controller
         $search = request('search');
         $filter = request('filter', 'all');
 
-
         $query = User::query();
-
 
         if ($search) {
             $query->where('name', 'like', '%' . $search . '%')
                 ->orWhere('email', 'like', '%' . $search . '%');
         }
-
 
         switch ($filter) {
             case 'verified':
@@ -35,18 +32,34 @@ class AdminController extends Controller
             case 'pending':
                 $query->whereNull('email_verified_at');
                 break;
-
         }
 
-        $users = $query->orderBy('created_at', 'desc')->paginate(5);
+        $users = $query->orderBy('created_at', 'desc')->paginate(4);
         $activeUsers = $this->getActiveUsersStats();
 
+        // Add these calculations for the users percentage change
+        $currentMonthUsers = User::whereMonth('created_at', now())->count();
+        $lastMonthUsers = User::whereMonth('created_at', now()->subMonth())->count();
 
+        $usersPercentageChange = 0;
+        if ($lastMonthUsers > 0) {
+            $usersPercentageChange = (($currentMonthUsers - $lastMonthUsers) / $lastMonthUsers) * 100;
+        } elseif ($currentMonthUsers > 0) {
+            $usersPercentageChange = 100;
+        }
 
-        return view('admin.users', compact('users', 'activeUsers', 'filter'));
+        $verifiedPercentage = $users->total() > 0
+            ? ($users->whereNotNull('email_verified_at')->count() / $users->total()) * 100
+            : 0;
+
+        return view('admin.users', compact(
+            'users',
+            'activeUsers',
+            'filter',
+            'usersPercentageChange' // Add this to the compact function
+        ));
     }
 
-    // Helper method to get active users statistics
     protected function getActiveUsersStats()
     {
         return cache()->remember('active_users_stats', now()->addMinutes(1), function () {
