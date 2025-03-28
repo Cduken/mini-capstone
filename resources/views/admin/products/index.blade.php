@@ -180,227 +180,237 @@
 
     <!-- Add Product Modal -->
     <div id="add-product-modal"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg transform transition-all duration-300 scale-95 opacity-0"
-            id="add-product-modal-content">
-            <!-- Modal Header -->
-            <div
-                class="border-b border-gray-200 px-6 py-4 flex items-center justify-between bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-2xl">
-                <div class="flex items-center space-x-3">
-                    <div class="p-2 bg-white bg-opacity-20 rounded-lg">
-                        <i class='bx bx-package text-white text-xl'></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white">Add New Product</h3>
+     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden transition-opacity duration-300">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg transform transition-all duration-300 scale-95 opacity-0"
+         id="add-product-modal-content">
+        <!-- Modal Header -->
+        <div class="border-b border-gray-200 px-6 py-4 flex items-center justify-between bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-2xl">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-white bg-opacity-20 rounded-lg">
+                    <i class='bx bx-package text-white text-xl'></i>
                 </div>
-                <button onclick="closeModal('add-product-modal')"
+                <h3 class="text-xl font-bold text-white">Add New Product</h3>
+            </div>
+            <button onclick="closeModal('add-product-modal')"
                     class="text-white hover:text-gray-200 transition-colors">
-                    <i class='bx bx-x text-2xl'></i>
-                </button>
-            </div>
+                <i class='bx bx-x text-2xl'></i>
+            </button>
+        </div>
 
-            <!-- Modal Body -->
-            <div class="p-6">
-                <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
-                    @csrf
+        <!-- Modal Body -->
+        <div class="p-6">
+            <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" id="add-product-form">
+                @csrf
 
-                    <div class="space-y-5">
-                        <!-- Product Name -->
-                        <div>
-                            <label for="title"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-rename mr-2 text-blue-500'></i> Product Name
-                            </label>
-                            <div class="relative">
-                                <input type="text" name="title" id="title" value="{{ old('title') }}"
-                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                                    placeholder="Enter product name">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class='bx bx-text text-gray-400'></i>
-                                </div>
+                <div class="space-y-5">
+                    <!-- Product Name -->
+                    <div>
+                        <label for="title"
+                               class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                            <i class='bx bx-rename mr-2 text-blue-500'></i> Product Name
+                        </label>
+                        <div class="relative">
+                            <input type="text" name="title" id="title" value="{{ old('title') }}"
+                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                   placeholder="Enter product name">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class='bx bx-text text-gray-400'></i>
                             </div>
-                            @error('title')
-                                <p class="mt-2 text-sm text-red-600 flex items-center">
-                                    <i class='bx bx-error-circle mr-1'></i> {{ $message }}
-                                </p>
-                            @enderror
                         </div>
+                        @error('title')
+                            <p class="mt-2 text-sm text-red-600 flex items-center">
+                                <i class='bx bx-error-circle mr-1'></i> {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
 
-                        <!-- Category -->
-                        <div>
-                            <label for="category"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-category mr-2 text-blue-500'></i> Category
-                            </label>
-                            <div class="relative">
-                                <select name="category" id="category"
+                    <!-- Category -->
+                    <div>
+                        <label for="category"
+                               class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                            <i class='bx bx-category mr-2 text-blue-500'></i> Category
+                        </label>
+                        <div class="relative">
+                            <select name="category" id="category"
                                     class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white">
-                                    <option value="">Select a category</option>
-                                    <option value="Phone" {{ old('category') == 'Phone' ? 'selected' : '' }}>Phone
-                                    </option>
-                                    <option value="Tablet" {{ old('category') == 'Tablet' ? 'selected' : '' }}>Tablet
-                                    </option>
-                                    <option value="Laptop" {{ old('category') == 'Laptop' ? 'selected' : '' }}>Laptop
-                                    </option>
-                                    <option value="Watch" {{ old('category') == 'Watch' ? 'selected' : '' }}>Watch
-                                    </option>
-                                </select>
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class='bx bx-category text-gray-400'></i>
-                                </div>
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <i class='bx bx-chevron-down text-gray-400'></i>
-                                </div>
+                                <option value="">Select a category</option>
+                                <option value="Phone" {{ old('category') == 'Phone' ? 'selected' : '' }}>Phone</option>
+                                <option value="Tablet" {{ old('category') == 'Tablet' ? 'selected' : '' }}>Tablet</option>
+                                <option value="Laptop" {{ old('category') == 'Laptop' ? 'selected' : '' }}>Laptop</option>
+                                <option value="Watch" {{ old('category') == 'Watch' ? 'selected' : '' }}>Watch</option>
+                                <option value="Accessories" {{ old('category') == 'Accessories' ? 'selected' : '' }}>Accessories</option>
+                                <option value="Airpods" {{ old('category') == 'Airpods' ? 'selected' : '' }}>Airpods</option>
+                                <option value="Desktop" {{ old('category') == 'Desktop' ? 'selected' : '' }}>Desktop</option>
+                            </select>
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class='bx bx-category text-gray-400'></i>
                             </div>
-                            @error('category')
-                                <p class="mt-2 text-sm text-red-600 flex items-center">
-                                    <i class='bx bx-error-circle mr-1'></i> {{ $message }}
-                                </p>
-                            @enderror
-                        </div>
-
-                        <!-- Price -->
-                        <div>
-                            <label for="price"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-dollar mr-2 text-blue-500'></i> Price
-                            </label>
-                            <div class="relative">
-                                <input type="text" name="price" id="price" value="{{ old('price') }}"
-                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="0.00">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500">$</span>
-                                </div>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <i class='bx bx-chevron-down text-gray-400'></i>
                             </div>
-                            @error('price')
-                                <p class="mt-2 text-sm text-red-600 flex items-center">
-                                    <i class='bx bx-error-circle mr-1'></i> {{ $message }}
-                                </p>
-                            @enderror
                         </div>
-
-                        <!-- Image Upload -->
-                        <div>
-                            <label for="image"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-image mr-2 text-blue-500'></i> Product Image
-                            </label>
-                            <div
-                                class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl">
-                                <div class="space-y-1 text-center">
-                                    <div class="flex text-sm text-gray-600 justify-center">
-                                        <label for="image"
-                                            class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
-                                            <span>Upload a file</span>
-                                            <input id="image" name="image" type="file" class="sr-only">
-                                        </label>
-                                        <p class="pl-1">or drag and drop</p>
-                                    </div>
-                                    <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
-                                </div>
-                            </div>
-                            @error('image')
-                                <p class="mt-2 text-sm text-red-600 flex items-center">
-                                    <i class='bx bx-error-circle mr-1'></i> {{ $message }}
-                                </p>
-                            @enderror
-                        </div>
-
-                        <!-- Stock Status -->
-                        <div>
-                            <label for="inStock"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-check-shield mr-2 text-blue-500'></i> Stock Status
-                            </label>
-                            <div class="grid grid-cols-2 gap-4">
-                                <label
-                                    class="flex items-center space-x-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50
-                                    {{ old('inStock') == '1' ? 'border-blue-500 bg-blue-50' : 'border-gray-300' }}">
-                                    <input type="radio" name="inStock" value="1"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500"
-                                        {{ old('inStock') == '1' ? 'checked' : '' }}>
-                                    <div>
-                                        <span class="block text-sm font-medium text-gray-700">In Stock</span>
-                                        <span class="block text-xs text-gray-500">Available for purchase</span>
-                                    </div>
-                                    <i class='bx bx-check-circle text-xl ml-auto text-green-500'></i>
-                                </label>
-                                <label
-                                    class="flex items-center space-x-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50
-                                    {{ old('inStock') == '0' ? 'border-blue-500 bg-blue-50' : 'border-gray-300' }}">
-                                    <input type="radio" name="inStock" value="0"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500"
-                                        {{ old('inStock') == '0' ? 'checked' : '' }}>
-                                    <div>
-                                        <span class="block text-sm font-medium text-gray-700">Out of Stock</span>
-                                        <span class="block text-xs text-gray-500">Not available</span>
-                                    </div>
-                                    <i class='bx bx-x-circle text-xl ml-auto text-red-500'></i>
-                                </label>
-                            </div>
-                            @error('inStock')
-                                <p class="mt-2 text-sm text-red-600 flex items-center">
-                                    <i class='bx bx-error-circle mr-1'></i> {{ $message }}
-                                </p>
-                            @enderror
-                        </div>
+                        @error('category')
+                            <p class="mt-2 text-sm text-red-600 flex items-center">
+                                <i class='bx bx-error-circle mr-1'></i> {{ $message }}
+                            </p>
+                        @enderror
                     </div>
 
-                    <!-- Modal Footer -->
-                    <div class="mt-8 flex justify-end space-x-3">
-                        <button type="button" onclick="closeModal('add-product-modal')"
+                    <!-- Price -->
+                    <div>
+                        <label for="price"
+                               class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                            <i class='bx bx-dollar mr-2 text-blue-500'></i> Price
+                        </label>
+                        <div class="relative">
+                            <input type="text" name="price" id="price" value="{{ old('price') }}"
+                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                   placeholder="0.00">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <span class="text-gray-500">$</span>
+                            </div>
+                        </div>
+                        @error('price')
+                            <p class="mt-2 text-sm text-red-600 flex items-center">
+                                <i class='bx bx-error-circle mr-1'></i> {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div>
+                        <label for="image"
+                               class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                            <i class='bx bx-image mr-2 text-blue-500'></i> Product Image
+                        </label>
+                        <div class="flex items-center gap-4">
+                            <!-- Image Preview Container (initially hidden) -->
+                            <div id="image-preview-container"
+                                 class="hidden flex-shrink-0 h-48 w-48 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
+                                <img id="image-preview" src="" alt="Preview"
+                                     class="h-full w-full object-cover">
+                            </div>
+
+                            <!-- Upload Box -->
+                            <div class="flex-1">
+                                <div class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl">
+                                    <div class="space-y-1 text-center">
+                                        <div class="flex text-sm text-gray-600 justify-center">
+                                            <label for="image" id="image-upload-label"
+                                                   class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                                <span id="image-upload-text">Upload a file</span>
+                                                <input id="image" name="image" type="file"
+                                                       class="sr-only" accept="image/*">
+                                            </label>
+                                            <p class="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @error('image')
+                            <p class="mt-2 text-sm text-red-600 flex items-center">
+                                <i class='bx bx-error-circle mr-1'></i> {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <!-- Stock Status -->
+                    <div>
+                        <label for="inStock"
+                               class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                            <i class='bx bx-check-shield mr-2 text-blue-500'></i> Stock Status
+                        </label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label
+                                class="flex items-center space-x-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50
+                                {{ old('inStock') == '1' ? 'border-blue-500 bg-blue-50' : 'border-gray-300' }}">
+                                <input type="radio" name="inStock" value="1"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                                       {{ old('inStock') == '1' ? 'checked' : '' }}>
+                                <div>
+                                    <span class="block text-sm font-medium text-gray-700">In Stock</span>
+                                    <span class="block text-xs text-gray-500">Available for purchase</span>
+                                </div>
+                                <i class='bx bx-check-circle text-xl ml-auto text-green-500'></i>
+                            </label>
+                            <label
+                                class="flex items-center space-x-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50
+                                {{ old('inStock') == '0' ? 'border-blue-500 bg-blue-50' : 'border-gray-300' }}">
+                                <input type="radio" name="inStock" value="0"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500"
+                                       {{ old('inStock') == '0' ? 'checked' : '' }}>
+                                <div>
+                                    <span class="block text-sm font-medium text-gray-700">Out of Stock</span>
+                                    <span class="block text-xs text-gray-500">Not available</span>
+                                </div>
+                                <i class='bx bx-x-circle text-xl ml-auto text-red-500'></i>
+                            </label>
+                        </div>
+                        @error('inStock')
+                            <p class="mt-2 text-sm text-red-600 flex items-center">
+                                <i class='bx bx-error-circle mr-1'></i> {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" onclick="closeModal('add-product-modal')"
                             class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors flex items-center">
-                            <i class='bx bx-x mr-2'></i> Cancel
-                        </button>
-                        <button type="submit"
+                        <i class='bx bx-x mr-2'></i> Cancel
+                    </button>
+                    <button type="submit"
                             class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-colors shadow-sm flex items-center">
-                            <i class='bx bx-save mr-2'></i> Add Product
-                        </button>
-                    </div>
-                </form>
-            </div>
+                        <i class='bx bx-save mr-2'></i> Add Product
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
     <!-- Edit Product Modal -->
     <div id="edit-product-modal"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg transform transition-all duration-300 scale-95 opacity-0"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md transform transition-all duration-300"
             id="edit-product-modal-content">
-            <!-- Modal Header -->
+            <!-- Modal Header (compact like add modal) -->
             <div
-                class="border-b border-gray-200 px-6 py-4 flex items-center justify-between bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-2xl">
-                <div class="flex items-center space-x-3">
-                    <div class="p-2 bg-white bg-opacity-20 rounded-lg">
-                        <i class='bx bx-edit text-white text-xl'></i>
+                class="border-b border-gray-200 px-5 py-3 flex items-center justify-between bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-xl">
+                <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-white bg-opacity-20 rounded-lg">
+                        <i class='bx bx-edit text-white text-lg'></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white">Edit Product</h3>
+                    <h3 class="text-lg font-bold text-white">Edit Product</h3>
                 </div>
                 <button onclick="closeModal('edit-product-modal')"
                     class="text-white hover:text-gray-200 transition-colors">
-                    <i class='bx bx-x text-2xl'></i>
+                    <i class='bx bx-x text-xl'></i>
                 </button>
             </div>
 
-            <!-- Modal Body -->
-            <div class="p-6">
+            <!-- Modal Body (compact like add modal) -->
+            <div class="p-4">
                 <form id="edit-product-form" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
-                    <div class="space-y-5">
+                    <div class="space-y-4">
                         <!-- Product Name -->
                         <div>
                             <label for="edit-title"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-rename mr-2 text-blue-500'></i> Product Name
+                                class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                                <i class='bx bx-rename mr-2 text-blue-500 text-sm'></i> Product Name
                             </label>
                             <div class="relative">
                                 <input type="text" name="title" id="edit-title"
-                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                    class="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
                                     placeholder="Enter product name">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class='bx bx-text text-gray-400'></i>
+                                <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                                    <i class='bx bx-text text-gray-400 text-sm'></i>
                                 </div>
                             </div>
                         </div>
@@ -408,22 +418,27 @@
                         <!-- Category -->
                         <div>
                             <label for="edit-category"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-category mr-2 text-blue-500'></i> Category
+                                class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                                <i class='bx bx-category mr-2 text-blue-500 text-sm'></i> Category
                             </label>
                             <div class="relative">
                                 <select name="category" id="edit-category"
-                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white">
+                                    class="w-full pl-8 pr-8 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white">
+                                    <option value="">Select a category</option>
                                     <option value="Phone">Phone</option>
                                     <option value="Tablet">Tablet</option>
                                     <option value="Laptop">Laptop</option>
                                     <option value="Watch">Watch</option>
+                                    <option value="Airpods">Airpods</option>
+                                    <option value="Desktop">Desktop</option>
+                                    <option value="Camera">Camera</option>
+                                    <option value="Accessories">Accessories</option>
                                 </select>
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class='bx bx-category text-gray-400'></i>
+                                <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                                    <i class='bx bx-category text-gray-400 text-sm'></i>
                                 </div>
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <i class='bx bx-chevron-down text-gray-400'></i>
+                                <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
+                                    <i class='bx bx-chevron-down text-gray-400 text-sm'></i>
                                 </div>
                             </div>
                         </div>
@@ -431,40 +446,40 @@
                         <!-- Price -->
                         <div>
                             <label for="edit-price"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-dollar mr-2 text-blue-500'></i> Price
+                                class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                                <i class='bx bx-dollar mr-2 text-blue-500 text-sm'></i> Price
                             </label>
                             <div class="relative">
                                 <input type="text" name="price" id="edit-price"
-                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    class="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                                     placeholder="0.00">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500">$</span>
+                                <div class="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 text-sm">$</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Image Upload -->
+                        <!-- Image Upload (compact version) -->
                         <div>
                             <label for="edit-image"
-                                class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-image mr-2 text-blue-500'></i> Product Image
+                                class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                                <i class='bx bx-image mr-2 text-blue-500 text-sm'></i> Product Image
                             </label>
-                            <div class="flex items-center space-x-4">
-                                <div class="flex-shrink-0 h-16 w-16 rounded-lg overflow-hidden border border-gray-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 h-12 w-12 rounded-lg overflow-hidden border border-gray-200">
                                     <img id="edit-current-image" src="" alt="Current product image"
                                         class="h-full w-full object-cover">
                                 </div>
                                 <div class="flex-1">
                                     <div
-                                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl">
+                                        class="flex justify-center px-4 pt-3 pb-3 border-2 border-gray-300 border-dashed rounded-lg">
                                         <div class="space-y-1 text-center">
-                                            <div class="flex text-sm text-gray-600 justify-center">
+                                            <div class="flex text-xs text-gray-600 justify-center">
                                                 <label for="edit-image"
-                                                    class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                                    class="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500">
                                                     <span>Change image</span>
                                                     <input id="edit-image" name="image" type="file"
-                                                        class="sr-only">
+                                                        class="sr-only" accept="image/*">
                                                 </label>
                                             </div>
                                             <p class="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
@@ -473,48 +488,45 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Stock Status -->
+                        <!-- Stock Status (compact version) -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
-                                <i class='bx bx-check-shield mr-2 text-blue-500'></i> Stock Status
+                            <label class="block text-sm font-medium text-gray-700 mb-1 flex items-center">
+                                <i class='bx bx-check-shield mr-2 text-blue-500 text-sm'></i> Stock Status
                             </label>
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-2 gap-2">
                                 <label
-                                    class="flex items-center space-x-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50"
+                                    class="flex items-center space-x-2 p-2 border rounded-lg cursor-pointer hover:bg-gray-50 border-gray-300"
                                     id="edit-inStock-true">
                                     <input type="radio" name="inStock" value="1"
                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500">
                                     <div>
-                                        <span class="block text-sm font-medium text-gray-700">In Stock</span>
-                                        <span class="block text-xs text-gray-500">Available for purchase</span>
+                                        <span class="block text-xs font-medium text-gray-700">In Stock</span>
                                     </div>
-                                    <i class='bx bx-check-circle text-xl ml-auto text-green-500'></i>
+                                    <i class='bx bx-check-circle text-lg ml-auto text-green-500'></i>
                                 </label>
                                 <label
-                                    class="flex items-center space-x-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50"
+                                    class="flex items-center space-x-2 p-2 border rounded-lg cursor-pointer hover:bg-gray-50 border-gray-300"
                                     id="edit-inStock-false">
                                     <input type="radio" name="inStock" value="0"
                                         class="h-4 w-4 text-blue-600 focus:ring-blue-500">
                                     <div>
-                                        <span class="block text-sm font-medium text-gray-700">Out of Stock</span>
-                                        <span class="block text-xs text-gray-500">Not available</span>
+                                        <span class="block text-xs font-medium text-gray-700">Out of Stock</span>
                                     </div>
-                                    <i class='bx bx-x-circle text-xl ml-auto text-red-500'></i>
+                                    <i class='bx bx-x-circle text-lg ml-auto text-red-500'></i>
                                 </label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Modal Footer -->
-                    <div class="mt-8 flex justify-end space-x-3">
+                    <!-- Modal Footer (compact like add modal) -->
+                    <div class="mt-4 flex justify-end space-x-2">
                         <button type="button" onclick="closeModal('edit-product-modal')"
-                            class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors flex items-center">
-                            <i class='bx bx-x mr-2'></i> Cancel
+                            class="px-4 py-2 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center">
+                            <i class='bx bx-x mr-1'></i> Cancel
                         </button>
                         <button type="submit"
-                            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-colors shadow-sm flex items-center">
-                            <i class='bx bx-save mr-2'></i> Update Product
+                            class="px-4 py-2 text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-colors shadow-sm flex items-center">
+                            <i class='bx bx-save mr-1'></i> Update Product
                         </button>
                     </div>
                 </form>
@@ -523,6 +535,28 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image');
+    const previewContainer = document.getElementById('image-preview-container');
+    const imagePreview = document.getElementById('image-preview');
+
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                previewContainer.classList.remove('hidden');
+                imagePreview.src = event.target.result;
+            }
+
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.classList.add('hidden');
+            imagePreview.src = '';
+        }
+    });
+});
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             const content = document.getElementById(`${modalId}-content`);
@@ -569,8 +603,9 @@
                         document.querySelector('#edit-inStock-false').classList.add('border-blue-500', 'bg-blue-50');
                     }
 
-                    // Set current image
-                    document.getElementById('edit-current-image').src = data.image;
+                    // Set current image - make sure this uses the full URL if needed
+                    const imageUrl = data.image.startsWith('http') ? data.image : `/${data.image}`;
+                    document.getElementById('edit-current-image').src = imageUrl;
 
                     // Update form action
                     document.getElementById('edit-product-form').action = `/admin/products/${productId}/update`;
@@ -611,6 +646,51 @@
                 }
             }, 500));
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle image preview for add modal
+            const addImageInput = document.getElementById('image');
+            if (addImageInput) {
+                addImageInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            // Create a preview container if it doesn't exist
+                            let previewContainer = document.querySelector(
+                                '#add-product-modal .image-preview');
+                            if (!previewContainer) {
+                                previewContainer = document.createElement('div');
+                                previewContainer.className =
+                                    'image-preview flex-shrink-0 h-12 w-12 rounded-lg overflow-hidden border border-gray-200 ml-3';
+                                const uploadContainer = document.querySelector(
+                                    '#add-product-modal .border-dashed');
+                                uploadContainer.parentNode.insertBefore(previewContainer,
+                                    uploadContainer);
+                            }
+                            previewContainer.innerHTML =
+                                `<img src="${event.target.result}" class="h-full w-full object-cover">`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Handle image preview for edit modal
+            const editImageInput = document.getElementById('edit-image');
+            if (editImageInput) {
+                editImageInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            document.getElementById('edit-current-image').src = event.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
     </script>
 
     <style>

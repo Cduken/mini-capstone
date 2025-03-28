@@ -5,7 +5,7 @@
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <!-- Breadcrumb Navigation -->
                 <nav class="px-6 pt-6 flex items-center text-sm text-gray-600">
-                    <a href="{{ route('home') }}" class="hover:text-gray-900 transition-colors">Home</a>
+                    <a href="{{ route('home') }}" class="hover:text-gray-900 transition-colors text-sm"> <i class='bx bx-home mr-2'></i>Home</a>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -15,7 +15,7 @@
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
-                    <span class="text-gray-900 font-medium">{{ $product->title }}</span>
+                    <span class="text-blue-700 font-medium">{{ $product->title }}</span>
                 </nav>
 
                 <!-- Product Content -->

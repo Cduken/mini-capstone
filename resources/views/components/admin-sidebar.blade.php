@@ -58,6 +58,9 @@
                                     <option value="Tablet" {{ old('category') == 'Tablet' ? 'selected' : '' }}>Tablet</option>
                                     <option value="Laptop" {{ old('category') == 'Laptop' ? 'selected' : '' }}>Laptop</option>
                                     <option value="Watch" {{ old('category') == 'Watch' ? 'selected' : '' }}>Watch</option>
+                                    <option value="Airpods" {{ old('category') == 'Airpods' ? 'selected' : '' }}>Airpods</option>
+                                    <option value="Desktop" {{ old('category') == 'Desktop' ? 'selected' : '' }}>Desktop</option>
+                                    <option value="Camera" {{ old('category') == 'Camera' ? 'selected' : '' }}>Camera</option>
                                     <option value="Accessories" {{ old('category') == 'Accessories' ? 'selected' : '' }}>Accessories</option>
 
                                 </select>

@@ -213,7 +213,7 @@
                         <div class="mt-8 flex flex-col-reverse sm:flex-row justify-between gap-4">
                             <a href="{{ url()->previous() }}"
                                 class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center">
-                                <i class='bx bx-chevron-left mr-2'></i> Back to Shipping
+                                <i class='bx bx-chevron-left mr-2'></i> Back to Cart
                             </a>
                             <button type="submit" form="cardForm" id="submitButton"
                                 class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md flex items-center justify-center">
@@ -295,7 +295,8 @@
     <!-- Success Modal (hidden by default) -->
     <div id="successModal"
         class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-md h-auto max-h-[100vh] flex flex-col">
+        <div
+            class="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-md h-auto max-h-[100vh] flex flex-col">
             <!-- Modal Header -->
             <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-center relative">
                 <div class="absolute top-2 left-1/2 transform -translate-x-1/2">
@@ -356,9 +357,9 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons - Compact Layout -->
+
                 <div class="mt-4 space-y-2">
-                    <a href="{{ route('home') }}"
+                    <a href="{{ route('products.index') }}"
                         class="block px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors text-center text-sm font-medium">
                         Continue Shopping
                     </a>
@@ -389,9 +390,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // ... (keep your existing initialization code)
 
-            // Form submission handler for all payment methods
+
             const forms = document.querySelectorAll('.payment-method');
             forms.forEach(form => {
                 form.addEventListener('submit', async function(e) {
@@ -402,12 +402,14 @@
                     const originalButtonText = submitButton.innerHTML;
 
                     try {
-                        // Show loading state
+
                         submitButton.disabled = true;
                         submitButton.innerHTML =
                             `<i class='bx bx-loader-alt animate-spin mr-2'></i> Processing...`;
 
-                        // Submit the form via AJAX
+                        await new Promise(resolve => setTimeout(resolve, 3000));
+
+
                         const response = await fetch(this.action, {
                             method: 'POST',
                             body: formData,

@@ -33,8 +33,7 @@
                             <button class="text-sm text-indigo-600 hover:text-indigo-800">Reset All</button>
                         </div>
 
-                        <!-- Search Filter -->
-                        <!-- Search Filter -->
+
                         <div class="mb-6">
                             <form method="GET" action="{{ route('products.index') }}">
                                 <div class="relative">
@@ -56,45 +55,7 @@
                             </form>
                         </div>
 
-                        <!-- Category Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-semibold text-gray-800 mb-3 flex items-center justify-between">
-                                <span>Categories</span>
-                                <i class='bx bx-chevron-down text-gray-500'></i>
-                            </h4>
-                            <ul class="space-y-2">
-                                <li>
-                                    <label
-                                        class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                        <input type="checkbox"
-                                            class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                        <span class="text-gray-700">Smartphones</span>
-                                        <span class="ml-auto text-gray-400 text-sm">(128)</span>
-                                    </label>
-                                </li>
-                                <li>
-                                    <label
-                                        class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                        <input type="checkbox"
-                                            class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                        <span class="text-gray-700">Laptops</span>
-                                        <span class="ml-auto text-gray-400 text-sm">(86)</span>
-                                    </label>
-                                </li>
-                                <li>
-                                    <label
-                                        class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                        <input type="checkbox"
-                                            class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                        <span class="text-gray-700">Accessories</span>
-                                        <span class="ml-auto text-gray-400 text-sm">(64)</span>
-                                    </label>
-                                </li>
-                            </ul>
-                        </div>
 
-                        <!-- Price Range Filter -->
-                        <!-- Price Range Filter -->
                         <div class="mb-6">
                             <h4 class="font-semibold text-gray-800 mb-4">Price Range</h4>
                             <div class="px-2">

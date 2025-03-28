@@ -104,7 +104,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
     Route::get('/admin/orders/{order}', [OrderController::class, 'show'])
         ->name('admin.orders.show')
-        ->middleware('auth'); // Or your admin middleware
+        ->middleware('auth');
+
+
 });
 
 require __DIR__ . '/auth.php';

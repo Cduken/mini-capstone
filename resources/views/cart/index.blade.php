@@ -223,7 +223,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit"
+                                <button type="submit" id="checkout-button"
                                     class="mt-6 w-full bg-gradient-to-r from-gray-700 to-gray-900 text-white py-3 rounded-lg font-bold hover:from-gray-800 hover:to-gray-900 transition-all shadow-md flex items-center justify-center">
                                     <i class='bx bx-lock-alt mr-2'></i> Proceed to Checkout
                                 </button>
@@ -336,6 +336,45 @@
                 document.querySelector('.shipping-amount').textContent = `$${data.shipping}`;
                 document.querySelector('.total-amount').textContent = `$${data.total}`;
             }
+        });
+
+        // Update your script section
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.innerHTML;
+
+            // Show loading state
+            submitButton.innerHTML = '<i class="bx bx-loader bx-spin mr-2"></i> Processing...';
+            submitButton.disabled = true;
+
+            fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (data.errors) {
+                        // Handle validation errors
+                        alert('Please check your form for errors');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred during checkout');
+                })
+                .finally(() => {
+                    submitButton.innerHTML = originalButtonText;
+                    submitButton.disabled = false;
+                });
         });
     </script>
 </x-app-layout>

@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
@@ -16,7 +17,7 @@ class AdminDashboardController extends Controller
         $totalProducts = Product::count();
         $totalOrders = Order::count();
         $totalUsers = User::count();
-        $recentOrders = Order::latest()->paginate(10);
+        $recentOrders = Order::latest()->paginate(5);
         $averageOrderValue = Order::avg('total') ?? 0;
         $conversionRate = $totalUsers > 0 ? ($totalOrders / $totalUsers) * 100 : 0;
         $newUsersCount = User::where('created_at', '>=', Carbon::now()->subMinutes(30))->count();
@@ -105,5 +106,20 @@ class AdminDashboardController extends Controller
             return (($current - $previous) / $previous) * 100;
         }
         return $current > 0 ? 100 : 0;
+    }
+
+    public function showCustomerOrder(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('admin.', [
+            'order' => $order,
+            'subtotal' => $order->subtotal,
+            'shipping' => $order->shipping,
+            'tax' => $order->tax,
+            'total' => $order->total
+        ]);
     }
 }

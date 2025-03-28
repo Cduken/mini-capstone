@@ -470,7 +470,7 @@
                 }, 10);
             }
 
-            // Hide modal with animation
+
             function hideModal() {
                 modal.classList.add('opacity-0');
                 setTimeout(() => {
@@ -478,7 +478,7 @@
                 }, 300);
             }
 
-            // Show modal when any show button is clicked
+
             document.querySelectorAll('[data-order-id]').forEach(button => {
                 button.addEventListener('click', async function() {
                     const orderId = this.getAttribute('data-order-id');
@@ -488,7 +488,7 @@
 
             async function fetchOrderDetails(orderId) {
                 try {
-                    // Show loading state
+
                     document.getElementById('modalOrderId').textContent = 'Loading...';
 
                     const response = await fetch(`/admin/orders/${orderId}`, {
@@ -595,6 +595,8 @@
                     hideModal();
                 }
             });
+
+
 
             // Print order handler - Matches modal design exactly
             printOrderBtn.addEventListener('click', () => {

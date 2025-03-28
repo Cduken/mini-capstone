@@ -161,9 +161,9 @@
                 </div>
             </div>
 
-            <!-- Users Table Container -->
+
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <!-- Table Header with Filters -->
+
                 <div
                     class="px-4 py-[14px] border-b border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-50">
                     <div class="flex items-center gap-3">

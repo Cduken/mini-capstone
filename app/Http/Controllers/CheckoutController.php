@@ -38,13 +38,24 @@ class CheckoutController extends Controller
 
     public function showPaymentPage()
     {
+        // Get cart items from session or fall back to database
+        $cartItems = Session::get('cartItems', function () {
+            return Cart::with('product')
+                ->where('user_id', Auth::id())
+                ->get();
+        });
+
+        // If still no cart items, redirect back with error
+        if (!$cartItems || $cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty');
+        }
+
         $address = Session::get('address');
         $city = Session::get('city');
         $zip_code = Session::get('zip_code');
         $country = Session::get('country');
         $state = Session::get('state');
         $shippingMethod = Session::get('shipping_method');
-        $cartItems = Session::get('cartItems');
 
         // Calculate the subtotal, tax, shipping, and total
         $subtotal = $cartItems->sum(function ($item) {
@@ -54,7 +65,19 @@ class CheckoutController extends Controller
         $shipping = 10.00; // Example flat shipping rate
         $total = $subtotal + $tax + $shipping;
 
-        return view('payment', compact('address', 'city', 'zip_code', 'country', 'state', 'shippingMethod', 'cartItems', 'subtotal', 'tax', 'shipping', 'total'));
+        return view('payment', compact(
+            'address',
+            'city',
+            'zip_code',
+            'country',
+            'state',
+            'shippingMethod',
+            'cartItems',
+            'subtotal',
+            'tax',
+            'shipping',
+            'total'
+        ));
     }
 
     public function processPayment(Request $request)

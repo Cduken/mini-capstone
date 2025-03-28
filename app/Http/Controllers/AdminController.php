@@ -63,7 +63,7 @@ class AdminController extends Controller
     protected function getActiveUsersStats()
     {
         return cache()->remember('active_users_stats', now()->addMinutes(1), function () {
-            $activeToday = User::where('last_login_at', '>=', Carbon::now()->subDay())->count();
+            $activeToday = User::where('last_login_at', '>=', Carbon::now()->subDay(1))->count();
             $activeYesterday = User::whereBetween('last_login_at', [
                 Carbon::now()->subDays(2),
                 Carbon::now()->subDay()
