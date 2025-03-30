@@ -1,5 +1,5 @@
 <?php
-// filepath: c:\Users\Cduken\Desktop\2nd Sem\Mini Capstone\mini capstone pure laravel\mini-capstone\app\Http\Controllers\AdminController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -8,18 +8,18 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    // app/Http/Controllers/AdminController.php
-
-    public function index()
+    public function index(Request $request)
     {
-        $search = request('search');
-        $filter = request('filter', 'all');
+        $search = $request->search;
+        $filter = $request->filter ?? 'all';
 
         $query = User::query();
 
         if ($search) {
-            $query->where('name', 'like', '%' . $search . '%')
-                ->orWhere('email', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
         }
 
         switch ($filter) {
@@ -37,7 +37,29 @@ class AdminController extends Controller
         $users = $query->orderBy('created_at', 'desc')->paginate(4);
         $activeUsers = $this->getActiveUsersStats();
 
-        // Add these calculations for the users percentage change
+        // Calculate statistics
+        $stats = $this->calculateStatistics($users);
+
+        // For AJAX requests, return JSON with both cards and table
+        if ($request->ajax()) {
+            return response()->json([
+                'cards' => view('admin.partials.user_stats_cards_inner', array_merge(
+                    ['users' => $users],
+                    $stats
+                ))->render(),
+                'table' => view('admin.partials.users_table', ['users' => $users])->render()
+            ]);
+        }
+
+        return view('admin.users', array_merge(
+            ['users' => $users, 'filter' => $filter],
+            $stats
+        ));
+    }
+
+    protected function calculateStatistics($users)
+    {
+        // Calculate users percentage change
         $currentMonthUsers = User::whereMonth('created_at', now())->count();
         $lastMonthUsers = User::whereMonth('created_at', now()->subMonth())->count();
 
@@ -52,12 +74,14 @@ class AdminController extends Controller
             ? ($users->whereNotNull('email_verified_at')->count() / $users->total()) * 100
             : 0;
 
-        return view('admin.users', compact(
-            'users',
-            'activeUsers',
-            'filter',
-            'usersPercentageChange' // Add this to the compact function
-        ));
+        $adminCount = $users->where('userType', 'admin')->count();
+
+        return [
+            'activeUsers' => $this->getActiveUsersStats(),
+            'usersPercentageChange' => $usersPercentageChange,
+            'verifiedPercentage' => $verifiedPercentage,
+            'adminCount' => $adminCount
+        ];
     }
 
     protected function getActiveUsersStats()

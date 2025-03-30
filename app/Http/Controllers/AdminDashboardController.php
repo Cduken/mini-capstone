@@ -11,23 +11,32 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-
+        // Dashboard statistics
         $totalProducts = Product::count();
         $totalOrders = Order::count();
         $totalUsers = User::count();
         $recentOrders = Order::latest()->paginate(5);
+        $recentUsers = User::latest()->paginate(5);
+
+        // For AJAX requests (users table pagination)
+        if ($request->ajax()) {
+            if ($request->has('users_page')) {
+                return view('admin.partials.users_table', ['users' => $recentUsers]);
+            }
+            return view('admin.partials.orders_table', ['recentOrders' => $recentOrders]);
+        }
+
+        // Calculate statistics
         $averageOrderValue = Order::avg('total') ?? 0;
         $conversionRate = $totalUsers > 0 ? ($totalOrders / $totalUsers) * 100 : 0;
         $newUsersCount = User::where('created_at', '>=', Carbon::now()->subMinutes(30))->count();
         $pendingOrdersCount = Order::where('status', 'pending')->count();
 
-
         $productsPercentageChange = $this->calculateMonthlyPercentageChange(Product::class, 'created_at');
         $ordersPercentageChange = $this->calculateMonthlyPercentageChange(Order::class, 'created_at');
         $usersPercentageChange = $this->calculateMonthlyPercentageChange(User::class, 'created_at');
-
 
         $avgOrderPercentageChange = $this->calculateAvgOrderPercentageChange();
         $conversionPercentageChange = $this->calculateConversionPercentageChange();
@@ -39,6 +48,7 @@ class AdminDashboardController extends Controller
             'totalOrders',
             'totalUsers',
             'recentOrders',
+            'recentUsers',
             'averageOrderValue',
             'conversionRate',
             'newUsersCount',
@@ -114,7 +124,7 @@ class AdminDashboardController extends Controller
             abort(403);
         }
 
-        return view('admin.', [
+        return view('admin.order-details', [
             'order' => $order,
             'subtotal' => $order->subtotal,
             'shipping' => $order->shipping,

@@ -1,9 +1,9 @@
 <x-app-layout>
     <div class="flex min-h-screen bg-gray-50">
-        <!-- Sidebar -->
+
         <x-admin-sidebar />
 
-        <!-- Main Content -->
+
         <div class="flex-1 p-4">
             <!-- Header -->
             <div class="flex justify-between items-center mb-4">
@@ -129,111 +129,8 @@
                                 <p class="text-gray-500">No recent orders found</p>
                             </div>
                         @else
-                            <div class="overflow-y-auto max-h-[350px]">
-                                <table class="w-full" id="orders-table">
-                                    <thead class="bg-gray-50 text-gray-600 text-left text-sm">
-                                        <tr>
-                                            <th class="py-3 px-5 font-medium">Order</th>
-                                            <th class="py-3 px-5 font-medium">Customer</th>
-                                            <th class="py-3 px-5 font-medium">Total</th>
-                                            <th class="py-3 px-5 font-medium">Status</th>
-                                            <th class="py-3 px-5 font-medium">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-100">
-                                        @foreach ($recentOrders as $order)
-                                            <tr class="hover:bg-gray-50 transition-colors">
-                                                <td class="py-4 px-5">
-                                                    <div class="font-medium text-gray-800">#{{ $order->id }}</div>
-                                                    <div class="text-xs text-gray-500">
-                                                        {{ $order->created_at->format('M d, Y') }}</div>
-                                                </td>
-                                                <td class="py-4 px-5">
-                                                    <div class="font-medium">{{ $order->name }}</div>
-                                                    <div class="text-xs text-gray-500">{{ $order->email }}</div>
-                                                </td>
-                                                <td class="py-4 px-5 font-medium">
-                                                    ${{ number_format($order->total, 2) }}
-                                                </td>
-                                                <td class="py-4 px-5">
-                                                    <span
-                                                        class="px-2.5 py-1 rounded-full text-xs font-medium
-                                                        @if ($order->status === 'completed') bg-green-100 text-green-800
-                                                        @elseif($order->status === 'pending') bg-yellow-100 text-yellow-800
-                                                        @elseif($order->status === 'cancelled') bg-red-100 text-red-800
-                                                        @else bg-gray-100 text-gray-800 @endif">
-                                                        {{ ucfirst($order->status) }}
-                                                    </span>
-                                                </td>
-                                                <td class="py-4 px-5">
-                                                    <button data-order-id="{{ $order->id }}"
-                                                        class="text-blue-600 hover:text-blue-800">
-                                                        <i class='bx bx-show text-xl'></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- Pagination -->
-                            <div class="px-5 py-4 border-t border-gray-100">
-                                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                                    <div class="text-sm text-gray-500">
-                                        Showing
-                                        <span class="font-semibold">{{ $recentOrders->firstItem() }}</span>
-                                        to
-                                        <span class="font-semibold">{{ $recentOrders->lastItem() }}</span>
-                                        of
-                                        <span class="font-semibold">{{ $recentOrders->total() }}</span> Results
-                                    </div>
-
-                                    @if ($recentOrders->hasPages())
-                                        <nav class="flex items-center space-x-1">
-                                            {{-- Previous Page Link --}}
-                                            @if ($recentOrders->onFirstPage())
-                                                <span
-                                                    class="p-2 rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
-                                                    <i class='bx bx-chevron-left text-xl'></i>
-                                                </span>
-                                            @else
-                                                <a href="{{ $recentOrders->previousPageUrl() }}"
-                                                    class="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
-                                                    <i class='bx bx-chevron-left text-xl'></i>
-                                                </a>
-                                            @endif
-
-                                            {{-- Pagination Elements --}}
-                                            @foreach ($recentOrders->getUrlRange(1, $recentOrders->lastPage()) as $page => $url)
-                                                @if ($page == $recentOrders->currentPage())
-                                                    <span
-                                                        class="px-3 py-1 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 font-medium">
-                                                        {{ $page }}
-                                                    </span>
-                                                @else
-                                                    <a href="{{ $url }}"
-                                                        class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
-                                                        {{ $page }}
-                                                    </a>
-                                                @endif
-                                            @endforeach
-
-                                            {{-- Next Page Link --}}
-                                            @if ($recentOrders->hasMorePages())
-                                                <a href="{{ $recentOrders->nextPageUrl() }}"
-                                                    class="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
-                                                    <i class='bx bx-chevron-right text-xl'></i>
-                                                </a>
-                                            @else
-                                                <span
-                                                    class="p-2 rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
-                                                    <i class='bx bx-chevron-right text-xl'></i>
-                                                </span>
-                                            @endif
-                                        </nav>
-                                    @endif
-                                </div>
+                            <div id="orders-container">
+                                @include('admin.partials.orders_table', ['recentOrders' => $recentOrders])
                             </div>
                         @endif
                     </div>
@@ -470,7 +367,6 @@
                 }, 10);
             }
 
-
             function hideModal() {
                 modal.classList.add('opacity-0');
                 setTimeout(() => {
@@ -478,17 +374,8 @@
                 }, 300);
             }
 
-
-            document.querySelectorAll('[data-order-id]').forEach(button => {
-                button.addEventListener('click', async function() {
-                    const orderId = this.getAttribute('data-order-id');
-                    await fetchOrderDetails(orderId);
-                });
-            });
-
             async function fetchOrderDetails(orderId) {
                 try {
-
                     document.getElementById('modalOrderId').textContent = 'Loading...';
 
                     const response = await fetch(`/admin/orders/${orderId}`, {
@@ -582,6 +469,58 @@
                 document.getElementById('modalPaymentMethod').textContent = paymentMethodDisplay;
             }
 
+            // Function to attach order detail handlers
+            function attachOrderDetailHandlers() {
+                document.querySelectorAll('.view-order-btn').forEach(button => {
+                    button.addEventListener('click', async function() {
+                        const orderId = this.getAttribute('data-order-id');
+                        await fetchOrderDetails(orderId);
+                    });
+                });
+            }
+
+            // Handle pagination links
+            document.addEventListener('click', function(e) {
+                const paginationLink = e.target.closest('.pagination-link');
+                if (paginationLink) {
+                    e.preventDefault();
+                    const url = paginationLink.getAttribute('href');
+
+                    // Show loading indicator
+                    const container = document.getElementById('orders-container');
+                    container.innerHTML = `
+                        <div class="flex justify-center items-center h-40">
+                            <i class="bx bx-loader-alt bx-spin text-3xl text-blue-500"></i>
+                        </div>
+                    `;
+
+                    fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.text())
+                        .then(html => {
+                            container.innerHTML = html;
+                            attachOrderDetailHandlers();
+                            window.history.pushState(null, null, url);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            container.innerHTML = `
+                                <div class="p-6 text-center text-red-500">
+                                    Error loading orders. Please try again.
+                                </div>
+                            `;
+                        });
+                }
+            });
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function() {
+                window.location.reload();
+            });
+
             // Close modal handlers
             closeModal.addEventListener('click', hideModal);
             closeModalBtn.addEventListener('click', hideModal);
@@ -596,9 +535,7 @@
                 }
             });
 
-
-
-            // Print order handler - Matches modal design exactly
+            // Print order handler
             printOrderBtn.addEventListener('click', () => {
                 const statusElement = document.getElementById('modalOrderStatus');
                 const statusColor = statusElement.className.includes('bg-green-100') ? '#D1FAE5' :
@@ -609,93 +546,93 @@
                     statusElement.className.includes('text-red-800') ? '#991B1B' : '#374151';
 
                 const printContent = `
-            <html>
-                <head>
-                    <title>Order #${document.getElementById('modalOrderId').textContent}</title>
-                    <style>
-                        @import url('https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css');
-                        body { font-family: 'Inter', Arial, sans-serif; margin: 0; padding: 20px; color: #1f2937; }
-                        .receipt-container { max-width: 600px; margin: 0 auto; }
-                        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
-                        .order-title { font-size: 20px; font-weight: 600; color: #111827; }
-                        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 500; margin-top: 4px; }
-                        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-                        .section { margin-bottom: 20px; }
-                        .section-title { display: flex; align-items: center; font-size: 16px; font-weight: 500; color: #111827; margin-bottom: 12px; }
-                        .section-content { background: #f9fafb; padding: 16px; border-radius: 8px; }
-                        .info-item { margin-bottom: 8px; }
-                        .info-label { font-size: 12px; color: #6b7280; margin-bottom: 2px; }
-                        .info-value { font-size: 14px; font-weight: 500; color: #111827; }
-                        .total-amount { font-size: 18px; font-weight: 600; color: #2563eb; }
-                        .shipping-address { background: #f9fafb; padding: 16px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
-                        .footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
-                        .icon { margin-right: 8px; color: #3b82f6; }
-                    </style>
-                </head>
-                <body>
-                    <div class="receipt-container">
-                        <div class="header">
-                            <h1 class="order-title">Order #${document.getElementById('modalOrderId').textContent}</h1>
-                            <span class="status-badge" style="background: ${statusColor}; color: ${statusTextColor}">
-                                ${document.getElementById('modalOrderStatus').textContent}
-                            </span>
-                        </div>
+                    <html>
+                        <head>
+                            <title>Order #${document.getElementById('modalOrderId').textContent}</title>
+                            <style>
+                                @import url('https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css');
+                                body { font-family: 'Inter', Arial, sans-serif; margin: 0; padding: 20px; color: #1f2937; }
+                                .receipt-container { max-width: 600px; margin: 0 auto; }
+                                .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
+                                .order-title { font-size: 20px; font-weight: 600; color: #111827; }
+                                .status-badge { display: inline-block; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 500; margin-top: 4px; }
+                                .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+                                .section { margin-bottom: 20px; }
+                                .section-title { display: flex; align-items: center; font-size: 16px; font-weight: 500; color: #111827; margin-bottom: 12px; }
+                                .section-content { background: #f9fafb; padding: 16px; border-radius: 8px; }
+                                .info-item { margin-bottom: 8px; }
+                                .info-label { font-size: 12px; color: #6b7280; margin-bottom: 2px; }
+                                .info-value { font-size: 14px; font-weight: 500; color: #111827; }
+                                .total-amount { font-size: 18px; font-weight: 600; color: #2563eb; }
+                                .shipping-address { background: #f9fafb; padding: 16px; border-radius: 8px; font-size: 14px; line-height: 1.5; }
+                                .footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
+                                .icon { margin-right: 8px; color: #3b82f6; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="receipt-container">
+                                <div class="header">
+                                    <h1 class="order-title">Order #${document.getElementById('modalOrderId').textContent}</h1>
+                                    <span class="status-badge" style="background: ${statusColor}; color: ${statusTextColor}">
+                                        ${document.getElementById('modalOrderStatus').textContent}
+                                    </span>
+                                </div>
 
-                        <div class="grid">
-                            <!-- Customer Information -->
-                            <div class="section">
-                                <h3 class="section-title"><i class='bx bx-user icon'></i>Customer Details</h3>
-                                <div class="section-content">
-                                    <div class="info-item">
-                                        <div class="info-label">Name</div>
-                                        <div class="info-value">${document.getElementById('modalCustomerName').textContent}</div>
+                                <div class="grid">
+                                    <!-- Customer Information -->
+                                    <div class="section">
+                                        <h3 class="section-title"><i class='bx bx-user icon'></i>Customer Details</h3>
+                                        <div class="section-content">
+                                            <div class="info-item">
+                                                <div class="info-label">Name</div>
+                                                <div class="info-value">${document.getElementById('modalCustomerName').textContent}</div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div class="info-label">Email</div>
+                                                <div class="info-value">${document.getElementById('modalCustomerEmail').textContent}</div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div class="info-label">Payment Method</div>
+                                                <div class="info-value">${document.getElementById('modalPaymentMethod').textContent}</div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="info-item">
-                                        <div class="info-label">Email</div>
-                                        <div class="info-value">${document.getElementById('modalCustomerEmail').textContent}</div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-label">Payment Method</div>
-                                        <div class="info-value">${document.getElementById('modalPaymentMethod').textContent}</div>
+
+                                    <!-- Order Summary -->
+                                    <div class="section">
+                                        <h3 class="section-title"><i class='bx bx-receipt icon'></i>Order Summary</h3>
+                                        <div class="section-content">
+                                            <div class="info-item">
+                                                <div class="info-label">Date</div>
+                                                <div class="info-value">${document.getElementById('modalOrderDate').textContent}</div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div class="info-label">Shipping Method</div>
+                                                <div class="info-value">${document.getElementById('modalShippingMethod').textContent}</div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div class="info-label">Total Amount</div>
+                                                <div class="info-value total-amount">${document.getElementById('modalOrderTotal').textContent}</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Order Summary -->
-                            <div class="section">
-                                <h3 class="section-title"><i class='bx bx-receipt icon'></i>Order Summary</h3>
-                                <div class="section-content">
-                                    <div class="info-item">
-                                        <div class="info-label">Date</div>
-                                        <div class="info-value">${document.getElementById('modalOrderDate').textContent}</div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-label">Shipping Method</div>
-                                        <div class="info-value">${document.getElementById('modalShippingMethod').textContent}</div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-label">Total Amount</div>
-                                        <div class="info-value total-amount">${document.getElementById('modalOrderTotal').textContent}</div>
+                                <!-- Shipping Information -->
+                                <div class="section">
+                                    <h3 class="section-title"><i class='bx bx-map icon'></i>Shipping Address</h3>
+                                    <div class="shipping-address">
+                                        ${document.getElementById('modalShippingAddress').textContent}
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Shipping Information -->
-                        <div class="section">
-                            <h3 class="section-title"><i class='bx bx-map icon'></i>Shipping Address</h3>
-                            <div class="shipping-address">
-                                ${document.getElementById('modalShippingAddress').textContent}
+                                <div class="footer">
+                                    <p>Printed on ${new Date().toLocaleString()}</p>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="footer">
-                            <p>Printed on ${new Date().toLocaleString()}</p>
-                        </div>
-                    </div>
-                </body>
-            </html>
-        `;
+                        </body>
+                    </html>
+                `;
 
                 const printWindow = window.open('', '_blank');
                 printWindow.document.write(printContent);
@@ -709,6 +646,9 @@
                     }, 200);
                 };
             });
+
+            // Initial attachment of event handlers
+            attachOrderDetailHandlers();
         });
     </script>
 </x-app-layout>
