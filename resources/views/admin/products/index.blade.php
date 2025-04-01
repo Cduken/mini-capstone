@@ -175,7 +175,7 @@
                             {{ $products->total() }} results
                         </div>
 
-                        <div class="flex items-center space-x-1">
+                        <div class="flex items-center space-x-1 ajax-pagination">
                             {{ $products->appends(['search' => request('search')])->onEachSide(1)->links('vendor.pagination.custom') }}
                         </div>
                     </div>
@@ -439,7 +439,7 @@
                             </label>
                             <div class="relative">
                                 <select name="category" id="edit-category"
-                                    class="w-full pl-8 pr-8 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white">
+                                    class="w-full pl-8 pr-8 py-2 text-sm border border-gray-300 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white cursor-pointer">
                                     <option value="">Select a category</option>
                                     <option value="Phone">Phone</option>
                                     <option value="Tablet">Tablet</option>
@@ -780,6 +780,159 @@
                         reader.readAsDataURL(file);
                     }
                 });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the first history state
+            window.history.replaceState({
+                path: window.location.href,
+                pageTitle: document.title,
+                tableContent: document.querySelector('.bg-white.rounded-2xl .overflow-y-auto').innerHTML,
+                paginationContent: document.querySelector('.ajax-pagination')?.innerHTML || ''
+            }, '', window.location.href);
+
+            // Handle AJAX pagination clicks
+            document.addEventListener('click', function(e) {
+                const paginationLink = e.target.closest('.pagination-link');
+                if (paginationLink) {
+                    e.preventDefault();
+                    const url = paginationLink.getAttribute('href');
+                    loadPaginatedData(url);
+                }
+            });
+
+            // Main function to load paginated data via AJAX
+            function loadPaginatedData(url) {
+                // Show loading state
+                const tableContainer = document.querySelector('.bg-white.rounded-2xl .overflow-y-auto');
+                const paginationContainer = document.querySelector('.ajax-pagination');
+                const originalState = {
+                    tableContent: tableContainer.innerHTML,
+                    paginationContent: paginationContainer?.innerHTML || ''
+                };
+
+                // Create and show loading spinner
+                const loadingSpinner = createLoadingSpinner();
+                tableContainer.innerHTML = '';
+                tableContainer.appendChild(loadingSpinner);
+
+                // Start the AJAX request
+                fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'text/html'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.text();
+                    })
+                    .then(html => {
+                        // Parse the response
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+
+                        // Update the table content - using more specific selector
+                        const newTable = doc.querySelector('.bg-white.rounded-2xl .overflow-y-auto');
+                        if (newTable) {
+                            tableContainer.innerHTML = newTable.innerHTML;
+                        }
+
+                        // Update the pagination
+                        const newPagination = doc.querySelector('.ajax-pagination');
+                        if (newPagination && paginationContainer) {
+                            paginationContainer.innerHTML = newPagination.innerHTML;
+                        }
+
+                        // Update browser URL without reload
+                        window.history.pushState({
+                            path: url,
+                            tableContent: tableContainer.innerHTML,
+                            paginationContent: paginationContainer?.innerHTML || ''
+                        }, '', url);
+
+                        // Smooth scroll to top
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading paginated data:', error);
+                        // Restore original content
+                        tableContainer.innerHTML = originalState.tableContent;
+                        if (paginationContainer && originalState.paginationContent) {
+                            paginationContainer.innerHTML = originalState.paginationContent;
+                        }
+
+                        // Show error message
+                        const errorMessage = document.createElement('div');
+                        errorMessage.className = 'p-4 bg-red-50 text-red-600 rounded-lg mb-4';
+                        errorMessage.innerHTML = `
+                <div class="flex items-center">
+                    <i class='bx bx-error-circle text-xl mr-2'></i>
+                    <span>Failed to load content. Please try again.</span>
+                </div>
+            `;
+                        tableContainer.prepend(errorMessage);
+
+                        // Remove error message after 5 seconds
+                        setTimeout(() => {
+                            errorMessage.remove();
+                        }, 5000);
+                    });
+            }
+
+            // Handle browser back/forward navigation
+            window.addEventListener('popstate', function(event) {
+                if (event.state) {
+                    // Restore content from history state
+                    const tableContainer = document.querySelector('.bg-white.rounded-2xl .overflow-y-auto');
+                    const paginationContainer = document.querySelector('.ajax-pagination');
+
+                    if (event.state.tableContent && tableContainer) {
+                        tableContainer.innerHTML = event.state.tableContent;
+                    }
+
+                    if (event.state.paginationContent && paginationContainer) {
+                        paginationContainer.innerHTML = event.state.paginationContent;
+                    }
+
+                    // Smooth scroll to top
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+
+            // Helper function to create loading spinner
+            function createLoadingSpinner() {
+                const container = document.createElement('div');
+                container.className = 'flex justify-center items-center h-64';
+
+                const spinner = document.createElement('div');
+                spinner.className = 'animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500';
+
+                container.appendChild(spinner);
+                return container;
+            }
+
+            // Add CSS for spinner animation if not already present
+            if (!document.getElementById('pagination-spinner-style')) {
+                const style = document.createElement('style');
+                style.id = 'pagination-spinner-style';
+                style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .animate-spin {
+                animation: spin 1s linear infinite;
+            }
+        `;
+                document.head.appendChild(style);
             }
         });
     </script>

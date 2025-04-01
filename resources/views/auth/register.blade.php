@@ -11,14 +11,14 @@
         <!-- Name -->
         <div>
             <div class="flex items-center justify-between relative">
-                <x-input-label for="name" :value="__('Full Name')" class="block text-sm font-medium text-gray-700" />
+                <x-input-label for="name" :value="__('Name')" class="block text-sm font-medium text-gray-700" />
                 <i class='bx bx-user absolute right-2 top-[40px] z-10 text-gray-400'></i>
             </div>
             <div class="mt-1 relative rounded-md shadow-sm">
                 <x-text-input id="name"
                     class="block w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 input-focus transition duration-200"
                     type="text" name="name" :value="old('name')" required autofocus autocomplete="name"
-                    placeholder="Full Name" />
+                    placeholder="Name" />
             </div>
             <x-input-error :messages="$errors->get('name')" class="mt-2 text-sm text-red-600" />
         </div>

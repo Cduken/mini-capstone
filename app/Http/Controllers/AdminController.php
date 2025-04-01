@@ -40,7 +40,7 @@ class AdminController extends Controller
         // Calculate statistics
         $stats = $this->calculateStatistics($users);
 
-        // For AJAX requests, return JSON with both cards and table
+
         if ($request->ajax()) {
             return response()->json([
                 'cards' => view('admin.partials.user_stats_cards_inner', array_merge(
@@ -59,7 +59,7 @@ class AdminController extends Controller
 
     protected function calculateStatistics($users)
     {
-        // Calculate users percentage change
+
         $currentMonthUsers = User::whereMonth('created_at', now())->count();
         $lastMonthUsers = User::whereMonth('created_at', now()->subMonth())->count();
 

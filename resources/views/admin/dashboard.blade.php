@@ -155,7 +155,7 @@
                                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wider">Avg. Order
                                     </p>
                                     <p class="text-2xl font-bold text-gray-800 mt-1">
-                                        ${{ number_format($averageOrderValue, 2) }}</p>
+                                        ${{ number_format($averageOrderValue, 1) }}</p>
                                 </div>
                                 <div class="text-blue-400 opacity-20 self-start mt-1">
                                     <i
@@ -213,13 +213,13 @@
                                 </div>
                                 <div class="text-purple-400 opacity-20 self-start mt-1">
                                     <i
-                                        class='bx bx-{{ $newUsersPercentageChange >= 0 ? 'group' : 'user-x' }} text-3xl'></i>
+                                        class='bx bx-{{ $newUsersPercentageChange >= 0 ? 'user-x' : 'group' }} text-3xl'></i>
                                 </div>
                             </div>
                             <div class="flex items-center mt-2">
                                 <span
                                     class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full flex items-center">
-                                    {{ $newUsersPercentageChange >= 0 ? '↑' : '↓' }}
+                                    {{ $newUsersPercentageChange >= 0 ? '↓' : '↑' }}
                                     {{ number_format(abs($newUsersPercentageChange), 1) }}%
                                 </span>
                             </div>
@@ -353,7 +353,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const modal = document.getElementById('orderModal');
-            const modalContent = modal.querySelector('div > div'); // The inner content div
+            const modalContent = modal.querySelector('div > div');
             const closeModal = document.getElementById('closeModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
             const printOrderBtn = document.getElementById('printOrderBtn');
@@ -479,18 +479,18 @@
                 });
             }
 
-            // Handle pagination links
+            // Handle pagination links - UPDATED LOADING ANIMATION
             document.addEventListener('click', function(e) {
                 const paginationLink = e.target.closest('.pagination-link');
                 if (paginationLink) {
                     e.preventDefault();
                     const url = paginationLink.getAttribute('href');
 
-                    // Show loading indicator
+                    // Show loading indicator - changed to spinning circle
                     const container = document.getElementById('orders-container');
                     container.innerHTML = `
-                        <div class="flex justify-center items-center h-40">
-                            <i class="bx bx-loader-alt bx-spin text-3xl text-blue-500"></i>
+                        <div class="flex justify-center items-center h-64">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                         </div>
                     `;
 
@@ -508,8 +508,11 @@
                         .catch(error => {
                             console.error('Error:', error);
                             container.innerHTML = `
-                                <div class="p-6 text-center text-red-500">
-                                    Error loading orders. Please try again.
+                                <div class="p-4 bg-red-50 text-red-600 rounded-lg mb-4">
+                                    <div class="flex items-center">
+                                        <i class='bx bx-error-circle text-xl mr-2'></i>
+                                        <span>Error loading orders. Please try again.</span>
+                                    </div>
                                 </div>
                             `;
                         });

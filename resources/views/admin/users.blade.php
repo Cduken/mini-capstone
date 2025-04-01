@@ -112,14 +112,10 @@
                 let isLoading = false;
                 let currentPageUrl = window.location.href;
 
+                // New loading spinner design (matches products table)
                 const loadingHTML = `
-                    <div class="flex justify-center items-center h-40">
-                        <div class="animate-pulse flex space-x-2 items-center">
-                            <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
-                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                            <div class="w-3 h-3 bg-blue-600 rounded-full"></div>
-                        </div>
-                        <span class="ml-2 text-gray-600 text-sm">Loading users...</span>
+                    <div class="flex justify-center items-center h-64">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                     </div>
                 `;
 
@@ -190,16 +186,15 @@
                         console.error('Error:', error);
                         container.innerHTML = oldTableContent;
 
-                        // Show error message
+                        // Show error message (matches products table style)
                         const errorDiv = document.createElement('div');
-                        errorDiv.className = 'p-4 text-center text-red-500';
+                        errorDiv.className = 'p-4 bg-red-50 text-red-600 rounded-lg mb-4';
                         errorDiv.innerHTML = `
-            <i class="bx bx-error text-xl"></i>
-            <p class="mt-2">Failed to load content</p>
-            <button onclick="window.location.reload()" class="mt-2 px-3 py-1 bg-gray-100 rounded text-sm">
-                Try Again
-            </button>
-        `;
+                            <div class="flex items-center">
+                                <i class='bx bx-error-circle text-xl mr-2'></i>
+                                <span>Failed to load content. Please try again.</span>
+                            </div>
+                        `;
                         container.appendChild(errorDiv);
                     } finally {
                         isLoading = false;
@@ -238,6 +233,22 @@
                 const urlObj = new URL(window.location.href);
                 const initialFilter = urlObj.searchParams.get('filter') || 'all';
                 updateActiveFilter(initialFilter);
+            }
+
+            // Add spinner animation CSS if not already present
+            if (!document.getElementById('spinner-animation-style')) {
+                const style = document.createElement('style');
+                style.id = 'spinner-animation-style';
+                style.textContent = `
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    .animate-spin {
+                        animation: spin 1s linear infinite;
+                    }
+                `;
+                document.head.appendChild(style);
             }
         });
     </script>
