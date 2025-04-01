@@ -20,44 +20,64 @@
 
     <style>
         .bg-auth-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a20 0%, #262630 100%);
         }
 
         .card-shadow {
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4), 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
 
         .input-focus:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            border-color: #a855f7;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.25);
+        }
+
+        .purple-glow {
+            filter: blur(80px);
+            opacity: 0.15;
+            background: #a855f7;
+        }
+
+        .purple-accent {
+            background: linear-gradient(to right, #a855f7, #d580ff);
         }
     </style>
 </head>
 
-<body class="font-sans text-gray-800 antialiased">
+<body class="font-sans text-gray-300 antialiased">
     <div class="min-h-screen bg-auth-gradient flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-        <!-- Animated background elements -->
+        <!-- Animated background elements for dark theme with purple accents -->
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div class="absolute top-20 left-10 w-32 h-32 rounded-full bg-white opacity-10"></div>
-            <div class="absolute bottom-10 right-10 w-64 h-64 rounded-full bg-white opacity-5"></div>
-            <div class="absolute top-1/3 right-20 w-16 h-16 rounded-full bg-white opacity-15"></div>
+            <div class="absolute top-40 right-20 w-64 h-64 rounded-full purple-glow"></div>
+            <div class="absolute -bottom-20 -left-20 w-96 h-96 rounded-full purple-glow"></div>
+            <div class="absolute top-1/4 left-1/3 w-32 h-32 rounded-full bg-gray-800 opacity-30"></div>
         </div>
 
         <div class="w-full sm:max-w-md px-6 py-8 relative z-10">
+            <!-- Logo at the top -->
+            <div class="mb-8 flex justify-center">
+                <div class="flex items-center gap-1">
+                    <box-icon name='cube-alt' color="purple" size="md" class="h-7 w-7"></box-icon>
 
-            <div class="bg-white rounded-xl card-shadow overflow-hidden ">
+                    <span class="text-xl font-sans">
+                        <span class="font-semibold text-white">Shop</span><span class="font-thin text-white">Ease</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="bg-gray-900/90 backdrop-blur-sm rounded-xl card-shadow overflow-hidden border border-gray-800">
+                <!-- Purple accent line at top -->
+                <div class="h-1 w-full purple-accent"></div>
+
                 <div class="px-8 py-6">
                     <!-- Card header with decorative element -->
                     <div class="mb-6 relative">
-                        <div
-                            class="absolute -left-8 top-0 w-1 h-full bg-gradient-to-b from-indigo-500 to-purple-600 rounded-r">
-                        </div>
-                        <h2 class="text-xl font-semibold text-gray-800">
+                        <div class="absolute -left-8 top-0 w-1 h-full purple-accent rounded-r"></div>
+                        <h2 class="text-xl font-semibold text-white">
                             @if (Request::is('login'))
                                 <div class="flex items-center">
                                     <i class='bx bx-log-in-circle align-middle mr-2'></i>
-                                     <x-application-logo
-                                        />
+                                    Sign In
                                 </div>
                             @elseif(Request::is('register'))
                                 <i class='bx bx-user-plus align-middle mr-2'></i> Create Account
@@ -67,7 +87,7 @@
                                 {{ $title ?? '' }}
                             @endif
                         </h2>
-                        <p class="text-sm text-gray-500 mt-1">
+                        <p class="text-sm text-gray-400 mt-1">
                             @if (Request::is('login'))
                                 Please sign in to continue
                             @elseif(Request::is('register'))
@@ -84,19 +104,19 @@
 
                 <!-- Card footer -->
                 @if (Request::is('login'))
-                    <div class="px-8 py-4 bg-gray-50 border-t border-gray-100 text-center text-sm text-gray-500">
+                    <div class="px-8 py-4 bg-gray-800/50 border-t border-gray-800 text-center text-sm text-gray-400">
                         New to our platform? <a href="{{ route('register') }}"
-                            class="text-indigo-600 hover:text-indigo-800 font-medium">Create an account</a>
+                            class="text-purple-400 hover:text-purple-300 font-medium">Create an account</a>
                     </div>
                 @endif
             </div>
 
             <!-- Footer links -->
-            <div class="mt-6 text-center text-sm text-white opacity-80">
-                <a href="#" class="hover:underline">Terms of Service</a>
+            {{-- <div class="mt-4 text-center text-sm text-gray-500">
+                <a href="#" class="hover:text-gray-300 transition duration-150">Terms of Service</a>
                 <span class="mx-2">•</span>
-                <a href="#" class="hover:underline">Privacy Policy</a>
-            </div>
+                <a href="#" class="hover:text-gray-300 transition duration-150">Privacy Policy</a>
+            </div> --}}
         </div>
     </div>
 </body>

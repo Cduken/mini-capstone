@@ -3,7 +3,7 @@
     <box-icon name='cube-alt' color="purple" size="md" class="h-7 w-7"></box-icon>
 
     <span class="text-xl font-sans">
-        <span class="font-semibold">Shop</span><span class="font-thin">Ease</span>
+        <span class="font-semibold text-white">Shop</span><span class="font-thin text-white">Ease</span>
 
     </span>
 </div>
