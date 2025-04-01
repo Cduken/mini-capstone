@@ -50,7 +50,7 @@
                         @if (Auth::user()->userType !== 'admin')
                             <a href="{{ route('cart.index') }}" class="relative p-1 text-gray-300 hover:text-white transition-colors">
                                 <i class='bx bx-cart text-2xl'></i>
-                                <span class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">3</span>
+                                <span class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">{{ App\Models\Cart::count() }}</span>
                             </a>
                         @endif
 

@@ -95,16 +95,8 @@
                         @foreach ($products as $product)
                             <div
                                 class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group relative overflow-hidden border border-gray-100 hover:border-blue-100">
-                                <!-- Wishlist & Stock Badge Container -->
-                                <div class="absolute top-3 left-3 right-3 z-10 flex justify-between">
-                                    <!-- Wishlist Button -->
-                                    {{-- <button
-                                        class="p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-gray-100 transition-colors group/wishlist">
-                                        <i
-                                            class='bx bx-heart text-xl text-gray-500 group-hover/wishlist:text-red-500 transition-colors'></i>
-                                    </button> --}}
 
-                                    <!-- Stock Status Badge -->
+                                <div class="absolute top-3 left-3 right-3 z-10 flex justify-between">
                                     <span
                                         class="px-3 py-1 text-center rounded-full text-xs font-semibold shadow-sm {{ $product->inStock ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
                                         {{ $product->inStock ? 'In Stock' : 'Out of Stock' }}
@@ -127,62 +119,66 @@
                                 </div>
 
                                 <!-- Product Info -->
-                                <div class="p-5 pt-3">
-                                    <!-- Category -->
-                                    <span
-                                        class="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full mb-3 inline-block">
-                                        {{ $product->category }}
-                                    </span>
+                                <div class="p-5 pt-3 flex flex-col h-[calc(100%-16rem)]">
+                                    <!-- Upper Content Section -->
+                                    <div class="flex-1">
+                                        <!-- Category -->
+                                        <span
+                                            class="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full mb-3 inline-block">
+                                            {{ $product->category }}
+                                        </span>
 
-                                    <!-- Title -->
-                                    <h3
-                                        class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
-                                        <a href="{{ route('products.show', $product->id) }}">{{ $product->title }}</a>
-                                    </h3>
+                                        <!-- Title -->
+                                        <h3
+                                            class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
+                                            <a
+                                                href="{{ route('products.show', $product->id) }}">{{ $product->title }}</a>
+                                        </h3>
 
-                                    <!-- Rating -->
-                                    <div class="flex items-center mb-4">
-                                        <div class="flex text-amber-400 text-sm">
-                                            <i class='bx bxs-star'></i>
-                                            <i class='bx bxs-star'></i>
-                                            <i class='bx bxs-star'></i>
-                                            <i class='bx bxs-star'></i>
-                                            <i class='bx bxs-star-half'></i>
-                                        </div>
-                                        <span class="ml-2 text-xs text-gray-500">(24 reviews)</span>
-                                    </div>
-
-                                    <!-- Price & Admin Actions -->
-                                    <div class="flex items-center justify-between mb-4">
-                                        <div>
-                                            <p class="text-xl font-bold text-gray-900">
-                                                ${{ number_format($product->price, 2) }}</p>
-                                            @if ($product->original_price)
-                                                <p class="text-sm text-gray-500 line-through">
-                                                    ${{ number_format($product->original_price, 2) }}</p>
-                                            @endif
+                                        <!-- Rating -->
+                                        <div class="flex items-center mb-4">
+                                            <div class="flex text-amber-400 text-sm">
+                                                <i class='bx bxs-star'></i>
+                                                <i class='bx bxs-star'></i>
+                                                <i class='bx bxs-star'></i>
+                                                <i class='bx bxs-star'></i>
+                                                <i class='bx bxs-star-half'></i>
+                                            </div>
+                                            <span class="ml-2 text-xs text-gray-500">(24 reviews)</span>
                                         </div>
 
-                                        @auth
-                                            @if (Auth::user()->userType === 'admin')
-                                                <div class="flex space-x-2">
-                                                    <form action="{{ route('admin.products.destroy', $product->id) }}"
-                                                        method="POST"
-                                                        onsubmit="return confirm('Are you sure you want to delete this product?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="p-2 text-red-500 hover:text-red-700 transition-colors hover:bg-red-50 rounded-full">
-                                                            <i class='bx bx-trash text-xl'></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            @endif
-                                        @endauth
+                                        <!-- Price & Admin Actions -->
+                                        <div class="flex items-center justify-between mb-4">
+                                            <div>
+                                                <p class="text-xl font-bold text-gray-900">
+                                                    ${{ number_format($product->price, 2) }}</p>
+                                                @if ($product->original_price)
+                                                    <p class="text-sm text-gray-500 line-through">
+                                                        ${{ number_format($product->original_price, 2) }}</p>
+                                                @endif
+                                            </div>
+
+                                            @auth
+                                                @if (Auth::user()->userType === 'admin')
+                                                    <div class="flex space-x-2">
+                                                        <form action="{{ route('admin.products.destroy', $product->id) }}"
+                                                            method="POST"
+                                                            onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="p-2 text-red-500 hover:text-red-700 transition-colors hover:bg-red-50 rounded-full">
+                                                                <i class='bx bx-trash text-xl'></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                @endif
+                                            @endauth
+                                        </div>
                                     </div>
 
-                                    <!-- Add to Cart Button -->
-                                    <div class="mt-2">
+                                    <!-- Add to Cart Button - Now placed at bottom -->
+                                    <div class="mt-auto">
                                         @auth
                                             @if (Auth::user()->userType !== 'admin')
                                                 <a href="{{ route('products.show', $product->id) }}"
