@@ -10,103 +10,111 @@
                 <h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
             </div>
 
-            <!-- Dashboard Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
+
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <!-- Products Card -->
-                <div
-                    class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer hover:shadow-blue-300 hover:transform hover:scale-105 transition duration-300">
-                    <div class="p-5 flex items-start justify-between">
+                <div class="relative bg-gradient-to-r from-blue-200 to-white rounded-xl shadow-sm border border-blue-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-blue-300 hover:-translate-y-1 ">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="relative p-6 flex items-start justify-between z-10">
                         <div>
-                            <span class="text-gray-500 text-sm font-medium">Total Products</span>
-                            <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $totalProducts }}</h3>
-                            <div class="flex items-center mt-3">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class='bx bx-package text-blue-500'></i>
+                                <span class="text-gray-500 text-sm font-medium tracking-wide">TOTAL PRODUCTS</span>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ $totalProducts }}</h3>
+                            <div class="flex items-center mt-4 space-x-2">
                                 @if ($productsPercentageChange >= 0)
-                                    <span
-                                        class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                        <i class='bx bx-up-arrow-alt mr-1'></i>
+                                    <span class="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-up-arrow-alt text-sm mr-1'></i>
                                         {{ round($productsPercentageChange, 0) }}%
                                     </span>
                                 @else
-                                    <span
-                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                        <i class='bx bx-down-arrow-alt mr-1'></i>
+                                    <span class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-down-arrow-alt text-sm mr-1'></i>
                                         {{ round(abs($productsPercentageChange), 0) }}%
                                     </span>
                                 @endif
-                                <span class="text-gray-500 text-xs ml-2">vs last month</span>
+                                <span class="text-gray-400 text-xs">vs last month</span>
                             </div>
                         </div>
-                        <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
+                        <div class="p-3 rounded-lg bg-blue-100/50 text-blue-600 backdrop-blur-sm border border-blue-200/50">
                             <i class='bx bx-package text-2xl'></i>
                         </div>
                     </div>
-                    <div class="h-1 bg-blue-200 w-full">
-                        <div class="h-1 bg-blue-500" style="width: {{ min($productsPercentageChange + 50, 100) }}%">
-                        </div>
+                    <div class="relative h-1.5 bg-blue-100 w-full overflow-hidden">
+                        <div class="absolute h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transition-all duration-700 ease-out"
+                            style="width: {{ min($productsPercentageChange + 50, 100) }}%"></div>
                     </div>
                 </div>
 
                 <!-- Orders Card -->
-                <div
-                    class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer hover:shadow-green-300 hover:transform hover:scale-105 transition duration-300">
-                    <div class="p-5 flex items-start justify-between">
+                <div class="relative bg-gradient-to-r from-green-200 to-white rounded-xl shadow-sm border border-green-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-green-300 hover:-translate-y-1 hover:border-green-200">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="relative p-6 flex items-start justify-between z-10">
                         <div>
-                            <span class="text-gray-500 text-sm font-medium">Total Orders</span>
-                            <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $totalOrders }}</h3>
-                            <div class="flex items-center mt-3">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class='bx bx-cart-alt text-green-500'></i>
+                                <span class="text-gray-500 text-sm font-medium tracking-wide">TOTAL ORDERS</span>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ $totalOrders }}</h3>
+                            <div class="flex items-center mt-4 space-x-2">
                                 @if ($ordersPercentageChange >= 0)
-                                    <span
-                                        class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                        <i class='bx bx-up-arrow-alt mr-1'></i> {{ round($ordersPercentageChange, 0) }}%
+                                    <span class="bg-green-50 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-up-arrow-alt text-sm mr-1'></i>
+                                        {{ round($ordersPercentageChange, 0) }}%
                                     </span>
                                 @else
-                                    <span
-                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                        <i class='bx bx-down-arrow-alt mr-1'></i>
+                                    <span class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-down-arrow-alt text-sm mr-1'></i>
                                         {{ round(abs($ordersPercentageChange), 0) }}%
                                     </span>
                                 @endif
-                                <span class="text-gray-500 text-xs ml-2">vs last month</span>
+                                <span class="text-gray-400 text-xs">vs last month</span>
                             </div>
                         </div>
-                        <div class="p-3 rounded-lg bg-green-50 text-green-600">
+                        <div class="p-3 rounded-lg bg-green-100/50 text-green-600 backdrop-blur-sm border border-green-200/50">
                             <i class='bx bx-cart-alt text-2xl'></i>
                         </div>
                     </div>
-                    <div class="h-1 bg-green-200 w-full">
-                        <div class="h-1 bg-green-500" style="width: 85%"></div>
+                    <div class="relative h-1.5 bg-green-100 w-full overflow-hidden">
+                        <div class="absolute h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-700 ease-out"
+                            style="width: 85%"></div>
                     </div>
                 </div>
 
                 <!-- Users Card -->
-                <div
-                    class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden hover:shadow-2xl cursor-pointer hover:shadow-purple-300 hover:transform hover:scale-105 transition duration-300">
-                    <div class="p-5 flex items-start justify-between">
+                <div class="relative bg-gradient-to-r from-purple-200 to-white rounded-xl shadow-sm border border-purple-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-purple-300 hover:-translate-y-1 hover:border-purple-200">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="relative p-6 flex items-start justify-between z-10">
                         <div>
-                            <span class="text-gray-500 text-sm font-medium">Total Users</span>
-                            <h3 class="text-2xl font-bold text-gray-800 mt-1">{{ $totalUsers }}</h3>
-                            <div class="flex items-center mt-3">
+                            <div class="flex items-center gap-2 mb-1">
+                                <i class='bx bx-user text-purple-500'></i>
+                                <span class="text-gray-500 text-sm font-medium tracking-wide">TOTAL USERS</span>
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ $totalUsers }}</h3>
+                            <div class="flex items-center mt-4 space-x-2">
                                 @if ($usersPercentageChange >= 0)
-                                    <span
-                                        class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                        <i class='bx bx-up-arrow-alt mr-1'></i> {{ round($usersPercentageChange, 0) }}%
+                                    <span class="bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-up-arrow-alt text-sm mr-1'></i>
+                                        {{ round($usersPercentageChange, 0) }}%
                                     </span>
                                 @else
-                                    <span
-                                        class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full flex items-center">
-                                        <i class='bx bx-down-arrow-alt mr-1'></i>
+                                    <span class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                        <i class='bx bx-down-arrow-alt text-sm mr-1'></i>
                                         {{ round(abs($usersPercentageChange), 0) }}%
                                     </span>
                                 @endif
-                                <span class="text-gray-500 text-xs ml-2">vs last month</span>
+                                <span class="text-gray-400 text-xs">vs last month</span>
                             </div>
                         </div>
-                        <div class="p-3 rounded-lg bg-purple-50 text-purple-600">
+                        <div class="p-3 rounded-lg bg-purple-100/50 text-purple-600 backdrop-blur-sm border border-purple-200/50">
                             <i class='bx bx-user text-2xl'></i>
                         </div>
                     </div>
-                    <div class="h-1 bg-purple-200 w-full">
-                        <div class="h-1 bg-purple-500" style="width: 60%"></div>
+                    <div class="relative h-1.5 bg-purple-100 w-full overflow-hidden">
+                        <div class="absolute h-full bg-gradient-to-r from-purple-400 to-purple-600 rounded-full transition-all duration-700 ease-out"
+                            style="width: 60%"></div>
                     </div>
                 </div>
             </div>
@@ -117,10 +125,10 @@
                     <div class="bg-white rounded-xl shadow-xs border border-gray-100 overflow-hidden">
                         <div class="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
                             <h3 class="font-semibold text-gray-800">Recent Orders</h3>
-                            <a href="{{ route('admin.orders.index') }}"
+                            {{-- <a href="{{ route('admin.orders.index') }}"
                                 class="text-sm text-blue-600 hover:text-blue-800 flex items-center">
                                 View all <i class='bx bx-chevron-right ml-1'></i>
-                            </a>
+                            </a> --}}
                         </div>
 
                         @if ($recentOrders->isEmpty())
@@ -145,7 +153,7 @@
                     <div class="p-2 grid grid-cols-2 gap-6 mt-6">
                         <!-- Avg Order Value Card -->
                         <div
-                            class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-4 border border-blue-100 hover:shadow-lg transition-all duration-300">
+                            class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-4 border border-blue-300 hover:shadow-lg hover:shadow-blue-200 transition-all duration-300">
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div
@@ -173,7 +181,7 @@
 
                         <!-- Conversion Rate Card -->
                         <div
-                            class="bg-gradient-to-br from-green-50 to-white rounded-xl p-4 border border-green-100 hover:shadow-lg transition-all duration-300">
+                            class="bg-gradient-to-br from-green-50 to-white rounded-xl p-4 border border-green-300 hover:shadow-lg hover:shadow-green-200 transition-all duration-300">
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div
@@ -201,7 +209,7 @@
 
                         <!-- New Users Card -->
                         <div
-                            class="bg-gradient-to-br from-purple-50 to-white rounded-xl p-4 border border-purple-100 hover:shadow-lg transition-all duration-300">
+                            class="bg-gradient-to-br from-purple-50 to-white rounded-xl p-4 border border-purple-300 hover:shadow-lg hover:shadow-purple-200 transition-all duration-300">
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div
@@ -227,7 +235,7 @@
 
                         <!-- Pending Orders Card -->
                         <div
-                            class="bg-gradient-to-br from-yellow-50 to-white rounded-xl p-4 border border-yellow-100 hover:shadow-lg transition-all duration-300">
+                            class="bg-gradient-to-br from-yellow-50 to-white rounded-xl p-4 border border-yellow-300 hover:shadow-lg hover:shadow-yellow-200 transition-all duration-300">
                             <div class="flex items-start justify-between">
                                 <div>
                                     <div
@@ -257,94 +265,104 @@
     </div>
 
     <!-- Order Details Modal -->
-    <div id="orderModal"
-        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden overflow-y-auto transition-opacity duration-300 ease-in-out opacity-0">
+    <div id="orderModal" class="fixed inset-0 bg-black/30 z-50 hidden overflow-y-auto backdrop-blur-sm transition-opacity duration-300 ease-in-out opacity-0">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div
-                class="inline-block w-full max-w-3xl bg-white rounded-xl shadow-xl overflow-hidden transform transition-all duration-300 ease-in-out scale-95">
+            <div class="inline-block w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out scale-95">
                 <!-- Modal header -->
-                <div class="px-6 py-4 bg-gray-50 flex justify-between items-center border-b border-gray-200">
-                    <div>
-                        <h3 class="text-xl font-semibold text-gray-800">Order #<span id="modalOrderId"></span></h3>
-                        <span id="modalOrderStatus"
-                            class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium"></span>
+                <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-500 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 rounded-lg bg-white/10">
+                            <i class='bx bx-receipt text-2xl text-white'></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white">Order #<span id="modalOrderId"></span></h3>
+                            <span id="modalOrderStatus" class="inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white"></span>
+                        </div>
                     </div>
-                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition-colors">
-                        <i class='bx bx-x text-2xl'></i>
+                    <button id="closeModal" class="text-white/80 hover:text-white transition-colors">
+                        <i class='bx bx-x text-3xl'></i>
                     </button>
                 </div>
 
                 <!-- Modal body -->
-                <div class="p-5 space-y-5">
+                <div class="p-6 space-y-6">
                     <!-- Customer & Order Summary -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Customer Information -->
-                        <div class="space-y-3">
-                            <h4 class="flex items-center text-md font-medium text-gray-800">
-                                <i class='bx bx-user mr-2 text-blue-500'></i>
-                                Customer Details
-                            </h4>
-                            <div class="space-y-2">
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="p-2 rounded-lg bg-blue-100 text-blue-600">
+                                    <i class='bx bx-user text-xl'></i>
+                                </div>
+                                <h4 class="text-md font-semibold text-gray-800">Customer Details</h4>
+                            </div>
+                            <div class="space-y-3 pl-10">
                                 <div>
-                                    <p class="text-xs text-gray-500">Name</p>
-                                    <p id="modalCustomerName" class="font-medium text-gray-800"></p>
+                                    <p class="text-xs text-gray-500 font-medium">Name</p>
+                                    <p id="modalCustomerName" class="font-medium text-gray-800 mt-1"></p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">Email</p>
-                                    <p id="modalCustomerEmail" class="font-medium text-gray-800"></p>
+                                    <p class="text-xs text-gray-500 font-medium">Email</p>
+                                    <p id="modalCustomerEmail" class="font-medium text-gray-800 mt-1 text-sm"></p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">Payment Method</p>
-                                    <p id="modalPaymentMethod" class="font-medium text-gray-800"></p>
+                                    <p class="text-xs text-gray-500 font-medium">Payment Method</p>
+                                    <p id="modalPaymentMethod" class="font-medium text-gray-800 mt-1"></p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Order Summary -->
-                        <div class="space-y-3">
-                            <h4 class="flex items-center text-md font-medium text-gray-800">
-                                <i class='bx bx-receipt mr-2 text-blue-500'></i>
-                                Order Summary
-                            </h4>
-                            <div class="space-y-2">
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="p-2 rounded-lg bg-blue-100 text-blue-600">
+                                    <i class='bx bx-credit-card text-xl'></i>
+                                </div>
+                                <h4 class="text-md font-semibold text-gray-800">Order Summary</h4>
+                            </div>
+                            <div class="space-y-3 pl-10">
                                 <div>
-                                    <p class="text-xs text-gray-500">Date</p>
-                                    <p id="modalOrderDate" class="font-medium text-gray-800"></p>
+                                    <p class="text-xs text-gray-500 font-medium">Date</p>
+                                    <p id="modalOrderDate" class="font-medium text-gray-800 mt-1"></p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">Shipping Method</p>
-                                    <p id="modalShippingMethod" class="font-medium text-gray-800"></p>
+                                    <p class="text-xs text-gray-500 font-medium">Shipping Method</p>
+                                    <p id="modalShippingMethod" class="font-medium text-gray-800 mt-1"></p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500">Total Amount</p>
-                                    <p id="modalOrderTotal" class="text-lg font-bold text-blue-600"></p>
+                                    <p class="text-xs text-gray-500 font-medium">Total Amount</p>
+                                    <p id="modalOrderTotal" class="text-xl font-bold text-blue-600 mt-1"></p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Shipping Information -->
-                    <div class="space-y-3">
-                        <h4 class="flex items-center text-md font-medium text-gray-800">
-                            <i class='bx bx-map mr-2 text-blue-500'></i>
-                            Shipping Address
-                        </h4>
-                        <div class="p-3 bg-gray-50 rounded-lg transition-colors duration-200 hover:bg-gray-100">
-                            <p id="modalShippingAddress" class="text-gray-800 text-sm"></p>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="p-2 rounded-lg bg-blue-100 text-blue-600">
+                                <i class='bx bx-map text-xl'></i>
+                            </div>
+                            <h4 class="text-md font-semibold text-gray-800">Shipping Address</h4>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 transition-all duration-200 hover:border-blue-200 hover:shadow-sm pl-10">
+                            <p id="modalShippingAddress" class="text-gray-800 text-sm leading-relaxed"></p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Modal footer -->
-                <div class="px-6 py-3 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
                     <button type="button" id="printOrderBtn"
-                        class="flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors">
-                        <i class='bx bx-printer mr-2'></i> Print Receipt
+                        class="flex items-center px-5 py-2.5 text-sm font-medium rounded-lg text-blue-600 bg-white border border-gray-300 hover:bg-gray-50 transition-all hover:shadow-sm">
+                        <i class='bx bx-printer mr-2 text-lg'></i> Print Receipt
                     </button>
-                    <button type="button" id="closeModalBtn"
-                        class="px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
-                        Close
-                    </button>
+                    <div class="flex space-x-3">
+                        <button type="button" id="closeModalBtn"
+                            class="px-5 py-2.5 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md">
+                            Close
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

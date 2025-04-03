@@ -37,7 +37,7 @@
                     </td>
                     <td class="py-4 px-5">
                         <button data-order-id="{{ $order->id }}"
-                                class="text-blue-600 hover:text-blue-800 view-order-btn">
+                            class="text-blue-600 hover:text-blue-800 view-order-btn">
                             <i class='bx bx-show text-xl'></i>
                         </button>
                     </td>
@@ -47,8 +47,7 @@
     </table>
 </div>
 
-<!-- Pagination outside the scrollable area -->
-<div class="px-5 py-4 border-t border-gray-100">
+ <div class="px-5 py-2 border-t border-gray-100">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="text-sm text-gray-500">
             Showing
@@ -60,45 +59,25 @@
         </div>
 
         @if ($recentOrders->hasPages())
-            <nav class="flex items-center space-x-1">
-                {{-- Previous Page Link --}}
-                @if ($recentOrders->onFirstPage())
-                    <span class="p-2 rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
-                        <i class='bx bx-chevron-left text-xl'></i>
-                    </span>
+            <nav class="flex items-center justify-center space-x-2"> {{-- Previous Page Link --}} @if ($recentOrders->onFirstPage())
+                    <span
+                        class="p-2 rounded-full border border-gray-200 text-gray-400 cursor-not-allowed transition-colors">
+                        <i class='bx bx-chevron-left text-xl'></i> </span>
                 @else
                     <a href="{{ $recentOrders->previousPageUrl() }}"
-                       class="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors pagination-link">
-                        <i class='bx bx-chevron-left text-xl'></i>
-                    </a>
-                @endif
-
-                {{-- Pagination Elements --}}
-                @foreach ($recentOrders->getUrlRange(1, $recentOrders->lastPage()) as $page => $url)
-                    @if ($page == $recentOrders->currentPage())
-                        <span class="px-3 py-1 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 font-medium">
-                            {{ $page }}
-                        </span>
-                    @else
-                        <a href="{{ $url }}"
-                           class="px-3 py-1 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors pagination-link">
-                            {{ $page }}
-                        </a>
-                    @endif
-                @endforeach
-
-                {{-- Next Page Link --}}
-                @if ($recentOrders->hasMorePages())
+                        class="p-2 rounded-full border border-gray-200 text-gray-600 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 transition-colors duration-200">
+                        <i class='bx bx-chevron-left text-xl'></i> </a>
+                @endif {{-- Simple Page Indicator --}} <span class="text-sm text-gray-500 px-2"> Page
+                    {{ $recentOrders->currentPage() }} </span> {{-- Next Page Link --}} @if ($recentOrders->hasMorePages())
                     <a href="{{ $recentOrders->nextPageUrl() }}"
-                       class="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors pagination-link">
-                        <i class='bx bx-chevron-right text-xl'></i>
-                    </a>
+                        class="p-2 rounded-full border border-gray-200 text-gray-600 hover:bg-blue-50 hover:border-blue-300 hover:text-blue-600 transition-colors duration-200">
+                        <i class='bx bx-chevron-right text-xl'></i> </a>
                 @else
-                    <span class="p-2 rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
-                        <i class='bx bx-chevron-right text-xl'></i>
-                    </span>
+                    <span
+                        class="p-2 rounded-full border border-gray-200 text-gray-400 cursor-not-allowed transition-colors">
+                        <i class='bx bx-chevron-right text-xl'></i> </span>
                 @endif
             </nav>
         @endif
     </div>
-</div>
+    </div>

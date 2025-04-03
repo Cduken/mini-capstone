@@ -36,7 +36,7 @@
                             {{ __('Dashboard') }}
                         </x-nav-link>
                         <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.index')" class="group">
-                            {{ __('Products') }}
+                            {{ __('Product List') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -141,7 +141,7 @@
                     <i class='bx bx-dashboard mr-3 text-gray-400'></i> {{ __('Dashboard') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.index')" class="block pl-3 pr-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md">
-                    <i class='bx bx-list-ul mr-3 text-gray-400'></i> {{ __('Products') }}
+                    <i class='bx bx-list-ul mr-3 text-gray-400'></i> {{ __('Product List') }}
                 </x-responsive-nav-link>
             @endif
         </div>

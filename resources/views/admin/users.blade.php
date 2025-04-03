@@ -37,13 +37,13 @@
 
             <div id="stats-cards">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-[9px]">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                     @include('admin.partials.user_stats_cards_inner', [
                         'users' => $users,
                         'activeUsers' => $activeUsers,
                         'usersPercentageChange' => $usersPercentageChange,
                         'verifiedPercentage' => $verifiedPercentage,
-                        'adminCount' => $adminCount,
+                        'adminCount' => $adminCount
                     ])
                 </div>
             </div>

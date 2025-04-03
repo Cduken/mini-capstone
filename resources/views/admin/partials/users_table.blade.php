@@ -137,7 +137,7 @@
     </div>
 </div>
 
-<div class="px-4 py-[12px] border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+<div class="px-4 py-1 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
     <div class="text-sm text-gray-600">
         Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} users
     </div>

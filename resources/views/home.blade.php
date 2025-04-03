@@ -8,76 +8,97 @@
 
 
 
-        <div class="w-full bg-[#211C24] h-[91vh]">
-            <div class="pr-[120px] pl-[120px] grid grid-cols-2 gap-4 items-center h-full">
-                <div class="col-span-1">
-                    <h3 class="text-[#FFFFFF] font-semibold text-2xl">Pro.Beyond.</h3>
-                    <h1 class="text-[80px] text-[#FFFFFF] font-thin">IPhone 14 <span
-                            class="font-bold text-[80px]">Pro</span></h1>
-                    <p class="text-[#F5F5F5] text-lg">Created to change everything for the better. For everyone</p>
+        <div class="w-full bg-[#211C24] min-h-[91vh] md:h-[91vh]">
+            <div
+                class="px-4 sm:px-8 md:px-16 lg:px-32 xl:px-[166px] grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full py-8 md:py-0">
+                <div class="order-2 md:order-1 text-center md:text-left">
+                    <h3 class="text-[#FFFFFF] font-semibold text-xl sm:text-2xl">Pro.Beyond.</h3>
+                    <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-[80px] text-[#FFFFFF] font-thin leading-tight">
+                        IPhone 16 <span class="font-bold">Pro</span>
+                    </h1>
+                    <p class="text-[#F5F5F5] text-base sm:text-lg mt-4">Created to change everything for the better. For
+                        everyone</p>
 
-                    <a href="{{ route('products.index') }}">
-                        <button
-                            class="px-8 py-2 border-2 border-white mt-4 rounded-md text-white block items-center justify-center hover:bg-gray-800 transition ease-in duration-150">Shop
-                            Now</button>
-                    </a>
+                    <div class="mt-6 flex justify-center md:justify-start">
+                        <a href="{{ route('products.index') }}">
+                            <button
+                                class="px-6 sm:px-8 py-2 border-2 border-white rounded-md text-white hover:bg-gray-800 transition ease-in duration-150">
+                                Shop Now
+                            </button>
+                        </a>
+                    </div>
                 </div>
 
-                <div class="ml-[100px] mt-[40px]">
-                    <img src="{{ asset('images/HomeIPhoneImage.png') }}" alt="">
+                <div
+                    class="order-1 md:order-2 flex justify-center md:ml-[50px] lg:ml-[100px] h-[300px] sm:h-[350px] md:h-[450px]">
+                    <img src="{{ asset('images/iphone 16 pro max.webp') }}" alt="iPhone 16 Pro"
+                        class="h-full w-auto object-contain">
                 </div>
             </div>
 
-            <section class="h-[100vh]">
-                <div class="grid grid-cols-2 h-screen">
-                    <div class="flex items-center flex-col">
-                        <div class="flex h-full items-center">
-                            <img class="w-[350px] h-full" src="{{ asset('images/Playstation.png') }}" alt="">
-                            <div class="flex flex-col text-left p-4 ">
-                                <h1 class="text-[55px] font-semibold">Playstation 5</h1>
-                                <p class="text-gray-500">Incredibly powerful CPUs, GPUs, and an SSD with integrated I/O
-                                    will
-                                    redefine your PlayStation experience.</p>
+            <section class="min-h-screen">
+                <div class="grid grid-cols-1 lg:grid-cols-2 h-auto lg:h-screen">
+                    <!-- Left Column -->
+                    <div class="flex flex-col">
+                        <!-- Playstation Section -->
+                        <div class="flex flex-col md:flex-row items-center p-6 h-auto md:h-1/2">
+                            <img class="w-[250px] md:w-[350px] h-auto object-contain"
+                                src="{{ asset('images/Playstation.png') }}" alt="Playstation 5">
+                            <div class="flex flex-col text-center md:text-left p-4 mt-4 md:mt-0">
+                                <h1 class="text-4xl md:text-[48px] text-gray-300 font-semibold">Playstation 5</h1>
+                                <p class="text-gray-500 mt-2 md:mt-4">
+                                    Incredibly powerful CPUs, GPUs, and an SSD with integrated I/O will redefine your
+                                    PlayStation experience.
+                                </p>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-2 h-full">
-                            <div class="flex items-center gap-8">
-                                <div class="w-[150px] h-[250px]">
-                                    <img class="w-full h-full" src="{{ asset('images/Headset.png') }}" alt="">
+                        <!-- Bottom Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 h-auto md:h-1/2">
+                            <!-- AirPods Section -->
+                            <div class="flex flex-col sm:flex-row items-center p-6 gap-4 bg-white">
+                                <div class="w-[120px] sm:w-[150px] h-[180px] sm:h-[250px]">
+                                    <img class="w-full h-full object-contain" src="{{ asset('images/Headset.png') }}"
+                                        alt="AirPods Max">
                                 </div>
-                                <div class="flex flex-col text-left pl-8 pr-8">
-                                    <h1 class="text-[40px]">Apple</h1>
-                                    <h1 class="text-[40px] mt-[-10px]">AirPods</h1>
-                                    <h1 class="text-[40px] font-semibold mt-[-10px]">Max</h1>
-                                    <p class="text-gray-500">Computational audio. Listen, it's powerful</p>
+                                <div class="flex flex-col text-center sm:text-left">
+                                    <h1 class="text-3xl mb-2 sm:text-[40px]">Apple</h1>
+                                    <h1 class="text-3xl mb-2 sm:text-[40px]">AirPods</h1>
+                                    <h1 class="text-3xl mb-2 sm:text-[40px] font-semibold">Max</h1>
+                                    <p class="text-gray-500 mt-2">Computational audio. Listen, it's powerful</p>
                                 </div>
                             </div>
 
-                            <div class="flex items-center bg-[#353535]">
-                                <div class="w-[200px] h-[200px]">
-                                    <img class="w-full h-full" src="{{ asset('images/image 36.png') }}" alt="">
+                            <!-- Vision Pro Section -->
+                            <div class="flex flex-col sm:flex-row items-center p-6 gap-4 bg-[#353535]">
+                                <div class="w-[120px] sm:w-[150px] md:w-[200px] h-[120px] sm:h-[150px] md:h-[200px]">
+                                    <img class="w-full h-full object-contain" src="{{ asset('images/image 36.png') }}"
+                                        alt="Vision Pro">
                                 </div>
-                                <div class="flex flex-col text-left pl-12 pr-12">
-                                    <h1 class="text-[40px] font-thin text-white">Apple</h1>
-                                    <h1 class="text-[40px] mt-[-10px] font-thin text-white">Vision <span
+                                <div class="flex flex-col text-center sm:text-left">
+                                    <h1 class="text-3xl mb-2 sm:text-[40px] font-thin text-white">Apple</h1>
+                                    <h1 class="text-3xl sm:text-[40px] font-thin text-white">Vision <span
                                             class="font-semibold">Pro</span></h1>
-                                    <p class="text-gray-500">An immersive way to experience entertainment</p>
+                                    <p class="text-gray-400 mt-2">An immersive way to experience entertainment</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-gray-300 flex items-center gap-12">
-                        <div class="flex flex-col text-left p-8 ">
-                            <h1 class="text-[60px] font-thin">Macbook</h1>
-                            <h1 class="text-[60px] font-semibold mt-[-30px]">Air</h1>
-                            <p class="text-gray-500">The new 15‑inch MacBook Air makes room for more of what you love
-                                with
-                                a spacious Liquid Retina display.</p>
+                    <!-- Macbook Column -->
+                    <div
+                        class="bg-gray-300 flex flex-col md:flex-row items-center justify-center p-8 gap-8 h-auto lg:h-full">
+                        <div class="flex flex-col text-center md:text-left mb-8 md:mb-0">
+                            <h1 class="text-5xl md:text-[60px] font-thin">Macbook</h1>
+                            <h1 class="text-5xl md:text-[60px] font-semibold">Air</h1>
+                            <p class="text-gray-600 max-w-md mx-auto md:mx-0 mt-4">
+                                The new 15‑inch MacBook Air makes room for more of what you love with a spacious Liquid
+                                Retina display.
+                            </p>
                         </div>
-                        <div class=" h-[500px] w-[450px] pb-8 pt-8">
-                            <img class="h-full w-full " src="{{ asset('images/Macbook.png') }}" alt="">
+                        <div class="w-full max-w-[350px] md:w-[450px] h-[400px] md:h-[500px]">
+                            <img class="w-full h-full object-contain" src="{{ asset('images/Macbook.png') }}"
+                                alt="Macbook Air">
                         </div>
                     </div>
                 </div>
@@ -201,141 +222,161 @@
                 </div>
             </section>
 
-            <section class="pr-[120px] pl-[120px] bg-gray-100 pt-2 pb-16" id="about">
-                <h2 class="text-md mt-11 mb-11 font-bold border-b border-gray-400 pb-6">About Us</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <section class="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[120px] bg-gray-100 pt-8 pb-16" id="about">
+                <h2 class="text-lg sm:text-xl font-bold border-b border-gray-400 pb-4 mb-8 mt-8 sm:mt-11 sm:mb-11">
+                    About Us</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                     <!-- About Content -->
-                    <div class="space-y-6">
-                        <h3 class="text-4xl font-bold text-gray-800">Who We Are</h3>
-                        <p class="text-gray-600 text-lg">
+                    <div class="space-y-4 sm:space-y-6">
+                        <h3 class="text-3xl sm:text-4xl font-bold text-gray-800">Who We Are</h3>
+                        <p class="text-gray-600 text-base sm:text-lg">
                             We are ShopEase, your ultimate destination for the latest and greatest in technology. Our
-                            mission
-                            is to provide you with high-quality products that enhance your lifestyle and keep you
-                            connected
-                            to the world.
+                            mission is to provide you with high-quality products that enhance your lifestyle and keep
+                            you connected to the world.
                         </p>
-                        <p class="text-gray-600 text-lg">
+                        <p class="text-gray-600 text-base sm:text-lg">
                             From cutting-edge smartphones to powerful laptops and innovative gadgets, we bring you the
-                            best
-                            from top brands like Apple, Samsung, and more. Our team is passionate about technology and
-                            dedicated to helping you find the perfect product for your needs.
+                            best from top brands like Apple, Samsung, and more. Our team is passionate about technology
+                            and dedicated to helping you find the perfect product for your needs.
                         </p>
-                        <div class="flex space-x-6">
+                        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
                             <div class="flex items-center space-x-2">
-                                <i class='bx bx-check-shield text-3xl text-blue-600'></i>
-                                <span class="text-gray-700 font-semibold">Quality Assurance</span>
+                                <i class='bx bx-check-shield text-2xl sm:text-3xl text-blue-600'></i>
+                                <span class="text-gray-700 font-medium sm:font-semibold">Quality Assurance</span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <i class='bx bx-headphone text-3xl text-green-600'></i>
-                                <span class="text-gray-700 font-semibold">24/7 Support</span>
+                                <i class='bx bx-headphone text-2xl sm:text-3xl text-green-600'></i>
+                                <span class="text-gray-700 font-medium sm:font-semibold">24/7 Support</span>
                             </div>
                         </div>
-                        <a href="#contact">
+                        <a href="#contact" class="inline-block">
                             <button
-                                class="px-8 py-3 bg-black text-white rounded-md hover:bg-gray-800 transition duration-300 mt-6">
+                                class="px-6 sm:px-8 py-2 sm:py-3 bg-black text-white rounded-md hover:bg-gray-800 transition duration-300 mt-4 sm:mt-6">
                                 Contact Us
                             </button>
                         </a>
                     </div>
 
                     <!-- About Image -->
-                    <div class="relative">
-                        <img src="{{ asset('images/6174398.jpg') }}" alt="About Us" class="rounded-lg shadow-2xl">
-                        <div class="absolute -bottom-8 -right-8 bg-white p-6 rounded-lg shadow-lg">
-                            <h4 class="text-2xl font-bold text-gray-800">5+ Years</h4>
-                            <p class="text-gray-600">of Experience</p>
+                    <div class="relative mt-8 md:mt-0">
+                        <img src="{{ asset('images/6174398.jpg') }}" alt="About Us"
+                            class="w-full rounded-lg shadow-xl">
+                        <div
+                            class="absolute -bottom-4 sm:-bottom-6 md:-bottom-8 -right-4 sm:-right-6 md:-right-8 bg-white p-3 sm:p-4 md:p-6 rounded-lg shadow-md">
+                            <h4 class="text-xl sm:text-2xl font-bold text-gray-800">5+ Years</h4>
+                            <p class="text-sm sm:text-base text-gray-600">of Experience</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="pr-[120px] pl-[120px] bg-white pb-10" id="contact">
-                <h2 class="text-md mt-11 mb-11 font-bold border-b border-gray-400 pb-6">Contact Us</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <!-- Contact Form -->
-                    <div class="bg-gray-100 p-8 rounded-lg shadow-lg">
-                        <h3 class="text-2xl font-bold text-gray-800 mb-6">Get in Touch</h3>
-                        <form action="#" method="POST" class="space-y-6">
-                            <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700">Your
-                                    Name</label>
-                                <input type="text" id="name" name="name" required
-                                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Your
-                                    Email</label>
-                                <input type="email" id="email" name="email" required
-                                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label for="message" class="block text-sm font-medium text-gray-700">Your
-                                    Message</label>
-                                <textarea id="message" name="message" rows="5" required
-                                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
-                            </div>
-                            <div>
-                                <button type="submit"
-                                    class="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition duration-300">
-                                    Send Message
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+            <section class="px-4 sm:px-6 lg:px-8 xl:px-32 2xl:px-40 bg-white py-10 md:py-16" id="contact">
+                <div class="max-w-7xl mx-auto">
+                    <h2
+                        class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 md:mb-12 pb-4 border-b border-gray-200">
+                        Contact Us</h2>
 
-                    <!-- Contact Information -->
-                    <div class="space-y-8">
-                        <h3 class="text-2xl font-bold text-gray-800">Contact Information</h3>
-                        <div class="space-y-6">
-                            <!-- Address -->
-                            <div class="flex items-start space-x-4">
-                                <i class='bx bx-map text-3xl text-blue-600'></i>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                        <!-- Contact Form -->
+                        <div
+                            class="bg-gray-50 p-6 md:p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">Get in Touch</h3>
+                            <form action="#" method="POST" class="space-y-4 md:space-y-6">
                                 <div>
-                                    <h4 class="text-lg font-semibold text-gray-800">Our Office</h4>
-                                    <p class="text-gray-600">Tubigon, Bohol</p>
+                                    <label for="name"
+                                        class="block text-sm md:text-base font-medium text-gray-700">Your Name</label>
+                                    <input type="text" id="name" name="name" required
+                                        class="mt-1 block w-full px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                 </div>
-                            </div>
-
-                            <!-- Phone -->
-                            <div class="flex items-start space-x-4">
-                                <i class='bx bx-phone text-3xl text-green-600'></i>
                                 <div>
-                                    <h4 class="text-lg font-semibold text-gray-800">Phone</h4>
-                                    <p class="text-gray-600">+(69) 123-456-789</p>
+                                    <label for="email"
+                                        class="block text-sm md:text-base font-medium text-gray-700">Your Email</label>
+                                    <input type="email" id="email" name="email" required
+                                        class="mt-1 block w-full px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                 </div>
-                            </div>
-
-                            <!-- Email -->
-                            <div class="flex items-start space-x-4">
-                                <i class='bx bx-envelope text-3xl text-purple-600'></i>
                                 <div>
-                                    <h4 class="text-lg font-semibold text-gray-800">Email</h4>
-                                    <p class="text-gray-600">ernestojrcabarrubias@gmail.com</p>
+                                    <label for="message"
+                                        class="block text-sm md:text-base font-medium text-gray-700">Your
+                                        Message</label>
+                                    <textarea id="message" name="message" rows="4" required
+                                        class="mt-1 block w-full px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
                                 </div>
-                            </div>
-
-                            <!-- Social Media Links -->
-                            <div class="flex items-start space-x-4">
-                                <i class='bx bx-share-alt text-3xl text-orange-600'></i>
                                 <div>
-                                    <h4 class="text-lg font-semibold text-gray-800">Follow Us</h4>
-                                    <div class="flex space-x-4 mt-2">
-                                        <a href="https://www.facebook.com/cdukenzxc"
-                                            class="text-gray-600 hover:text-blue-600">
-                                            <i class='bx bxl-facebook text-2xl'></i>
-                                        </a>
-                                        <a href="https://www.instagram.com/cdukenzxc/"
-                                            class="text-gray-600 hover:text-pink-600">
-                                            <i class='bx bxl-instagram text-2xl'></i>
-                                        </a>
-                                        <a href="https://discord.com/channels/@me"
-                                            class="text-gray-600 hover:text-violet-500">
-                                            <i class='bx bxl-discord text-2xl'></i>
-                                        </a>
-                                        <a href="https://www.linkedin.com/in/ernestojr-cabarrubias-3154342a1/"
-                                            class="text-gray-600 hover:text-blue-600">
-                                            <i class='bx bxl-linkedin text-2xl'></i>
-                                        </a>
+                                    <button type="submit"
+                                        class="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 transition duration-300 text-sm md:text-base font-medium">
+                                        Send Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="space-y-6 md:space-y-8">
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Contact Information</h3>
+                            <div class="space-y-4 md:space-y-6">
+                                <!-- Address -->
+                                <div class="flex items-start space-x-3 md:space-x-4">
+                                    <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
+                                        <i class='bx bx-map text-xl md:text-2xl'></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-base md:text-lg font-semibold text-gray-800">Our Office</h4>
+                                        <p class="text-gray-600 text-sm md:text-base">Tubigon, Bohol</p>
+                                    </div>
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="flex items-start space-x-3 md:space-x-4">
+                                    <div class="p-2 bg-green-100 rounded-lg text-green-600">
+                                        <i class='bx bx-phone text-xl md:text-2xl'></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-base md:text-lg font-semibold text-gray-800">Phone</h4>
+                                        <p class="text-gray-600 text-sm md:text-base">+(69) 123-456-789</p>
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="flex items-start space-x-3 md:space-x-4">
+                                    <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
+                                        <i class='bx bx-envelope text-xl md:text-2xl'></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-base md:text-lg font-semibold text-gray-800">Email</h4>
+                                        <p class="text-gray-600 text-sm md:text-base break-all">
+                                            ernestojrcabarrubias@gmail.com</p>
+                                    </div>
+                                </div>
+
+                                <!-- Social Media Links -->
+                                <div class="flex items-start space-x-3 md:space-x-4">
+                                    <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
+                                        <i class='bx bx-share-alt text-xl md:text-2xl'></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-base md:text-lg font-semibold text-gray-800">Follow Us</h4>
+                                        <div class="flex space-x-3 md:space-x-4 mt-2">
+                                            <a href="https://www.facebook.com/cdukenzxc" target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="text-gray-600 hover:text-blue-600 transition">
+                                                <i class='bx bxl-facebook text-2xl md:text-3xl'></i>
+                                            </a>
+                                            <a href="https://www.instagram.com/cdukenzxc/" target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="text-gray-600 hover:text-pink-600 transition">
+                                                <i class='bx bxl-instagram text-2xl md:text-3xl'></i>
+                                            </a>
+                                            <a href="https://discord.com/channels/@me" target="_blank"
+                                                rel="noopener noreferrer"
+                                                class="text-gray-600 hover:text-violet-500 transition">
+                                                <i class='bx bxl-discord text-2xl md:text-3xl'></i>
+                                            </a>
+                                            <a href="https://www.linkedin.com/in/ernestojr-cabarrubias-3154342a1/"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="text-gray-600 hover:text-blue-600 transition">
+                                                <i class='bx bxl-linkedin text-2xl md:text-3xl'></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
