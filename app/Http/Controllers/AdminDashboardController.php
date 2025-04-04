@@ -31,7 +31,7 @@ class AdminDashboardController extends Controller
         // Calculate statistics
         $averageOrderValue = Order::avg('total') ?? 0;
         $conversionRate = $totalUsers > 0 ? ($totalOrders / $totalUsers) * 100 : 0;
-        $newUsersCount = User::where('created_at', '>=', Carbon::now()->subMinutes(30))->count();
+        $newUsersCount = User::where('created_at', '>=', Carbon::now()->subMinutes(40))->count();
         $pendingOrdersCount = Order::where('status', 'pending')->count();
 
         $productsPercentageChange = $this->calculateMonthlyPercentageChange(Product::class, 'created_at');
@@ -87,7 +87,7 @@ class AdminDashboardController extends Controller
 
     private function calculateNewUsersPercentageChange()
     {
-        $current = User::whereMonth('created_at', Carbon::now()->month)->count();
+        $current = User::whereMonth('created_at', Carbon::now()->subMinutes(60))->count();
         $previous = User::whereMonth('created_at', Carbon::now()->subMonth()->month)->count();
         return $this->calculatePercentageChange($current, $previous);
     }
@@ -126,6 +126,8 @@ class AdminDashboardController extends Controller
 
         return view('admin.order-details', [
             'order' => $order,
+            'products' => $order->products,
+            'items' => $order->items,
             'subtotal' => $order->subtotal,
             'shipping' => $order->shipping,
             'tax' => $order->tax,

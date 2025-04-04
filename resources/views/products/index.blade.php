@@ -30,7 +30,7 @@
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-4">
                         <div class="flex justify-between items-center mb-6 pb-2 border-b border-gray-100">
                             <h3 class="font-bold text-gray-900 text-xl">Filters</h3>
-                            <button class="text-sm text-indigo-600 hover:text-indigo-800">Reset All</button>
+                            {{-- <button class="text-sm text-indigo-600 hover:text-indigo-800">Reset All</button> --}}
                         </div>
 
 
@@ -198,12 +198,20 @@
                                 </div>
                                 <div class="relative">
                                     <select
-                                        class="appearance-none bg-white border border-gray-200 rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 text-sm">
-                                        <option>Sort by: Featured</option>
-                                        <option>Price: Low to High</option>
-                                        <option>Price: High to Low</option>
-                                        <option>Customer Rating</option>
-                                        <option>Newest Arrivals</option>
+                                        class="appearance-none bg-white border border-gray-200 rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 text-sm"
+                                        onchange="updateUrlParam('sort', this.value)">
+                                        <option value="latest" {{ $currentSort == 'latest' ? 'selected' : '' }}>
+                                            Sort by: Featured
+                                        </option>
+                                        <option value="price_asc" {{ $currentSort == 'price_asc' ? 'selected' : '' }}>
+                                            Price: Low to High
+                                        </option>
+                                        <option value="price_desc" {{ $currentSort == 'price_desc' ? 'selected' : '' }}>
+                                            Price: High to Low
+                                        </option>
+                                        <option value="rating" {{ $currentSort == 'rating' ? 'selected' : '' }}>
+                                            Customer Rating
+                                        </option>
                                     </select>
                                     <div
                                         class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
@@ -268,14 +276,29 @@
                                         <!-- Product Info -->
                                         <div class="p-4">
                                             <div class="flex items-center mb-2">
-                                                <div class="flex items-center text-yellow-400">
-                                                    <i class='bx bxs-star'></i>
-                                                    <i class='bx bxs-star'></i>
-                                                    <i class='bx bxs-star'></i>
-                                                    <i class='bx bxs-star'></i>
-                                                    <i class='bx bxs-star-half'></i>
-                                                </div>
-                                                <span class="text-xs text-gray-500 ml-1">(24 reviews)</span>
+                                                @if ($product->ratings_count > 0)
+                                                    <div class="flex items-center text-yellow-400">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            @if ($i <= floor($product->average_rating))
+                                                                <i class='bx bxs-star'></i>
+                                                            @elseif($i - 0.5 <= $product->average_rating)
+                                                                <i class='bx bxs-star-half'></i>
+                                                            @else
+                                                                <i class='bx bx-star'></i>
+                                                            @endif
+                                                        @endfor
+                                                    </div>
+                                                    <span
+                                                        class="text-xs text-gray-500 ml-1">({{ $product->ratings_count }}
+                                                        reviews)</span>
+                                                @else
+                                                    <div class="flex items-center text-gray-300">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            <i class='bx bx-star'></i>
+                                                        @endfor
+                                                    </div>
+                                                    <span class="text-xs text-gray-500 ml-1">(No reviews yet)</span>
+                                                @endif
                                             </div>
                                             <a href="{{ route('products.show', $product->id) }}"
                                                 class="font-semibold text-gray-900 mb-1 line-clamp-1 hover:text-indigo-600 block">
@@ -334,68 +357,83 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Price Range Filter
-            const priceRange = document.getElementById('price-range');
-            const minPriceValue = document.getElementById('min-price-value');
-            const maxPriceValue = document.getElementById('max-price-value');
-            const currentMinPrice = document.getElementById('current-min-price');
-            const currentMaxPrice = document.getElementById('current-max-price');
-            let debounceTimer;
+        // Price Range Filter
+        const priceRange = document.getElementById('price-range');
+        const minPriceValue = document.getElementById('min-price-value');
+        const maxPriceValue = document.getElementById('max-price-value');
+        const currentMinPrice = document.getElementById('current-min-price');
+        const currentMaxPrice = document.getElementById('current-max-price');
+        let debounceTimer;
 
-            // Initialize values
-            maxPriceValue.textContent = priceRange.max;
-            currentMaxPrice.textContent = priceRange.value;
+        // Initialize values
+        maxPriceValue.textContent = priceRange.max;
+        currentMaxPrice.textContent = priceRange.value;
 
-            // Update display when slider moves
-            priceRange.addEventListener('input', function() {
-                currentMaxPrice.textContent = this.value;
-            });
-
-            // Fetch products when slider is released (with debounce)
-            priceRange.addEventListener('change', function() {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    updateFilters(0, this.value);
-                }, 500);
-            });
-
-            // Search Filter
-            const searchInput = document.querySelector('input[name="search"]');
-            if (searchInput) {
-                searchInput.addEventListener('keyup', function(e) {
-                    if (e.key === 'Enter' || e.target.value.length === 0) {
-                        updateFilters();
-                    }
-                });
-            }
-
-            function updateFilters(minPrice = null, maxPrice = null) {
-                // Get current URL parameters
-                const url = new URL(window.location.href);
-                const params = new URLSearchParams(url.search);
-
-                // Update price parameters if provided
-                if (minPrice !== null) params.set('min_price', minPrice);
-                if (maxPrice !== null) params.set('max_price', maxPrice);
-
-                // Update search parameter
-                if (searchInput) {
-                    const searchValue = searchInput.value.trim();
-                    if (searchValue) {
-                        params.set('search', searchValue);
-                    } else {
-                        params.delete('search');
-                    }
-                }
-
-                // Remove page parameter to go back to first page
-                params.delete('page');
-
-                // Redirect with new parameters
-                window.location.href = `${url.pathname}?${params.toString()}`;
-            }
+        // Update display when slider moves
+        priceRange.addEventListener('input', function() {
+            currentMaxPrice.textContent = this.value;
         });
+
+        // Fetch products when slider is released (with debounce)
+        priceRange.addEventListener('change', function() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                updateFilters(0, this.value);
+            }, 500);
+        });
+
+        // Search Filter
+        const searchInput = document.querySelector('input[name="search"]');
+        if (searchInput) {
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter' || e.target.value.length === 0) {
+                    updateFilters();
+                }
+            });
+        }
+
+        function updateFilters(minPrice = null, maxPrice = null) {
+            // Get current URL parameters
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            // Update price parameters if provided
+            if (minPrice !== null) params.set('min_price', minPrice);
+            if (maxPrice !== null) params.set('max_price', maxPrice);
+
+            // Update search parameter
+            if (searchInput) {
+                const searchValue = searchInput.value.trim();
+                if (searchValue) {
+                    params.set('search', searchValue);
+                } else {
+                    params.delete('search');
+                }
+            }
+
+            // Remove page parameter to go back to first page
+            params.delete('page');
+
+            // Redirect with new parameters
+            window.location.href = `${url.pathname}?${params.toString()}`;
+        }
+
+        // Function to update URL parameter for sorting
+        function updateUrlParam(key, value) {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            if (value === 'latest') {
+                params.delete(key);
+            } else {
+                params.set(key, value);
+            }
+
+            // Remove page parameter when changing sort
+            params.delete('page');
+
+            window.location.href = `${url.pathname}?${params.toString()}`;
+        }
     </script>
 
     <style>

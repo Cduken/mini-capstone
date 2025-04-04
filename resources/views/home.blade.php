@@ -104,68 +104,79 @@
                 </div>
             </section>
 
-            <section class="px-4 sm:px-6 lg:px-8 py-12 bg-gray-50" id="products">
-                <div class="max-w-7xl mx-auto">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center relative pb-4">
-                        Featured Products
-                        <span
-                            class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"></span>
-                    </h2>
+            @if ($products->count() > 0)
+                <section class="px-4 sm:px-6 lg:px-8 py-12 bg-gray-50" id="products">
+                    <div class="max-w-7xl mx-auto">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center relative pb-4">
+                            Featured Products
+                            <span
+                                class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"></span>
+                        </h2>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        @foreach ($products as $product)
-                            <div
-                                class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group relative overflow-hidden border border-gray-100 hover:border-blue-100">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            @foreach ($products as $product)
+                                <div
+                                    class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group relative overflow-hidden border border-gray-100 hover:border-blue-100 flex flex-col h-full">
 
-                                <div class="absolute top-3 left-3 right-3 z-10 flex justify-between">
-                                    <span
-                                        class="px-3 py-1 text-center rounded-full text-xs font-semibold shadow-sm {{ $product->inStock ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }}">
-                                        {{ $product->inStock ? 'In Stock' : 'Out of Stock' }}
-                                    </span>
-                                </div>
-
-                                <!-- Product Image -->
-                                <div class="relative h-64 w-full overflow-hidden bg-gray-50/50">
-                                    <img src="{{ asset($product->image) }}" alt="{{ $product->title }}"
-                                        class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 p-6 mix-blend-multiply">
-
-                                    <!-- Quick View Overlay -->
-                                    <div
-                                        class="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
-                                        <a href="{{ route('products.show', $product->id) }}"
-                                            class="bg-white text-blue-600 px-6 py-2 rounded-full font-medium shadow-lg hover:bg-blue-50 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 flex items-center">
-                                            <i class='bx bx-search-alt-2 mr-2'></i> Quick View
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <!-- Product Info -->
-                                <div class="p-5 pt-3 flex flex-col h-[calc(100%-16rem)]">
-                                    <!-- Upper Content Section -->
-                                    <div class="flex-1">
-                                        <!-- Category -->
+                                    <div class="absolute top-3 left-3 right-3 z-10 flex justify-between">
                                         <span
-                                            class="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full mb-3 inline-block">
-                                            {{ $product->category }}
+                                            class="px-3 py-1 text-center rounded-full text-xs font-semibold shadow-sm {{ $product->inStock ? 'bg-green-100 text-green-700' : 'bg-red-50 text-red-700' }}">
+                                            {{ $product->inStock ? 'In Stock' : 'Out of Stock' }}
                                         </span>
+                                    </div>
 
-                                        <!-- Title -->
+                                    <!-- Product Image -->
+                                    <div class="relative h-64 w-full overflow-hidden bg-gray-50/50">
+                                        <img src="{{ asset($product->image) }}" alt="{{ $product->title }}"
+                                            class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110 p-6 mix-blend-multiply">
+
+                                        <!-- Quick View Overlay -->
+                                        <div
+                                            class="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
+                                            <a href="{{ route('products.show', $product->id) }}"
+                                                class="bg-white text-blue-600 px-6 py-2 rounded-full font-medium shadow-lg hover:bg-blue-50 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 flex items-center">
+                                                <i class='bx bx-search-alt-2 mr-2'></i> Quick View
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Info -->
+                                    <div class="p-5 pt-3 flex flex-col flex-grow">
+                                        <!-- Category - Changed to not be full width -->
+                                        <div class="mb-3">
+                                            <span
+                                                class="text-xs font-medium text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block w-auto">
+                                                {{ $product->category }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Title - Fixed height -->
                                         <h3
-                                            class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
+                                            class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors min-h-[3.5rem]">
                                             <a
                                                 href="{{ route('products.show', $product->id) }}">{{ $product->title }}</a>
                                         </h3>
 
-                                        <!-- Rating -->
-                                        <div class="flex items-center mb-4">
-                                            <div class="flex text-amber-400 text-sm">
-                                                <i class='bx bxs-star'></i>
-                                                <i class='bx bxs-star'></i>
-                                                <i class='bx bxs-star'></i>
-                                                <i class='bx bxs-star'></i>
-                                                <i class='bx bxs-star-half'></i>
+                                        <!-- Rating - Fixed height container -->
+                                        <div class="mb-4 min-h-[1.5rem]">
+                                            <div class="flex items-center">
+                                                <!-- Star Rating -->
+                                                <div class="flex text-amber-400 text-sm">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= floor($product->ratings_avg_rating))
+                                                            <i class='bx bxs-star'></i>
+                                                        @elseif($i == ceil($product->ratings_avg_rating) && $product->ratings_avg_rating - floor($product->ratings_avg_rating) > 0)
+                                                            <i class='bx bxs-star-half'></i>
+                                                        @else
+                                                            <i class='bx bx-star'></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                                <span class="ml-2 text-xs text-gray-500">
+                                                    ({{ $product->ratings_count }}
+                                                    {{ Str::plural('review', $product->ratings_count) }})
+                                                </span>
                                             </div>
-                                            <span class="ml-2 text-xs text-gray-500">(24 reviews)</span>
                                         </div>
 
                                         <!-- Price & Admin Actions -->
@@ -196,31 +207,41 @@
                                                 @endif
                                             @endauth
                                         </div>
-                                    </div>
 
-                                    <!-- Add to Cart Button - Now placed at bottom -->
-                                    <div class="mt-auto">
-                                        @auth
-                                            @if (Auth::user()->userType !== 'admin')
-                                                <a href="{{ route('products.show', $product->id) }}"
-                                                    class="block w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white text-center py-3 px-4 rounded-xl font-medium transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 {{ $product->inStock ? '' : 'opacity-50 cursor-not-allowed' }}"
-                                                    {{ $product->inStock ? '' : 'disabled' }}>
-                                                    <i class='bx bx-cart-alt mr-2'></i> Add to Cart
+                                        <!-- Add to Cart Button - Now placed at bottom -->
+                                        <div class="mt-auto">
+                                            @auth
+                                                @if (Auth::user()->userType !== 'admin')
+                                                    <a href="{{ route('products.show', $product->id) }}"
+                                                        class="block w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white text-center py-3 px-4 rounded-xl font-medium transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 {{ $product->inStock ? '' : 'opacity-50 cursor-not-allowed' }}"
+                                                        {{ $product->inStock ? '' : 'disabled' }}>
+                                                        <i class='bx bx-cart-alt mr-2'></i> Click to Buy
+                                                    </a>
+                                                @endif
+                                            @else
+                                                <a href="{{ route('login') }}"
+                                                    class="block w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white text-center py-3 px-4 rounded-xl font-medium transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                                                    <i class='bx bx-cart-alt mr-2'></i> Click to Buy
                                                 </a>
-                                            @endif
-                                        @else
-                                            <a href="{{ route('login') }}"
-                                                class="block w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white text-center py-3 px-4 rounded-xl font-medium transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
-                                                <i class='bx bx-cart-alt mr-2'></i> Add to Cart
-                                            </a>
-                                        @endauth
+                                            @endauth
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            @else
+                <section class="px-4 sm:px-6 lg:px-8 py-12 bg-gray-50">
+                    <div class="max-w-7xl mx-auto">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center relative pb-4">
+                            No Products Available
+                            <span
+                                class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full"></span>
+                        </h2>
+                    </div>
+                </section>
+            @endif
 
             <section class="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[120px] bg-gray-100 pt-8 pb-16" id="about">
                 <h2 class="text-lg sm:text-xl font-bold border-b border-gray-400 pb-4 mb-8 mt-8 sm:mt-11 sm:mb-11">
@@ -348,7 +369,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Social Media Links -->
+
                                 <div class="flex items-start space-x-3 md:space-x-4">
                                     <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
                                         <i class='bx bx-share-alt text-xl md:text-2xl'></i>

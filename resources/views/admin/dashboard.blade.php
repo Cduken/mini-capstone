@@ -221,13 +221,13 @@
                                 </div>
                                 <div class="text-purple-400 opacity-20 self-start mt-1">
                                     <i
-                                        class='bx bx-{{ $newUsersPercentageChange >= 0 ? 'user-x' : 'group' }} text-3xl'></i>
+                                        class='bx bx-{{ $newUsersPercentageChange >= 0 ? 'group' : 'user-x' }} text-3xl'></i>
                                 </div>
                             </div>
                             <div class="flex items-center mt-2">
                                 <span
                                     class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full flex items-center">
-                                    {{ $newUsersPercentageChange >= 0 ? '↓' : '↑' }}
+                                    {{ $newUsersPercentageChange >= 0 ? '↑' : '↓' }}
                                     {{ number_format(abs($newUsersPercentageChange), 1) }}%
                                 </span>
                             </div>

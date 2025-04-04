@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
@@ -38,46 +39,38 @@ class CheckoutController extends Controller
 
     public function showPaymentPage()
     {
-        // Get cart items from session or fall back to database
         $cartItems = Session::get('cartItems', function () {
             return Cart::with('product')
                 ->where('user_id', Auth::id())
                 ->get();
         });
 
-        // If still no cart items, redirect back with error
         if (!$cartItems || $cartItems->isEmpty()) {
             return redirect()->back()->with('error', 'Your cart is empty');
         }
 
-        $address = Session::get('address');
-        $city = Session::get('city');
-        $zip_code = Session::get('zip_code');
-        $country = Session::get('country');
-        $state = Session::get('state');
-        $shippingMethod = Session::get('shipping_method');
-
-        // Calculate the subtotal, tax, shipping, and total
+        // Calculate totals
         $subtotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
-        $tax = $subtotal * 0.1; // Example tax calculation
-        $shipping = 10.00; // Example flat shipping rate
+        $tax = $subtotal * 0.1;
+        $shipping = 10.00;
         $total = $subtotal + $tax + $shipping;
 
-        return view('payment', compact(
-            'address',
-            'city',
-            'zip_code',
-            'country',
-            'state',
-            'shippingMethod',
-            'cartItems',
-            'subtotal',
-            'tax',
-            'shipping',
-            'total'
-        ));
+        return view('payment', [
+            'address' => Session::get('address'),
+            'city' => Session::get('city'),
+            'zip_code' => Session::get('zip_code'),
+            'country' => Session::get('country'),
+            'state' => Session::get('state'),
+            'shippingMethod' => Session::get('shipping_method'),
+            'cartItems' => $cartItems,
+            'subtotal' => $subtotal,
+            'tax' => $tax,
+            'shipping' => $shipping,
+            'total' => $total,
+            'order' => null // Explicitly set order to null for payment page
+        ]);
     }
 
     public function processPayment(Request $request)
@@ -114,6 +107,7 @@ class CheckoutController extends Controller
                 break;
         }
 
+        DB::beginTransaction();
         try {
             $cartItems = Session::get('cartItems', function () {
                 return Cart::with('product')
@@ -125,6 +119,15 @@ class CheckoutController extends Controller
                 throw new \Exception('Your cart is empty');
             }
 
+            // Calculate totals
+            $subtotal = $cartItems->sum(function ($item) {
+                return $item->price * $item->quantity;
+            });
+            $tax = $subtotal * 0.1;
+            $shipping = 10.00;
+            $total = $subtotal + $tax + $shipping;
+
+            // Prepare order items
             $items = $cartItems->map(function ($cartItem) {
                 return [
                     'product_id' => $cartItem->product_id,
@@ -135,38 +138,19 @@ class CheckoutController extends Controller
                 ];
             });
 
-            $subtotal = $cartItems->sum(function ($item) {
-                return $item->price * $item->quantity;
-            });
-            $tax = $subtotal * 0.1;
-            $shipping = 10.00;
-            $total = $subtotal + $tax + $shipping;
+            // Prepare payment details
+            $paymentDetails = [
+                'method' => $paymentMethod === 'card' ? 'Credit Card' : ($paymentMethod === 'gcash' ? 'GCash' : 'Cash on Delivery')
+            ];
 
-            // Save payment details based on method
-            $paymentDetails = [];
-            switch ($paymentMethod) {
-                case 'card':
-                    $paymentDetails = [
-                        'method' => 'Credit Card',
-                        'last_four' => substr($request->card_number, -4),
-                    ];
-                    break;
-
-                case 'gcash':
-                    $paymentDetails = [
-                        'method' => 'GCash',
-                        'number' => $request->gcash_number,
-                        'name' => $request->gcash_name,
-                    ];
-                    break;
-
-                case 'cod':
-                    $paymentDetails = [
-                        'method' => 'Cash on Delivery',
-                    ];
-                    break;
+            if ($paymentMethod === 'card') {
+                $paymentDetails['last_four'] = substr($request->card_number, -4);
+            } elseif ($paymentMethod === 'gcash') {
+                $paymentDetails['number'] = $request->gcash_number;
+                $paymentDetails['name'] = $request->gcash_name;
             }
 
+            // Create the order
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'name' => Auth::user()->name,
@@ -187,6 +171,16 @@ class CheckoutController extends Controller
                 'status' => $paymentMethod === 'cod' ? 'pending' : 'completed'
             ]);
 
+            // Attach products to order
+            $productsData = [];
+            foreach ($cartItems as $item) {
+                $productsData[$item->product_id] = [
+                    'quantity' => $item->quantity,
+                    'price' => $item->price
+                ];
+            }
+            $order->products()->sync($productsData);
+
             // Clear cart and session
             Cart::where('user_id', Auth::id())->delete();
             Session::forget([
@@ -199,12 +193,29 @@ class CheckoutController extends Controller
                 'cartItems'
             ]);
 
+            DB::commit();
+
             return response()->json([
                 'success' => true,
+                'order' => $order,
                 'order_id' => $order->id,
-                'order_number'  => $order->id
+                'products' => $order->products->map(function ($product) {
+                    return [
+                        'id' => $product->id,
+                        'title' => $product->title,
+                        'image' => asset($product->image),
+                        'quantity' => $product->pivot->quantity,
+                        'price' => $product->pivot->price,
+                        'rating_url' => route('products.rate', $product)
+                    ];
+                }),
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'shipping' => $shipping,
+                'total' => $total
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -212,19 +223,20 @@ class CheckoutController extends Controller
         }
     }
 
-    public function orderSuccess()
+    public function orderSuccess(Order $order)
     {
-        // Get the latest order for the authenticated user
-        $order = Order::where('user_id', Auth::id())
-            ->latest()
-            ->first();
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
 
-        return view('order.success', [
+        $order->load('products'); // Eager load products
+
+        return view('orders.success', [
+            'order' => $order,
             'subtotal' => $order->subtotal,
             'shipping' => $order->shipping,
             'tax' => $order->tax,
-            'total' => $order->total,
-            'order' => $order
+            'total' => $order->total
         ]);
     }
 

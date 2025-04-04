@@ -239,11 +239,41 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="flex items-center mb-4">
+                <div class="bg-red-100 p-3 rounded-full mr-3">
+                    <i class='bx bx-trash text-red-600 text-xl'></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900">Remove Item</h3>
+            </div>
+            <p class="text-gray-600 mb-6">Are you sure you want to remove this item from your cart?</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancelDelete"
+                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirmDelete"
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                    Remove Item
+                </button>
+            </div>
+        </div>
+    </div>
+
     <x-footer />
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const deleteModal = document.getElementById('deleteModal');
+            const cancelDeleteBtn = document.getElementById('cancelDelete');
+            const confirmDeleteBtn = document.getElementById('confirmDelete');
+            const checkoutForm = document.querySelector('form[action="{{ route('checkout') }}"]');
+
+            let currentProductIdToDelete = null;
 
             // Handle Quantity Updates
             document.querySelectorAll('.update-quantity').forEach(button => {
@@ -272,14 +302,35 @@
                 });
             });
 
-            // Handle Removing Items
+            // Handle Removing Items - Show Modal
             document.querySelectorAll('.remove-item').forEach(button => {
                 button.addEventListener('click', function() {
-                    if (confirm('Are you sure you want to remove this item from your cart?')) {
-                        let productId = this.getAttribute('data-id');
-                        removeItem(productId);
-                    }
+                    currentProductIdToDelete = this.getAttribute('data-id');
+                    deleteModal.classList.remove('hidden');
                 });
+            });
+
+            // Handle Cancel Delete
+            cancelDeleteBtn.addEventListener('click', function() {
+                deleteModal.classList.add('hidden');
+                currentProductIdToDelete = null;
+            });
+
+            // Handle Confirm Delete
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (currentProductIdToDelete) {
+                    removeItem(currentProductIdToDelete);
+                    deleteModal.classList.add('hidden');
+                    currentProductIdToDelete = null;
+                }
+            });
+
+            // Close modal when clicking outside
+            deleteModal.addEventListener('click', function(e) {
+                if (e.target === deleteModal) {
+                    deleteModal.classList.add('hidden');
+                    currentProductIdToDelete = null;
+                }
             });
 
             // AJAX Function for Updating Cart
@@ -294,7 +345,12 @@
                             quantity: quantity
                         })
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
                             document.querySelector(`.quantity-input[data-id="${productId}"]`).value = data
@@ -303,6 +359,10 @@
                                 `$${data.price}`;
                             updateOrderSummary(data);
                         }
+                    })
+                    .catch(error => {
+                        console.error('Error updating cart:', error);
+                        alert('An error occurred while updating the cart');
                     });
             }
 
@@ -315,10 +375,15 @@
                             'X-CSRF-TOKEN': csrfToken
                         }
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
-                            document.querySelector(`.cart-item[data-id="${productId}"]`).remove();
+                            document.querySelector(`.cart-item[data-id="${productId}"]`)?.remove();
                             updateOrderSummary(data);
 
                             // If cart is now empty, reload the page to show empty state
@@ -326,55 +391,97 @@
                                 location.reload();
                             }
                         }
+                    })
+                    .catch(error => {
+                        console.error('Error removing item:', error);
+                        alert('An error occurred while removing the item');
                     });
             }
 
             // Update Order Summary
             function updateOrderSummary(data) {
-                document.querySelector('.subtotal-amount').textContent = `$${data.subtotal}`;
-                document.querySelector('.tax-amount').textContent = `$${data.tax}`;
-                document.querySelector('.shipping-amount').textContent = `$${data.shipping}`;
-                document.querySelector('.total-amount').textContent = `$${data.total}`;
+                if (data.subtotal !== undefined) {
+                    document.querySelector('.subtotal-amount').textContent = `$${data.subtotal}`;
+                }
+                if (data.tax !== undefined) {
+                    document.querySelector('.tax-amount').textContent = `$${data.tax}`;
+                }
+                if (data.shipping !== undefined) {
+                    document.querySelector('.shipping-amount').textContent = `$${data.shipping}`;
+                }
+                if (data.total !== undefined) {
+                    document.querySelector('.total-amount').textContent = `$${data.total}`;
+                }
             }
-        });
 
-        // Update your script section
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
+            // Update your form submission handler
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
 
-            const form = this;
-            const submitButton = form.querySelector('button[type="submit"]');
-            const originalButtonText = submitButton.innerHTML;
+                    const form = this;
+                    const submitButton = form.querySelector('button[type="submit"]');
+                    const originalButtonText = submitButton.innerHTML;
 
-            // Show loading state
-            submitButton.innerHTML = '<i class="bx bx-loader bx-spin mr-2"></i> Processing...';
-            submitButton.disabled = true;
+                    // Show loading state
+                    submitButton.innerHTML = '<i class="bx bx-loader bx-spin mr-2"></i> Processing...';
+                    submitButton.disabled = true;
 
-            fetch(form.action, {
-                    method: 'POST',
-                    body: new FormData(form),
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
-                    } else if (data.errors) {
-                        // Handle validation errors
-                        alert('Please check your form for errors');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred during checkout');
-                })
-                .finally(() => {
-                    submitButton.innerHTML = originalButtonText;
-                    submitButton.disabled = false;
+                    fetch(form.action, {
+                            method: 'POST',
+                            body: new FormData(form),
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': csrfToken
+                            }
+                        })
+                        .then(async response => {
+                            const contentType = response.headers.get('content-type');
+
+                            // Handle JSON response
+                            if (contentType && contentType.includes('application/json')) {
+                                const data = await response.json();
+
+                                if (!response.ok) {
+                                    // Handle validation errors
+                                    if (data.errors) {
+                                        let errorMessages = Object.values(data.errors).flat().join(
+                                            '\n');
+                                        throw new Error(errorMessages);
+                                    }
+                                    throw new Error(data.message || 'An error occurred');
+                                }
+
+                                // Handle successful response
+                                if (data.redirect) {
+                                    window.location.href = data.redirect;
+                                }
+                                return;
+                            }
+
+                            // Handle HTML response (fallback for non-JSON responses)
+                            const text = await response.text();
+
+                            // Check if this is a redirect in HTML (Laravel sometimes does this)
+                            if (response.redirected) {
+                                window.location.href = response.url;
+                                return;
+                            }
+
+                            // If we got HTML but expected JSON, something went wrong
+                            throw new Error('Server returned unexpected response');
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error: ' + error.message);
+                        })
+                        .finally(() => {
+                            submitButton.innerHTML = originalButtonText;
+                            submitButton.disabled = false;
+                        });
                 });
+            }
         });
     </script>
 </x-app-layout>

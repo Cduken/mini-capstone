@@ -9,7 +9,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ViewOrderDetails;
+// use App\Http\Controllers\ViewOrderDetails;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +24,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Product Display
 Route::get('/products', [ProductPageController::class, 'index'])->name('products.index');
 Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -55,13 +57,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/payment/clear', [CheckoutController::class, 'clearSession'])->name('payment.clear');
     Route::get('/payment', [CheckoutController::class, 'showPaymentPage'])->name('payment');
     Route::post('/payment/process', [CheckoutController::class, 'processPayment'])->name('payment.process');
-    Route::get('/order/success', [CheckoutController::class, 'orderSuccess'])->name('order.success');
+    // routes/web.php
+    Route::get('/orders/success/{order}', [CheckoutController::class, 'orderSuccess'])
+        ->name('orders.success')
+        ->middleware('auth');
 
-    Route::get('/my-orders/{order}', [OrderController::class, 'showCustomerOrder'])
+    Route::get('/my-orders/{order}', [OrderController::class, 'showOrder'])
         ->name('customer.orders.show')
         ->middleware('auth');
-    // Add this in your authenticated routes
 
+    Route::post('/products/{product}/rate', [ProductPageController::class, 'rate'])
+        ->name('products.rate')
+        ->middleware('auth');
 });
 
 
@@ -76,6 +83,15 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+    // routes/web.php
+    Route::get('/admin/orders/{order}', [AdminDashboardController::class, 'showOrder'])
+        ->name('admin.orders.show');
+
+    // routes/web.php
+    Route::get('/images/default-product.png', function () {
+        return response()->file(public_path('images/default-product.png'));
+    })->name('default-product-image');
 
     // Products
     Route::prefix('products')->group(function () {
@@ -105,8 +121,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/admin/orders/{order}', [OrderController::class, 'show'])
         ->name('admin.orders.show')
         ->middleware('auth');
-
-
 });
 
 require __DIR__ . '/auth.php';
