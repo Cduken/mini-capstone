@@ -47,7 +47,7 @@
     </table>
 </div>
 
- <div class="px-5 py-2 border-t border-gray-100">
+<div class="px-5 py-2 border-t border-gray-100">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div class="text-sm text-gray-500">
             Showing
@@ -80,4 +80,4 @@
             </nav>
         @endif
     </div>
-    </div>
+</div>

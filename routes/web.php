@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\CartController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
-// use App\Http\Controllers\ViewOrderDetails;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +25,17 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductPageController::class, 'index'])->name('products.index');
 Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
 
+// Address System
+Route::get('/regions', [AddressController::class, 'getRegions'])->name('regions');
+Route::get('/provinces', [AddressController::class, 'getProvinces'])->name('provinces');
+Route::get('/cities', [AddressController::class, 'getCities'])->name('cities');
+Route::get('/barangays', [AddressController::class, 'getBarangays'])->name('barangays');
 
+// Cart Routes (public)
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/add/{product}', [CartController::class, 'add'])->name('cart.add');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -38,42 +48,30 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // // Dashboard
-    // Route::get('/dashboard', function () {
-    //     return view('dashboard');
-    // })->name('dashboard');
-
-    // Cart
+    // Cart Management
     Route::prefix('cart')->group(function () {
-        Route::get('/', [CartController::class, 'show'])->name('cart.show');
-        Route::get('/', [CartController::class, 'index'])->name('cart.index');
-        Route::post('/add/{product}', [CartController::class, 'add'])->name('cart.add');
-        Route::post('/update/{id}', [CartController::class, 'update'])->name('cart.update');
-        Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+        Route::post('/update/{product}', [CartController::class, 'update'])->name('cart.update');
+        Route::delete('/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
     });
+
+    // Orders
+    Route::get('/my-orders', [OrderController::class, 'customerOrders'])->name('orders.index');
+    Route::get('/my-orders/{order}', [OrderController::class, 'showCustomerOrder'])->name('orders.show');
 
     // Checkout & Payment
     Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('checkout');
-    Route::post('/payment/clear', [CheckoutController::class, 'clearSession'])->name('payment.clear');
     Route::get('/payment', [CheckoutController::class, 'showPaymentPage'])->name('payment');
     Route::post('/payment/process', [CheckoutController::class, 'processPayment'])->name('payment.process');
-    // routes/web.php
+    Route::post('/payment/clear', [CheckoutController::class, 'clearSession'])->name('payment.clear');
+
+    // Order Success
     Route::get('/orders/success/{order}', [CheckoutController::class, 'orderSuccess'])
-        ->name('orders.success')
-        ->middleware('auth');
+        ->name('orders.success');
 
-    Route::get('/my-orders/{order}', [OrderController::class, 'showOrder'])
-        ->name('customer.orders.show')
-        ->middleware('auth');
-
+    // Product Ratings
     Route::post('/products/{product}/rate', [ProductPageController::class, 'rate'])
-        ->name('products.rate')
-        ->middleware('auth');
+        ->name('products.rate');
 });
-
-
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -84,16 +82,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-    // routes/web.php
-    Route::get('/admin/orders/{order}', [AdminDashboardController::class, 'showOrder'])
-        ->name('admin.orders.show');
-
-    // routes/web.php
-    Route::get('/images/default-product.png', function () {
-        return response()->file(public_path('images/default-product.png'));
-    })->name('default-product-image');
-
-    // Products
+    // Products Management
     Route::prefix('products')->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('admin.products.index');
         Route::get('/create', [ProductController::class, 'create'])->name('admin.products.create');
@@ -104,7 +93,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::delete('/{product}/destroy', [ProductController::class, 'destroy'])->name('admin.products.destroy');
     });
 
-    // Users
+    // Users Management
     Route::prefix('users')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.users');
         Route::get('/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
@@ -112,15 +101,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::delete('/{user}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
     });
 
-    // Orders
+    // Orders Management
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('admin.orders.index');
-        Route::get('/{order}', [OrderController::class, 'show'])->name('orders.show');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
     });
 
-    Route::get('/admin/orders/{order}', [OrderController::class, 'show'])
-        ->name('admin.orders.show')
-        ->middleware('auth');
+    Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
+
+    // Static Assets
+    Route::get('/images/default-product.png', function () {
+        return response()->file(public_path('images/default-product.png'));
+    })->name('default-product-image');
 });
 
 require __DIR__ . '/auth.php';

@@ -14,8 +14,11 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <!-- Products Card -->
-                <div class="relative bg-gradient-to-r from-blue-200 to-white rounded-xl shadow-sm border border-blue-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-blue-300 hover:-translate-y-1 ">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div
+                    class="relative bg-gradient-to-r from-blue-200 to-white rounded-xl shadow-sm border border-blue-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-blue-300 hover:-translate-y-1 ">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
                     <div class="relative p-6 flex items-start justify-between z-10">
                         <div>
                             <div class="flex items-center gap-2 mb-1">
@@ -25,12 +28,14 @@
                             <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ $totalProducts }}</h3>
                             <div class="flex items-center mt-4 space-x-2">
                                 @if ($productsPercentageChange >= 0)
-                                    <span class="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                    <span
+                                        class="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
                                         <i class='bx bx-up-arrow-alt text-sm mr-1'></i>
                                         {{ round($productsPercentageChange, 0) }}%
                                     </span>
                                 @else
-                                    <span class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                    <span
+                                        class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
                                         <i class='bx bx-down-arrow-alt text-sm mr-1'></i>
                                         {{ round(abs($productsPercentageChange), 0) }}%
                                     </span>
@@ -38,7 +43,8 @@
                                 <span class="text-gray-400 text-xs">vs last month</span>
                             </div>
                         </div>
-                        <div class="p-3 rounded-lg bg-blue-100/50 text-blue-600 backdrop-blur-sm border border-blue-200/50">
+                        <div
+                            class="p-3 rounded-lg bg-blue-100/50 text-blue-600 backdrop-blur-sm border border-blue-200/50">
                             <i class='bx bx-package text-2xl'></i>
                         </div>
                     </div>
@@ -49,8 +55,11 @@
                 </div>
 
                 <!-- Orders Card -->
-                <div class="relative bg-gradient-to-r from-green-200 to-white rounded-xl shadow-sm border border-green-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-green-300 hover:-translate-y-1 hover:border-green-200">
-                    <div class="absolute inset-0 bg-gradient-to-br from-green-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div
+                    class="relative bg-gradient-to-r from-green-200 to-white rounded-xl shadow-sm border border-green-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-green-300 hover:-translate-y-1 hover:border-green-200">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-green-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
                     <div class="relative p-6 flex items-start justify-between z-10">
                         <div>
                             <div class="flex items-center gap-2 mb-1">
@@ -60,12 +69,14 @@
                             <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ $totalOrders }}</h3>
                             <div class="flex items-center mt-4 space-x-2">
                                 @if ($ordersPercentageChange >= 0)
-                                    <span class="bg-green-50 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                    <span
+                                        class="bg-green-50 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
                                         <i class='bx bx-up-arrow-alt text-sm mr-1'></i>
                                         {{ round($ordersPercentageChange, 0) }}%
                                     </span>
                                 @else
-                                    <span class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                    <span
+                                        class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
                                         <i class='bx bx-down-arrow-alt text-sm mr-1'></i>
                                         {{ round(abs($ordersPercentageChange), 0) }}%
                                     </span>
@@ -73,7 +84,8 @@
                                 <span class="text-gray-400 text-xs">vs last month</span>
                             </div>
                         </div>
-                        <div class="p-3 rounded-lg bg-green-100/50 text-green-600 backdrop-blur-sm border border-green-200/50">
+                        <div
+                            class="p-3 rounded-lg bg-green-100/50 text-green-600 backdrop-blur-sm border border-green-200/50">
                             <i class='bx bx-cart-alt text-2xl'></i>
                         </div>
                     </div>
@@ -84,8 +96,11 @@
                 </div>
 
                 <!-- Users Card -->
-                <div class="relative bg-gradient-to-r from-purple-200 to-white rounded-xl shadow-sm border border-purple-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-purple-300 hover:-translate-y-1 hover:border-purple-200">
-                    <div class="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div
+                    class="relative bg-gradient-to-r from-purple-200 to-white rounded-xl shadow-sm border border-purple-300 overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-purple-300 hover:-translate-y-1 hover:border-purple-200">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    </div>
                     <div class="relative p-6 flex items-start justify-between z-10">
                         <div>
                             <div class="flex items-center gap-2 mb-1">
@@ -95,12 +110,14 @@
                             <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ $totalUsers }}</h3>
                             <div class="flex items-center mt-4 space-x-2">
                                 @if ($usersPercentageChange >= 0)
-                                    <span class="bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                    <span
+                                        class="bg-purple-50 text-purple-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
                                         <i class='bx bx-up-arrow-alt text-sm mr-1'></i>
                                         {{ round($usersPercentageChange, 0) }}%
                                     </span>
                                 @else
-                                    <span class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                                    <span
+                                        class="bg-red-50 text-red-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
                                         <i class='bx bx-down-arrow-alt text-sm mr-1'></i>
                                         {{ round(abs($usersPercentageChange), 0) }}%
                                     </span>
@@ -108,7 +125,8 @@
                                 <span class="text-gray-400 text-xs">vs last month</span>
                             </div>
                         </div>
-                        <div class="p-3 rounded-lg bg-purple-100/50 text-purple-600 backdrop-blur-sm border border-purple-200/50">
+                        <div
+                            class="p-3 rounded-lg bg-purple-100/50 text-purple-600 backdrop-blur-sm border border-purple-200/50">
                             <i class='bx bx-user text-2xl'></i>
                         </div>
                     </div>
@@ -265,9 +283,11 @@
     </div>
 
     <!-- Order Details Modal -->
-    <div id="orderModal" class="fixed inset-0 bg-black/30 z-50 hidden overflow-y-auto backdrop-blur-sm transition-opacity duration-300 ease-in-out opacity-0">
+    <div id="orderModal"
+        class="fixed inset-0 bg-black/30 z-50 hidden overflow-y-auto backdrop-blur-sm transition-opacity duration-300 ease-in-out opacity-0">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="inline-block w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out scale-95">
+            <div
+                class="inline-block w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out scale-95">
                 <!-- Modal header -->
                 <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-500 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
@@ -276,7 +296,8 @@
                         </div>
                         <div>
                             <h3 class="text-xl font-bold text-white">Order #<span id="modalOrderId"></span></h3>
-                            <span id="modalOrderStatus" class="inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white"></span>
+                            <span id="modalOrderStatus"
+                                class="inline-block mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white"></span>
                         </div>
                     </div>
                     <button id="closeModal" class="text-white/80 hover:text-white transition-colors">
@@ -345,7 +366,8 @@
                             </div>
                             <h4 class="text-md font-semibold text-gray-800">Shipping Address</h4>
                         </div>
-                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 transition-all duration-200 hover:border-blue-200 hover:shadow-sm pl-10">
+                        <div
+                            class="p-4 bg-gray-50 rounded-lg border border-gray-200 transition-all duration-200 hover:border-blue-200 hover:shadow-sm pl-10">
                             <p id="modalShippingAddress" class="text-gray-800 text-sm leading-relaxed"></p>
                         </div>
                     </div>
@@ -376,8 +398,11 @@
             const closeModalBtn = document.getElementById('closeModalBtn');
             const printOrderBtn = document.getElementById('printOrderBtn');
 
+            // Store original modal content
+            const originalModalContent = modal.innerHTML;
+
             // Show modal with animation
-            async function showModal() {
+            function showModal() {
                 modal.classList.remove('hidden');
                 setTimeout(() => {
                     modal.classList.remove('opacity-0');
@@ -389,12 +414,20 @@
                 modal.classList.add('opacity-0');
                 setTimeout(() => {
                     modal.classList.add('hidden');
+                    // Restore original modal content when hiding
+                    modal.innerHTML = originalModalContent;
                 }, 300);
             }
 
             async function fetchOrderDetails(orderId) {
                 try {
-                    document.getElementById('modalOrderId').textContent = 'Loading...';
+                    // Show loading indicator
+                    modal.innerHTML = `
+            <div class="fixed inset-0 flex items-center justify-center bg-white/50">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        `;
+                    modal.classList.remove('hidden');
 
                     const response = await fetch(`/admin/orders/${orderId}`, {
                         headers: {
@@ -410,17 +443,33 @@
 
                     const order = await response.json();
 
-                    if (order.error) {
-                        throw new Error(order.message || order.error);
-                    }
+                    // Debug log to check the received data
+                    console.log('Order data received:', order);
 
+                    // Restore original modal content before populating
+                    modal.innerHTML = originalModalContent;
                     populateModal(order);
                     showModal();
+                    attachModalEventListeners();
 
                 } catch (error) {
-                    console.error('Error:', error);
-                    alert(error.message || 'Error loading order details');
-                    document.getElementById('modalOrderId').textContent = 'Error';
+                    console.error('Error fetching order details:', error);
+
+                    // Show error message in modal
+                    modal.innerHTML = `
+            <div class="fixed inset-0 flex items-center justify-center bg-white/50">
+                <div class="bg-white p-6 rounded-xl shadow-lg max-w-md text-center">
+                    <div class="text-red-500 text-4xl mb-3">
+                        <i class='bx bx-error-circle'></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Error Loading Order</h3>
+                    <p class="text-gray-600 mb-4">${error.message || 'Failed to load order details'}</p>
+                    <button onclick="hideModal()" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200">
+                        Close
+                    </button>
+                </div>
+            </div>
+        `;
                 }
             }
 
@@ -456,12 +505,21 @@
                 document.getElementById('modalOrderTotal').textContent =
                     `$${parseFloat(order.total || 0).toFixed(2)}`;
 
-                // Shipping information
-                document.getElementById('modalShippingAddress').textContent =
-                    `${order.address || ''}, ${order.city || ''}, ${order.state || ''} ${order.zip_code || ''}, ${order.country || ''}`
-                    .trim();
+                // Shipping information - updated to handle new address structure
+                const addressParts = [
+                    order.address_line_1 || '',
+                    order.address_line_2 || '',
+                    order.barangay || '',
+                    order.city || '',
+                    order.province || '',
+                    order.region || '',
+                    order.zip_code ? ` ${order.zip_code}` : '',
+                    order.country || ''
+                ].filter(part => part.trim() !== '');
 
-                // Payment method display
+                document.getElementById('modalShippingAddress').textContent = addressParts.join(', ');
+
+                // Payment method display - more robust handling
                 let paymentDetails = order.payment_details || {};
                 let paymentMethodDisplay = '';
 
@@ -476,13 +534,19 @@
                         paymentMethodDisplay = 'GCash';
                         if (paymentDetails.number) {
                             paymentMethodDisplay += ` (${paymentDetails.number})`;
+                            if (paymentDetails.name) {
+                                paymentMethodDisplay += ` - ${paymentDetails.name}`;
+                            }
                         }
                         break;
                     case 'cod':
                         paymentMethodDisplay = 'Cash on Delivery';
                         break;
                     default:
-                        paymentMethodDisplay = order.payment_method || 'Unknown';
+                        paymentMethodDisplay = order.payment_method ?
+                            order.payment_method.charAt(0).toUpperCase() +
+                            order.payment_method.slice(1) :
+                            'Unknown';
                 }
                 document.getElementById('modalPaymentMethod').textContent = paymentMethodDisplay;
             }
@@ -490,74 +554,33 @@
             // Function to attach order detail handlers
             function attachOrderDetailHandlers() {
                 document.querySelectorAll('.view-order-btn').forEach(button => {
-                    button.addEventListener('click', async function() {
+                    button.addEventListener('click', async function(e) {
+                        e.preventDefault();
                         const orderId = this.getAttribute('data-order-id');
                         await fetchOrderDetails(orderId);
                     });
                 });
             }
 
-            // Handle pagination links - UPDATED LOADING ANIMATION
-            document.addEventListener('click', function(e) {
-                const paginationLink = e.target.closest('.pagination-link');
-                if (paginationLink) {
-                    e.preventDefault();
-                    const url = paginationLink.getAttribute('href');
+            // Function to attach modal event listeners
+            function attachModalEventListeners() {
+                const closeModal = document.getElementById('closeModal');
+                const closeModalBtn = document.getElementById('closeModalBtn');
+                const printOrderBtn = document.getElementById('printOrderBtn');
 
-                    // Show loading indicator - changed to spinning circle
-                    const container = document.getElementById('orders-container');
-                    container.innerHTML = `
-                        <div class="flex justify-center items-center h-64">
-                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-                        </div>
-                    `;
-
-                    fetch(url, {
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        })
-                        .then(response => response.text())
-                        .then(html => {
-                            container.innerHTML = html;
-                            attachOrderDetailHandlers();
-                            window.history.pushState(null, null, url);
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            container.innerHTML = `
-                                <div class="p-4 bg-red-50 text-red-600 rounded-lg mb-4">
-                                    <div class="flex items-center">
-                                        <i class='bx bx-error-circle text-xl mr-2'></i>
-                                        <span>Error loading orders. Please try again.</span>
-                                    </div>
-                                </div>
-                            `;
-                        });
+                if (closeModal) {
+                    closeModal.addEventListener('click', hideModal);
                 }
-            });
-
-            // Handle browser back/forward buttons
-            window.addEventListener('popstate', function() {
-                window.location.reload();
-            });
-
-            // Close modal handlers
-            closeModal.addEventListener('click', hideModal);
-            closeModalBtn.addEventListener('click', hideModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    hideModal();
+                if (closeModalBtn) {
+                    closeModalBtn.addEventListener('click', hideModal);
                 }
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-                    hideModal();
+                if (printOrderBtn) {
+                    printOrderBtn.addEventListener('click', printOrderHandler);
                 }
-            });
+            }
 
             // Print order handler
-            printOrderBtn.addEventListener('click', () => {
+            function printOrderHandler() {
                 const statusElement = document.getElementById('modalOrderStatus');
                 const statusColor = statusElement.className.includes('bg-green-100') ? '#D1FAE5' :
                     statusElement.className.includes('bg-yellow-100') ? '#FEF3C7' :
@@ -666,10 +689,70 @@
                         printWindow.close();
                     }, 200);
                 };
+            }
+
+            // Handle pagination links
+            document.addEventListener('click', function(e) {
+                const paginationLink = e.target.closest('.pagination-link');
+                if (paginationLink) {
+                    e.preventDefault();
+                    const url = paginationLink.getAttribute('href');
+
+                    // Show loading indicator
+                    const container = document.getElementById('orders-container');
+                    container.innerHTML = `
+                        <div class="flex justify-center items-center h-64">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                        </div>
+                    `;
+
+                    fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.text())
+                        .then(html => {
+                            container.innerHTML = html;
+                            attachOrderDetailHandlers();
+                            window.history.pushState(null, null, url);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            container.innerHTML = `
+                                <div class="p-4 bg-red-50 text-red-600 rounded-lg mb-4">
+                                    <div class="flex items-center">
+                                        <i class='bx bx-error-circle text-xl mr-2'></i>
+                                        <span>Error loading orders. Please try again.</span>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                }
             });
 
-            // Initial attachment of event handlers
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function() {
+                window.location.reload();
+            });
+
+            // Initial attachment of event listeners
             attachOrderDetailHandlers();
+            attachModalEventListeners();
+
+            // Close modal when clicking outside
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    hideModal();
+                }
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    hideModal();
+                }
+            });
         });
     </script>
 </x-app-layout>

@@ -10,14 +10,20 @@ class Order extends Model
         'user_id',
         'name',
         'email',
-        'address',
+        'address_line_1',  // Changed from 'address'
+        'address_line_2',
+        'region',
+        'region_code',
+        'province',
+        'province_code',
         'city',
+        'city_code',
+        'barangay',
+        'barangay_code',
         'zip_code',
-        'country',
-        'state',
         'shipping_method',
-        'payment_method',  // Add this
-        'payment_details', // Add this
+        'payment_method',
+        'payment_details',
         'items',
         'subtotal',
         'tax',
@@ -25,10 +31,13 @@ class Order extends Model
         'total',
         'status'
     ];
-    protected $casts = [
-        'items' => 'array'
-    ];
 
+    protected $casts = [
+        'payment_details' => 'array',
+        'items' => 'array',
+        'shipping_details' => 'array'
+
+    ];
 
     public function getStatusColorAttribute()
     {

@@ -60,11 +60,11 @@
                             <h4 class="font-semibold text-gray-800 mb-4">Price Range</h4>
                             <div class="px-2">
                                 <div class="flex justify-between mb-2">
-                                    <span class="text-sm text-gray-500">$<span id="min-price-value">500</span></span>
-                                    <span class="text-sm text-gray-500">$<span id="max-price-value">20000</span></span>
+                                    <span class="text-sm text-gray-500">$<span id="min-price-value">100</span></span>
+                                    <span class="text-sm text-gray-500">$<span id="max-price-value">5000</span></span>
                                 </div>
                                 <div class="relative">
-                                    <input type="range" id="price-range" min="500" max="5000" step="50"
+                                    <input type="range" id="price-range" min="100" max="5000" step="50"
                                         value="{{ $maxPrice ?? 5000 }}"
                                         class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer">
                                 </div>
@@ -72,7 +72,7 @@
                                     <div class="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg">
                                         <span class="text-sm text-gray-600">Range:</span>
                                         <span class="font-medium text-indigo-600">
-                                            $<span id="current-min-price">500</span> - $<span
+                                            $<span id="current-min-price">100</span> - $<span
                                                 id="current-max-price">{{ $maxPrice ?? 5000 }}</span>
                                         </span>
                                     </div>
@@ -341,6 +341,7 @@
                                             'search' => request('search'),
                                             'min_price' => request('min_price'),
                                             'max_price' => request('max_price'),
+                                            'sort' => request('sort'),
                                         ])->onEachSide(1)->links('vendor.pagination.custom') }}
                                 </div>
                             </div>

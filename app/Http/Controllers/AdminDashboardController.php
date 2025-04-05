@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
@@ -132,6 +133,30 @@ class AdminDashboardController extends Controller
             'shipping' => $order->shipping,
             'tax' => $order->tax,
             'total' => $order->total
+        ]);
+    }
+
+    // Add this to your AdminDashboardController
+    public function getOrderDetails(Order $order)
+    {
+        // The payment_details will be automatically cast to array by the model
+        // No need for manual json_decode()
+
+        return response()->json([
+            'id' => $order->id,
+            'name' => $order->user->name ?? $order->name,
+            'email' => $order->user->email ?? $order->email,
+            'status' => $order->status,
+            'total' => $order->total,
+            'created_at' => $order->created_at->toDateTimeString(),
+            'address' => $order->address_line_1,
+            'city' => $order->city,
+            'state' => $order->province,
+            'zip_code' => $order->zip_code,
+            'country' => 'Philippines',
+            'payment_method' => $order->payment_method,
+            'payment_details' => $order->payment_details ?? [], // Ensure it's always an array
+            'shipping_method' => $order->shipping_method
         ]);
     }
 }

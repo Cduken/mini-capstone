@@ -149,75 +149,137 @@
                                 </div>
                             </div>
 
-                            <!-- Checkout Form -->
-                            <form method="POST" action="{{ route('checkout') }}" class="mt-8">
+                            <form method="POST" action="{{ route('checkout') }}" class="mt-8" id="checkoutForm">
                                 @csrf
                                 <h3 class="text-lg font-semibold mb-4 flex items-center">
                                     <i class='bx bx-map mr-2'></i> Shipping Information
                                 </h3>
 
                                 <div class="space-y-4">
+                                    <!-- Address Line 1 -->
                                     <div>
                                         <label for="address_line_1"
-                                            class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                            class="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
                                         <input type="text" id="address_line_1" name="address_line_1" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                            placeholder="House/Building number, Street name">
+                                    </div>
+
+                                    <!-- Region Selection -->
+                                    <div>
+                                        <label for="region"
+                                            class="block text-sm font-medium text-gray-700 mb-1">Region</label>
+                                        <select id="region" name="region" required
                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                            <option value="">Select Region</option>
+                                            @foreach ($regions as $region)
+                                                <option value="{{ $region->code }}"
+                                                    @if (old('region') == $region->code) selected @endif>
+                                                    {{ $region->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="city"
-                                                class="block text-sm font-medium text-gray-700 mb-1">City</label>
-                                            <input type="text" id="city" name="city" required
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                        </div>
-                                        <div>
-                                            <label for="zip_code"
-                                                class="block text-sm font-medium text-gray-700 mb-1">Zip Code</label>
-                                            <input type="text" id="zip_code" name="zip_code" required
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                        </div>
+                                    <!-- Province Selection -->
+                                    <div>
+                                        <label for="province"
+                                            class="block text-sm font-medium text-gray-700 mb-1">Province</label>
+                                        <select id="province" name="province" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                            @empty(old('province')) disabled @endempty>
+                                            <option value="">Select Province</option>
+                                            @if (old('province'))
+                                                @php
+                                                    $selectedProvince = \App\Models\Province::where(
+                                                        'code',
+                                                        old('province'),
+                                                    )->first();
+                                                @endphp
+                                                @if ($selectedProvince)
+                                                    <option value="{{ $selectedProvince->code }}" selected>
+                                                        {{ $selectedProvince->name }}
+                                                    </option>
+                                                @endif
+                                            @endif
+                                        </select>
                                     </div>
 
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="country"
-                                                class="block text-sm font-medium text-gray-700 mb-1">Country</label>
-                                            <select id="country" name="country" required
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                                <option value="">Select Country</option>
-                                                <option value="US">United States</option>
-                                                <option value="CA">Canada</option>
-                                                <option value="UK">United Kingdom</option>
-                                                <option value="PH">Philippines</option>
-                                                <option value="MX">Mexico</option>
-                                                <option value="IN">India</option>
-                                                <option value="CN">China</option>
-                                                <option value="ID">Indonesia</option>
-                                                <option value="JP">Japan</option>
-                                                <option value="BR">Brazil</option>
-                                                <option value="RU">Russia</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label for="state"
-                                                class="block text-sm font-medium text-gray-700 mb-1">State/Province</label>
-                                            <input type="text" id="state" name="state" required
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                        </div>
+                                    <!-- City/Municipality Selection -->
+                                    <div>
+                                        <label for="city"
+                                            class="block text-sm font-medium text-gray-700 mb-1">City/Municipality</label>
+                                        <select id="city" name="city" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                            @empty(old('city')) disabled @endempty>
+                                            <option value="">Select City/Municipality</option>
+                                            @if (old('city'))
+                                                @php
+                                                    $selectedCity = \App\Models\City::where(
+                                                        'code',
+                                                        old('city'),
+                                                    )->first();
+                                                @endphp
+                                                @if ($selectedCity)
+                                                    <option value="{{ $selectedCity->code }}" selected>
+                                                        {{ $selectedCity->name }}
+                                                    </option>
+                                                @endif
+                                            @endif
+                                        </select>
                                     </div>
 
+                                    <!-- Barangay Selection -->
+                                    <div>
+                                        <label for="barangay"
+                                            class="block text-sm font-medium text-gray-700 mb-1">Barangay</label>
+                                        <select id="barangay" name="barangay" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                            @empty(old('barangay')) disabled @endempty>
+                                            <option value="">Select Barangay</option>
+                                            @if (old('barangay'))
+                                                @php
+                                                    $selectedBarangay = \App\Models\Barangay::where(
+                                                        'code',
+                                                        old('barangay'),
+                                                    )->first();
+                                                @endphp
+                                                @if ($selectedBarangay)
+                                                    <option value="{{ $selectedBarangay->code }}" selected>
+                                                        {{ $selectedBarangay->name }}
+                                                    </option>
+                                                @endif
+                                            @endif
+                                        </select>
+                                    </div>
+
+                                    <!-- Zip Code -->
+                                    <div>
+                                        <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-1">Zip
+                                            Code</label>
+                                        <input type="text" id="zip_code" name="zip_code" required
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                            value="{{ old('zip_code') }}">
+                                    </div>
+
+                                    <!-- Shipping Method -->
                                     <div>
                                         <label for="shipping_method"
                                             class="block text-sm font-medium text-gray-700 mb-1">Shipping
                                             Method</label>
                                         <select id="shipping_method" name="shipping_method"
                                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                            <option value="Standard Shipping">Standard Shipping (5-7 business days)
+                                            <option value="Standard Shipping"
+                                                @if (old('shipping_method') == 'Standard Shipping') selected @endif>
+                                                Standard Shipping (5-7 business days)
                                             </option>
-                                            <option value="Express Shipping">Express Shipping (2-3 business days)
+                                            <option value="Express Shipping"
+                                                @if (old('shipping_method') == 'Express Shipping') selected @endif>
+                                                Express Shipping (2-3 business days)
                                             </option>
-                                            <option value="Overnight Shipping">Overnight Shipping (1 business day)
+                                            <option value="Overnight Shipping"
+                                                @if (old('shipping_method') == 'Overnight Shipping') selected @endif>
+                                                Overnight Shipping (1 business day)
                                             </option>
                                         </select>
                                     </div>
@@ -227,10 +289,6 @@
                                     class="mt-6 w-full bg-gradient-to-r from-gray-700 to-gray-900 text-white py-3 rounded-lg font-bold hover:from-gray-800 hover:to-gray-900 transition-all shadow-md flex items-center justify-center">
                                     <i class='bx bx-lock-alt mr-2'></i> Proceed to Checkout
                                 </button>
-
-                                <p class="mt-4 text-center text-sm text-gray-500">
-                                    <i class='bx bx-shield-alt text-gray-400 mr-1'></i> Secure checkout
-                                </p>
                             </form>
                         </div>
                     </div>
@@ -267,6 +325,109 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            // Address Dropdown Handling
+            const regionSelect = document.getElementById('region');
+            const provinceSelect = document.getElementById('province');
+            const citySelect = document.getElementById('city');
+            const barangaySelect = document.getElementById('barangay');
+            const zipCodeInput = document.getElementById('zip_code');
+
+            // Region change handler
+            if (regionSelect) {
+                regionSelect.addEventListener('change', function() {
+                    const regionCode = this.value;
+
+                    // Reset downstream selects
+                    provinceSelect.innerHTML = '<option value="">Select Province</option>';
+                    provinceSelect.disabled = !regionCode;
+                    citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
+                    citySelect.disabled = true;
+                    barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+                    barangaySelect.disabled = true;
+                    zipCodeInput.value = '';
+
+                    if (!regionCode) return;
+
+                    // Fetch provinces for selected region
+                    fetch(`/provinces?region_code=${regionCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(province => {
+                                const option = document.createElement('option');
+                                option.value = province.code;
+                                option.textContent = province.name;
+                                provinceSelect.appendChild(option);
+                            });
+                            provinceSelect.disabled = false;
+                        });
+                });
+            }
+
+            // Province change handler
+            if (provinceSelect) {
+                provinceSelect.addEventListener('change', function() {
+                    const provinceCode = this.value;
+
+                    // Reset downstream selects
+                    citySelect.innerHTML = '<option value="">Select City/Municipality</option>';
+                    citySelect.disabled = !provinceCode;
+                    barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+                    barangaySelect.disabled = true;
+                    zipCodeInput.value = '';
+
+                    if (!provinceCode) return;
+
+                    // Fetch cities for selected province
+                    fetch(`/cities?province_code=${provinceCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(city => {
+                                const option = document.createElement('option');
+                                option.value = city.code;
+                                option.textContent = city.name;
+                                citySelect.appendChild(option);
+                            });
+                            citySelect.disabled = false;
+                        });
+                });
+            }
+
+            // City change handler
+            if (citySelect) {
+                citySelect.addEventListener('change', function() {
+                    const cityCode = this.value;
+
+                    // Reset downstream selects
+                    barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+                    barangaySelect.disabled = !cityCode;
+                    zipCodeInput.value = '';
+
+                    if (!cityCode) return;
+
+                    // Fetch barangays for selected city
+                    fetch(`/barangays?city_code=${cityCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(barangay => {
+                                const option = document.createElement('option');
+                                option.value = barangay.code;
+                                option.textContent = barangay.name;
+                                barangaySelect.appendChild(option);
+                            });
+                            barangaySelect.disabled = false;
+                        });
+
+                    // Try to fetch zip code for the city
+                    fetch(`/cities/${cityCode}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.zip_code) {
+                                zipCodeInput.value = data.zip_code;
+                            }
+                        });
+                });
+            }
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             const deleteModal = document.getElementById('deleteModal');
             const cancelDeleteBtn = document.getElementById('cancelDelete');
@@ -333,7 +494,7 @@
                 }
             });
 
-            // AJAX Function for Updating Cart
+            // Update the updateCart function to handle quantity properly
             function updateCart(productId, quantity) {
                 fetch(`/cart/update/${productId}`, {
                         method: 'POST',
@@ -353,10 +514,19 @@
                     })
                     .then(data => {
                         if (data.success) {
-                            document.querySelector(`.quantity-input[data-id="${productId}"]`).value = data
-                                .quantity;
-                            document.querySelector(`.item-price[data-id="${productId}"]`).textContent =
-                                `$${data.price}`;
+                            // Update the input value
+                            const quantityInput = document.querySelector(
+                                `.quantity-input[data-id="${productId}"]`);
+                            if (quantityInput) {
+                                quantityInput.value = data.quantity;
+                            }
+
+                            // Update the price display
+                            const priceElement = document.querySelector(`.item-price[data-id="${productId}"]`);
+                            if (priceElement) {
+                                priceElement.textContent = `$${data.price}`;
+                            }
+
                             updateOrderSummary(data);
                         }
                     })
@@ -365,6 +535,37 @@
                         alert('An error occurred while updating the cart');
                     });
             }
+
+            // Update the quantity button event listeners
+            document.querySelectorAll('.update-quantity').forEach(button => {
+                button.addEventListener('click', function() {
+                    let productId = this.getAttribute('data-id');
+                    let action = this.getAttribute('data-action');
+                    let quantityInput = document.querySelector(
+                        `.quantity-input[data-id="${productId}"]`);
+                    let quantity = parseInt(quantityInput.value) || 1; // Ensure we have at least 1
+
+                    if (action === 'plus') {
+                        quantity += 1;
+                    } else if (action === 'minus') {
+                        quantity = Math.max(1, quantity - 1); // Ensure quantity doesn't go below 1
+                    }
+
+                    quantityInput.value = quantity; // Update the input immediately
+                    updateCart(productId, quantity);
+                });
+            });
+
+            // Handle direct quantity input changes
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    let productId = this.getAttribute('data-id');
+                    let quantity = parseInt(this.value) || 1;
+                    quantity = Math.max(1, quantity); // Ensure quantity is at least 1
+                    this.value = quantity; // Update the input with validated value
+                    updateCart(productId, quantity);
+                });
+            });
 
             // AJAX Function for Removing Items
             function removeItem(productId) {

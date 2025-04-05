@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Region;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -11,8 +12,15 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
+    // DatabaseSeeder.php
+    public function run()
     {
-        // $this->call(AdminSeeder::class);
+        $this->call([
+            RegionsTableSeeder::class,
+            ProvincesTableSeeder::class,
+            CitiesTableSeeder::class,
+            BarangaysTableSeeder::class,
+            // Add your other seeders here
+        ]);
     }
 }

@@ -28,15 +28,24 @@ class OrderController extends Controller
                 'tax' => $order->tax,
                 'shipping' => $order->shipping,
                 'created_at' => $order->created_at,
-                'address' => $order->address,
+                'address' => $order->address_line_1, // Changed from address to address_line_1
+                'address_line_1' => $order->address_line_1,
+                'address_line_2' => $order->address_line_2,
                 'city' => $order->city,
-                'state' => $order->state,
+                'state' => $order->province, // Changed from state to province
+                'province' => $order->province,
                 'zip_code' => $order->zip_code,
-                'country' => $order->country,
+                'country' => 'Philippines', // Hardcoded or from your DB
                 'payment_method' => $order->payment_method,
-                'payment_details' => json_decode($order->payment_details, true) ?? [],
-                'items' => json_decode($order->items, true) ?? [],
-                'shipping_method' => $order->shipping_method
+                'payment_details' => is_array($order->payment_details) ?
+                    $order->payment_details :
+                    json_decode($order->payment_details, true) ?? [],
+                'items' => is_array($order->items) ?
+                    $order->items :
+                    json_decode($order->items, true) ?? [],
+                'shipping_method' => $order->shipping_method,
+                'region' => $order->region,
+                'barangay' => $order->barangay
             ]);
         } catch (\Exception $e) {
             return response()->json([

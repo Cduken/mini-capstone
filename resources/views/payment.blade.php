@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gray-50 py-12">
+    <div class="min-h-screen bg-gray-50 py-12 overflow-x-hidden">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Progress Steps -->
             <div class="max-w-md mx-auto mb-12">
@@ -42,23 +42,26 @@
                     <div class="bg-white rounded-xl shadow-sm p-6 md:p-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">Payment Method</h2>
 
-                        <!-- Payment Tabs -->
+                        <!-- Replace the payment tabs section with this -->
                         <div class="border-b border-gray-200 mb-6">
-                            <nav class="-mb-px flex space-x-8">
+                            <nav class="flex flex-wrap gap-2 md:gap-4">
                                 <button type="button" onclick="showPaymentMethod('card')"
-                                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center payment-tab border-blue-500 text-blue-600"
+                                    class="whitespace-nowrap py-3 px-3 border-b-2 font-medium text-sm flex items-center payment-tab border-blue-500 text-blue-600"
                                     data-method="card">
-                                    <i class='bx bx-credit-card mr-2'></i> Credit/Debit Card
+                                    <i class='bx bx-credit-card mr-1 md:mr-2'></i>
+                                    <span class="text-xs md:text-sm">Card</span>
                                 </button>
                                 <button type="button" onclick="showPaymentMethod('gcash')"
-                                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center payment-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                    class="whitespace-nowrap py-3 px-3 border-b-2 font-medium text-sm flex items-center payment-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                                     data-method="gcash">
-                                    <i class='bx bx-wallet mr-2'></i> GCash
+                                    <i class='bx bx-wallet mr-1 md:mr-2'></i>
+                                    <span class="text-xs md:text-sm">GCash</span>
                                 </button>
                                 <button type="button" onclick="showPaymentMethod('cod')"
-                                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center payment-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                    class="whitespace-nowrap py-3 px-3 border-b-2 font-medium text-sm flex items-center payment-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                                     data-method="cod">
-                                    <i class='bx bx-money mr-2'></i> Cash On Delivery
+                                    <i class='bx bx-money mr-1 md:mr-2'></i>
+                                    <span class="text-xs md:text-sm">COD</span>
                                 </button>
                             </nav>
                         </div>
@@ -258,18 +261,36 @@
                             @endforeach
                         </div>
 
-                        <!-- Shipping Info -->
                         <div class="border-t border-gray-200 pt-4 mb-6">
-                            <h3 class="text-sm font-medium text-gray-900 mb-2">Shipping to:</h3>
-                            <div class="flex items-center gap-2">
-                                <p class="text-sm text-gray-600">{{ $address }}</p>
-                                <p class="text-sm text-gray-600">{{ $city }}, {{ $state }},
-                                    {{ $zip_code }}</p>
-                                <p class="text-sm text-gray-600">{{ $country }}</p>
-                            </div>
-                            <h3 class="text-sm font-medium text-gray-900 mt-2 mb-2">Shipping Method:</h3>
+                            <h3 class="text-sm font-medium text-gray-900 mb-3">Shipping Information</h3>
 
-                            <p class="text-sm text-gray-600 mt-1">{{ $shippingMethod }}</p>
+                            <div class="space-y-3">
+                                <!-- Address -->
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 pt-0.5 mr-2">
+                                        <i class='bx bx-map text-gray-400'></i>
+                                    </div>
+                                    <div class="space-y-1">
+                                        <p class="text-sm text-gray-600">{{ $address }}</p>
+                                        <p class="text-sm text-gray-600">{{ $barangayName }}</p>
+                                        <p class="text-sm text-gray-600">{{ $cityName }}, {{ $provinceName }}</p>
+                                        <p class="text-sm text-gray-600">{{ $regionName }}, {{ $zip_code }}</p>
+                                        <p class="text-sm text-gray-600">Philippines</p>
+                                    </div>
+                                </div>
+
+                                <!-- Shipping Method -->
+                            <h3 class="text-sm font-medium text-gray-900 mb-3">Shipping Information</h3>
+
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 pt-0.5 mr-2">
+                                        <i class='bx bxs-truck text-gray-400'></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600 font-medium">{{ $shippingMethod }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Cost Breakdown -->
@@ -306,12 +327,6 @@
             style="max-height: 85vh;">
             <!-- Modal Header -->
             <div class="bg-gradient-to-r from-emerald-500 to-teal-600 p-5 text-center relative">
-                <!-- Close Button -->
-                <button onclick="closeSuccessModalAndShowRating()"
-                    class="absolute top-3 right-3 text-white hover:text-gray-200 transition-colors">
-                    <i class='bx bx-x text-xl'></i>
-                </button>
-
                 <div class="absolute -top-6 left-1/2 transform -translate-x-1/2">
                     <div class="h-10 w-10 mt-[30px] bg-white rounded-full shadow-md flex items-center justify-center">
                         <div class="h-8 w-8 bg-emerald-100 rounded-full flex items-center justify-center">
@@ -389,10 +404,10 @@
 
                 <!-- Action Buttons -->
                 <div class="grid grid-cols-2 gap-3">
-                    <a href="{{ route('products.index') }}"
+                    <button onclick="closeSuccessModalAndShowRating()"
                         class="p-2 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white rounded-lg text-xs font-medium transition-all flex items-center justify-center shadow">
-                        <i class='bx bx-shopping-bag mr-1 text-sm'></i> Continue Shopping
-                    </a>
+                        <i class='bx bx-x mr-1 text-sm'></i> Close
+                    </button>
                     <button onclick="window.print()"
                         class="p-2 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-xs transition-all flex items-center justify-center shadow-sm">
                         <i class='bx bx-printer mr-1 text-sm'></i> Print Receipt
@@ -707,6 +722,28 @@
                 width: 100%;
             }
         }
+
+        .min-w-max {
+            min-width: max-content;
+        }
+
+        .overflow-x-auto {
+            overflow-x: auto;
+        }
+
+        /* Add this to your style section */
+        .payment-tab {
+            flex: 1 0 auto;
+            min-width: 80px;
+            justify-content: center;
+        }
+
+        @media (min-width: 768px) {
+            .payment-tab {
+                flex: 0 0 auto;
+                min-width: auto;
+            }
+        }
     </style>
 
     <script>
@@ -862,13 +899,13 @@
                         if (response.ok) {
                             const productDiv = this.closest('.bg-gradient-to-br');
                             productDiv.innerHTML = `
-                        <div class="text-center py-4">
-                            <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-2">
-                                <i class='bx bxs-check-circle text-xl text-green-500'></i>
-                            </div>
-                            <p class="text-sm font-medium text-gray-700">${data.message || 'Thank you for your feedback!'}</p>
+                    <div class="text-center py-4">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-2">
+                            <i class='bx bxs-check-circle text-xl text-green-500'></i>
                         </div>
-                    `;
+                        <p class="text-sm font-medium text-gray-700">${data.message || 'Thank you for your feedback!'}</p>
+                    </div>
+                `;
 
                             // Check if all ratings are submitted
                             const remainingForms = document.querySelectorAll(

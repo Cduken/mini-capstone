@@ -743,7 +743,7 @@
             const addImageInput = document.getElementById('image');
             if (addImageInput) {
                 addImageInput.addEventListener('change', function(e) {
-                    const file = e.target.files[0];
+                const file = e.target.files[0];
                     if (file) {
                         const reader = new FileReader();
                         reader.onload = function(event) {

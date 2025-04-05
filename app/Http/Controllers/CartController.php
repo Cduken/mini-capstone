@@ -1,93 +1,156 @@
 <?php
-// filepath: c:\Users\Cduken\Desktop\2nd Sem\Mini Capstone\mini capstone pure laravel\mini-capstone\app\Http\Controllers\CartController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Region;
+use App\Models\Province;
+use App\Models\City;
+use App\Models\Barangay;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
     public function index()
     {
         $cartItems = Cart::with('product')->where('user_id', Auth::id())->get();
-        $subtotal = $cartItems->sum(function($item) {
+
+        // Calculate totals
+        $subtotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
-        $tax = $subtotal * 0.1; // Example tax calculation
-        $shipping = 10; // Example shipping cost
+        $tax = $subtotal * 0.1;
+        $shipping = 10;
         $total = $subtotal + $tax + $shipping;
 
-        return view('cart.index', compact('cartItems', 'subtotal', 'tax', 'shipping', 'total'));
+        // Get regions for address dropdown
+        $regions = Region::orderBy('name')->get();
+
+        return view('cart.index', compact(
+            'cartItems',
+            'subtotal',
+            'tax',
+            'shipping',
+            'total',
+            'regions'
+        ));
     }
-
-
-
-
 
     public function add(Request $request, $id)
     {
-        $product = Product::find($id);
-        $cartItem = Cart::where('user_id', Auth::id())->where('product_id', $id)->first();
+        $product = Product::findOrFail($id);
 
-        if ($cartItem) {
-            $cartItem->quantity++;
-            $cartItem->save();
+        $cartItem = Cart::firstOrNew([
+            'user_id' => Auth::id(),
+            'product_id' => $id
+        ]);
+
+        // If item already exists, increment quantity, otherwise set to 1
+        if ($cartItem->exists) {
+            $cartItem->quantity += 1;
         } else {
-            Cart::create([
-                'user_id' => Auth::id(),
-                'product_id' => $product->id,
-                'quantity' => 1,
-                'price' => $product->price, // Include the price field
-            ]);
+            $cartItem->quantity = 1;
         }
 
-        return redirect()->route('cart.index')->with('success', 'Product added to cart successfully!');
+        $cartItem->price = $product->price;
+        $cartItem->save();
+
+        return redirect()->route('cart.index')
+            ->with('success', 'Product added to cart successfully!');
     }
 
     public function update(Request $request, $id)
     {
-        $cartItem = Cart::where('user_id', Auth::id())->where('product_id', $id)->first();
-
-        if ($cartItem) {
-            $cartItem->quantity = $request->quantity;
-            $cartItem->save();
-        }
-
-        $cartItems = Cart::with('product')->where('user_id', Auth::id())->get();
-        $subtotal = $cartItems->sum(function($item) {
-            return $item->price * $item->quantity;
-        });
-
-        return response()->json([
-            'success' => true,
-            'quantity' => $cartItem->quantity,
-            'price' => number_format($cartItem->price * $cartItem->quantity, 2),
-            'subtotal' => number_format($subtotal, 2),
-            'tax' => number_format($subtotal * 0.1, 2),
-            'shipping' => number_format(10, 2),
-            'total' => number_format($subtotal * 1.1 + 10, 2)
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
         ]);
+
+        $cartItem = Cart::where('user_id', Auth::id())
+            ->where('product_id', $id)
+            ->firstOrFail();
+
+        $cartItem->update([
+            'quantity' => $request->quantity
+        ]);
+
+        return $this->getCartResponse($id);
     }
 
     public function remove($id)
     {
-        $cartItem = Cart::where('user_id', Auth::id())->where('product_id', $id)->first();
+        Cart::where('user_id', Auth::id())
+            ->where('product_id', $id)
+            ->delete();
 
-        if ($cartItem) {
-            $cartItem->delete();
-        }
+        return $this->getCartResponse();
+    }
 
-        $cartItems = Cart::with('product')->where('user_id', Auth::id())->get();
-        $subtotal = $cartItems->sum(function($item) {
+    // Address-related methods
+    public function getProvinces(Request $request)
+    {
+        $request->validate(['region_code' => 'required|string']);
+
+        $provinces = Province::where('region_code', $request->region_code)
+            ->orderBy('name')
+            ->get(['code', 'name']);
+
+        return response()->json($provinces);
+    }
+
+    public function getCities(Request $request)
+    {
+        $request->validate(['province_code' => 'required|string']);
+
+        $cities = City::where('province_code', $request->province_code)
+            ->orderBy('name')
+            ->get(['code', 'name', 'zip_code']);
+
+        return response()->json($cities);
+    }
+
+    public function getBarangays(Request $request)
+    {
+        $request->validate(['city_code' => 'required|string']);
+
+        $barangays = Barangay::where('city_code', $request->city_code)
+            ->orderBy('name')
+            ->get(['code', 'name']);
+
+        return response()->json($barangays);
+    }
+
+    protected function getCartResponse($productId = null)
+    {
+        $cartItems = Cart::with('product')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        $subtotal = $cartItems->sum(function ($item) {
             return $item->price * $item->quantity;
         });
 
-        return response()->json([
+        $response = [
             'success' => true,
+            'quantity' => $cartItems->sum('quantity'),
             'subtotal' => number_format($subtotal, 2),
-            'total' => number_format($subtotal * 1.1 + 10, 2)
-        ]);
+            'tax' => number_format($subtotal * 0.1, 2),
+            'shipping' => number_format(10, 2),
+            'total' => number_format($subtotal * 1.1 + 10, 2),
+            'item_count' => $cartItems->count()
+        ];
+
+        // Add individual item data if product ID is provided
+        if ($productId) {
+            $item = $cartItems->firstWhere('product_id', $productId);
+            if ($item) {
+                $response['price'] = number_format($item->price * $item->quantity, 2);
+                $response['item_quantity'] = $item->quantity;
+            }
+        }
+
+        return response()->json($response);
     }
 }

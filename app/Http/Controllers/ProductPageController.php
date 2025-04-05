@@ -17,29 +17,41 @@ class ProductPageController extends Controller
         $sort = $request->input('sort', 'latest');
         $order_id = session('order_id');
 
-        $products = Product::query()
+        $query = Product::query()
             ->withCount('ratings')
-            ->when($search, function ($query, $search) {
-                return $query->where('title', 'like', '%' . $search . '%')
+            ->withAvg('ratings', 'rating'); // Always include this to avoid N+1 issues
+
+        // Search filter
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
                     ->orWhere('category', 'like', '%' . $search . '%');
-            })
-            ->when($request->filled('min_price') || $request->filled('max_price'), function ($query) use ($minPrice, $maxPrice) {
-                $query->whereBetween('price', [$minPrice, $maxPrice]);
-            })
-            ->when($sort === 'rating', function ($query) {
-                $query->withAvg('ratings', 'rating')
-                    ->orderBy('ratings_avg_rating', 'desc');
-            })
-            ->when($sort === 'price_asc', function ($query) {
+            });
+        }
+
+        // Price range filter
+        if ($request->filled('min_price') || $request->filled('max_price')) {
+            $query->whereBetween('price', [$minPrice, $maxPrice]);
+        }
+
+        // Sorting logic
+        switch ($sort) {
+            case 'rating':
+                $query->orderBy('ratings_avg_rating', 'desc');
+                break;
+            case 'price_asc':
                 $query->orderBy('price', 'asc');
-            })
-            ->when($sort === 'price_desc', function ($query) {
+                break;
+            case 'price_desc':
                 $query->orderBy('price', 'desc');
-            })
-            ->when($sort === 'latest', function ($query) {
+                break;
+            case 'latest':
+            default:
                 $query->latest();
-            })
-            ->paginate(6);
+                break;
+        }
+
+        $products = $query->paginate(6);
 
         return view('products.index', [
             'products' => $products,
