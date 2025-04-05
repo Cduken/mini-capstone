@@ -121,6 +121,7 @@
 
                 <!-- Order Summary Section -->
                 @if ($cartItems->isNotEmpty())
+                    <!-- Order Summary Section -->
                     <div class="lg:w-1/3">
                         <div class="bg-white rounded-xl shadow-sm p-6 sticky top-6">
                             <h2 class="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
@@ -151,143 +152,178 @@
 
                             <form method="POST" action="{{ route('checkout') }}" class="mt-8" id="checkoutForm">
                                 @csrf
-                                <h3 class="text-lg font-semibold mb-4 flex items-center">
-                                    <i class='bx bx-map mr-2'></i> Shipping Information
+                                <h3 class="text-lg font-semibold mb-6 flex items-center text-gray-800">
+                                    <i class='bx bx-map text-blue-600 mr-2'></i> Shipping Information
                                 </h3>
 
-                                <div class="space-y-4">
+                                <div class="space-y-5">
                                     <!-- Address Line 1 -->
-                                    <div>
+                                    <div class="relative">
                                         <label for="address_line_1"
-                                            class="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
-                                        <input type="text" id="address_line_1" name="address_line_1" required
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                            placeholder="House/Building number, Street name">
+                                            class="block text-sm font-medium text-gray-700 mb-1">
+                                            <i class='bx bx-home-alt mr-1'></i> Street Address
+                                        </label>
+                                        <div class="relative">
+                                            <i class='bx bx-buildings absolute left-3 top-3 text-gray-400'></i>
+                                            <input type="text" id="address_line_1" name="address_line_1" required
+                                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                                placeholder="House/Building number, Street name"
+                                                value="{{ old('address_line_1') }}">
+                                        </div>
                                     </div>
 
                                     <!-- Region Selection -->
-                                    <div>
-                                        <label for="region"
-                                            class="block text-sm font-medium text-gray-700 mb-1">Region</label>
-                                        <select id="region" name="region" required
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                            <option value="">Select Region</option>
-                                            @foreach ($regions as $region)
-                                                <option value="{{ $region->code }}"
-                                                    @if (old('region') == $region->code) selected @endif>
-                                                    {{ $region->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                    <div class="relative">
+                                        <label for="region" class="block text-sm font-medium text-gray-700 mb-1">
+                                            <i class='bx bx-globe mr-1'></i> Region
+                                        </label>
+                                        <div class="relative">
+                                            <i class='bx bx-map-pin absolute left-3 top-3 text-gray-400'></i>
+                                            <select id="region" name="region" required
+                                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white">
+                                                <option value="">Select Region</option>
+                                                @foreach ($regions as $region)
+                                                    <option value="{{ $region->code }}"
+                                                        @if (old('region') == $region->code) selected @endif>
+                                                        {{ $region->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
                                     </div>
 
                                     <!-- Province Selection -->
-                                    <div>
-                                        <label for="province"
-                                            class="block text-sm font-medium text-gray-700 mb-1">Province</label>
-                                        <select id="province" name="province" required
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                            @empty(old('province')) disabled @endempty>
-                                            <option value="">Select Province</option>
-                                            @if (old('province'))
-                                                @php
-                                                    $selectedProvince = \App\Models\Province::where(
-                                                        'code',
-                                                        old('province'),
-                                                    )->first();
-                                                @endphp
-                                                @if ($selectedProvince)
-                                                    <option value="{{ $selectedProvince->code }}" selected>
-                                                        {{ $selectedProvince->name }}
-                                                    </option>
+                                    <div class="relative">
+                                        <label for="province" class="block text-sm font-medium text-gray-700 mb-1">
+                                            <i class='bx bx-map mr-1'></i> Province
+                                        </label>
+                                        <div class="relative">
+                                            <i class='bx bx-map-alt absolute left-3 top-3 text-gray-400'></i>
+                                            <select id="province" name="province" required
+                                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white"
+                                                @empty(old('province')) disabled @endempty>
+                                                <option value="">Select Province</option>
+                                                @if (old('province'))
+                                                    @php
+                                                        $selectedProvince = \App\Models\Province::where(
+                                                            'code',
+                                                            old('province'),
+                                                        )->first();
+                                                    @endphp
+                                                    @if ($selectedProvince)
+                                                        <option value="{{ $selectedProvince->code }}" selected>
+                                                            {{ $selectedProvince->name }}
+                                                        </option>
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        </select>
+                                            </select>
+
+                                        </div>
                                     </div>
 
                                     <!-- City/Municipality Selection -->
-                                    <div>
-                                        <label for="city"
-                                            class="block text-sm font-medium text-gray-700 mb-1">City/Municipality</label>
-                                        <select id="city" name="city" required
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                            @empty(old('city')) disabled @endempty>
-                                            <option value="">Select City/Municipality</option>
-                                            @if (old('city'))
-                                                @php
-                                                    $selectedCity = \App\Models\City::where(
-                                                        'code',
-                                                        old('city'),
-                                                    )->first();
-                                                @endphp
-                                                @if ($selectedCity)
-                                                    <option value="{{ $selectedCity->code }}" selected>
-                                                        {{ $selectedCity->name }}
-                                                    </option>
+                                    <div class="relative">
+                                        <label for="city" class="block text-sm font-medium text-gray-700 mb-1">
+                                            <i class='bx bx-building-house mr-1'></i> City/Municipality
+                                        </label>
+                                        <div class="relative">
+                                            <i class='bx bxs-city absolute left-3 top-3 text-gray-400'></i>
+                                            <select id="city" name="city" required
+                                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white"
+                                                @empty(old('city')) disabled @endempty>
+                                                <option value="">Select City/Municipality</option>
+                                                @if (old('city'))
+                                                    @php
+                                                        $selectedCity = \App\Models\City::where(
+                                                            'code',
+                                                            old('city'),
+                                                        )->first();
+                                                    @endphp
+                                                    @if ($selectedCity)
+                                                        <option value="{{ $selectedCity->code }}" selected>
+                                                            {{ $selectedCity->name }}
+                                                        </option>
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
 
                                     <!-- Barangay Selection -->
-                                    <div>
-                                        <label for="barangay"
-                                            class="block text-sm font-medium text-gray-700 mb-1">Barangay</label>
-                                        <select id="barangay" name="barangay" required
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                            @empty(old('barangay')) disabled @endempty>
-                                            <option value="">Select Barangay</option>
-                                            @if (old('barangay'))
-                                                @php
-                                                    $selectedBarangay = \App\Models\Barangay::where(
-                                                        'code',
-                                                        old('barangay'),
-                                                    )->first();
-                                                @endphp
-                                                @if ($selectedBarangay)
-                                                    <option value="{{ $selectedBarangay->code }}" selected>
-                                                        {{ $selectedBarangay->name }}
-                                                    </option>
+                                    <div class="relative">
+                                        <label for="barangay" class="block text-sm font-medium text-gray-700 mb-1">
+                                            <i class='bx bx-current-location mr-1'></i> Barangay
+                                        </label>
+                                        <div class="relative">
+                                            <i class='bx bx-location-plus absolute left-3 top-3 text-gray-400'></i>
+                                            <select id="barangay" name="barangay" required
+                                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white"
+                                                @empty(old('barangay')) disabled @endempty>
+                                                <option value="">Select Barangay</option>
+                                                @if (old('barangay'))
+                                                    @php
+                                                        $selectedBarangay = \App\Models\Barangay::where(
+                                                            'code',
+                                                            old('barangay'),
+                                                        )->first();
+                                                    @endphp
+                                                    @if ($selectedBarangay)
+                                                        <option value="{{ $selectedBarangay->code }}" selected>
+                                                            {{ $selectedBarangay->name }}
+                                                        </option>
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        </select>
+                                            </select>
+
+                                        </div>
                                     </div>
 
                                     <!-- Zip Code -->
-                                    <div>
-                                        <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-1">Zip
-                                            Code</label>
-                                        <input type="text" id="zip_code" name="zip_code" required
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                            value="{{ old('zip_code') }}">
+                                    <div class="relative">
+                                        <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-1">
+                                            <i class='bx bx-mail-send mr-1'></i> Zip Code
+                                        </label>
+                                        <div class="relative">
+                                            <i class='bx bx-barcode absolute left-3 top-3 text-gray-400'></i>
+                                            <input type="text" id="zip_code" name="zip_code" required
+                                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                                value="{{ old('zip_code') }}">
+                                        </div>
                                     </div>
 
                                     <!-- Shipping Method -->
-                                    <div>
+                                    <div class="relative">
                                         <label for="shipping_method"
-                                            class="block text-sm font-medium text-gray-700 mb-1">Shipping
-                                            Method</label>
-                                        <select id="shipping_method" name="shipping_method"
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
-                                            <option value="Standard Shipping"
-                                                @if (old('shipping_method') == 'Standard Shipping') selected @endif>
-                                                Standard Shipping (5-7 business days)
-                                            </option>
-                                            <option value="Express Shipping"
-                                                @if (old('shipping_method') == 'Express Shipping') selected @endif>
-                                                Express Shipping (2-3 business days)
-                                            </option>
-                                            <option value="Overnight Shipping"
-                                                @if (old('shipping_method') == 'Overnight Shipping') selected @endif>
-                                                Overnight Shipping (1 business day)
-                                            </option>
-                                        </select>
+                                            class="block text-sm font-medium text-gray-700 mb-1">
+                                            <i class='bx bx-truck mr-1'></i> Shipping Method
+                                        </label>
+                                        <div class="relative">
+                                            <i class='bx bx-package absolute left-3 top-3 text-gray-400'></i>
+                                            <select id="shipping_method" name="shipping_method"
+                                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white">
+                                                <option value="Standard Shipping"
+                                                    @if (old('shipping_method', 'Standard Shipping') == 'Standard Shipping') selected @endif>
+                                                    Standard Shipping (5-7 business days)
+                                                </option>
+                                                <option value="Express Shipping"
+                                                    @if (old('shipping_method') == 'Express Shipping') selected @endif>
+                                                    Express Shipping (2-3 business days)
+                                                </option>
+                                                <option value="Overnight Shipping"
+                                                    @if (old('shipping_method') == 'Overnight Shipping') selected @endif>
+                                                    Overnight Shipping (1 business day)
+                                                </option>
+                                            </select>
+                                            <i
+                                                class='bx bx-chevron-down absolute right-3 top-3 text-gray-400 pointer-events-none'></i>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <button type="submit" id="checkout-button"
-                                    class="mt-6 w-full bg-gradient-to-r from-gray-700 to-gray-900 text-white py-3 rounded-lg font-bold hover:from-gray-800 hover:to-gray-900 transition-all shadow-md flex items-center justify-center">
-                                    <i class='bx bx-lock-alt mr-2'></i> Proceed to Checkout
+                                    class="mt-8 w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-400 transition-all shadow-md flex items-center justify-center">
+                                    <i class='bx bx-lock-alt text-xl mr-2'></i> Proceed to Checkout
                                 </button>
                             </form>
                         </div>
@@ -325,8 +361,148 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const deleteModal = document.getElementById('deleteModal');
+            const cancelDeleteBtn = document.getElementById('cancelDelete');
+            const confirmDeleteBtn = document.getElementById('confirmDelete');
+            const checkoutForm = document.querySelector('form[action="{{ route('checkout') }}"]');
+            let currentProductIdToDelete = null;
 
-            // Address Dropdown Handling
+            // ================ ADDRESS PERSISTENCE ================
+
+            // Store form data in sessionStorage
+            function storeFormData() {
+                const formData = {
+                    address_line_1: document.getElementById('address_line_1').value,
+                    region: document.getElementById('region').value,
+                    province: document.getElementById('province').value,
+                    city: document.getElementById('city').value,
+                    barangay: document.getElementById('barangay').value,
+                    zip_code: document.getElementById('zip_code').value,
+                    shipping_method: document.getElementById('shipping_method').value
+                };
+                sessionStorage.setItem('shippingFormData', JSON.stringify(formData));
+            }
+
+            // Add event listeners to all form inputs
+            document.querySelectorAll('#checkoutForm input, #checkoutForm select').forEach(input => {
+                input.addEventListener('change', storeFormData);
+                input.addEventListener('input', storeFormData);
+            });
+
+            // Restore form data from sessionStorage
+            function restoreFormData() {
+                const savedFormData = sessionStorage.getItem('shippingFormData');
+                if (savedFormData) {
+                    const formData = JSON.parse(savedFormData);
+
+                    // Restore simple fields
+                    document.getElementById('address_line_1').value = formData.address_line_1 || '';
+                    document.getElementById('zip_code').value = formData.zip_code || '';
+                    document.getElementById('shipping_method').value = formData.shipping_method ||
+                        'Standard Shipping';
+
+                    // Only restore region if it exists in the select options
+                    const regionSelect = document.getElementById('region');
+                    if (formData.region && Array.from(regionSelect.options).some(opt => opt.value === formData
+                            .region)) {
+                        regionSelect.value = formData.region;
+
+                        // Trigger region change to load provinces
+                        const event = new Event('change');
+                        regionSelect.dispatchEvent(event);
+
+                        // Restore province after provinces are loaded
+                        setTimeout(() => {
+                            const provinceSelect = document.getElementById('province');
+                            if (formData.province && provinceSelect) {
+                                // Wait until the province is available in the options
+                                const checkProvince = setInterval(() => {
+                                    const provinceOption = Array.from(provinceSelect.options).find(
+                                        opt => opt.value === formData.province);
+                                    if (provinceOption) {
+                                        provinceSelect.value = formData.province;
+                                        provinceSelect.dispatchEvent(event);
+                                        clearInterval(checkProvince);
+
+                                        // Restore city after cities are loaded
+                                        setTimeout(() => {
+                                            const citySelect = document.getElementById(
+                                                'city');
+                                            if (formData.city && citySelect) {
+                                                const checkCity = setInterval(() => {
+                                                    const cityOption = Array.from(
+                                                            citySelect.options)
+                                                        .find(opt => opt.value ===
+                                                            formData.city);
+                                                    if (cityOption) {
+                                                        citySelect.value = formData
+                                                            .city;
+                                                        citySelect.dispatchEvent(
+                                                            event);
+                                                        clearInterval(checkCity);
+
+                                                        // Restore barangay after barangays are loaded
+                                                        setTimeout(() => {
+                                                            const
+                                                                barangaySelect =
+                                                                document
+                                                                .getElementById(
+                                                                    'barangay'
+                                                                );
+                                                            if (formData
+                                                                .barangay &&
+                                                                barangaySelect
+                                                            ) {
+                                                                const
+                                                                    checkBarangay =
+                                                                    setInterval(
+                                                                        () => {
+                                                                            const
+                                                                                barangayOption =
+                                                                                Array
+                                                                                .from(
+                                                                                    barangaySelect
+                                                                                    .options
+                                                                                )
+                                                                                .find(
+                                                                                    opt =>
+                                                                                    opt
+                                                                                    .value ===
+                                                                                    formData
+                                                                                    .barangay
+                                                                                );
+                                                                            if (
+                                                                                barangayOption
+                                                                            ) {
+                                                                                barangaySelect
+                                                                                    .value =
+                                                                                    formData
+                                                                                    .barangay;
+                                                                                clearInterval
+                                                                                    (
+                                                                                        checkBarangay
+                                                                                    );
+                                                                            }
+                                                                        },
+                                                                        100
+                                                                    );
+                                                            }
+                                                        }, 300);
+                                                    }
+                                                }, 100);
+                                            }
+                                        }, 300);
+                                    }
+                                }, 100);
+                            }
+                        }, 300);
+                    }
+                }
+            }
+
+            // ================ ADDRESS SELECT HANDLING ================
+
             const regionSelect = document.getElementById('region');
             const provinceSelect = document.getElementById('province');
             const citySelect = document.getElementById('city');
@@ -360,6 +536,7 @@
                                 provinceSelect.appendChild(option);
                             });
                             provinceSelect.disabled = false;
+                            storeFormData();
                         });
                 });
             }
@@ -389,6 +566,7 @@
                                 citySelect.appendChild(option);
                             });
                             citySelect.disabled = false;
+                            storeFormData();
                         });
                 });
             }
@@ -416,6 +594,7 @@
                                 barangaySelect.appendChild(option);
                             });
                             barangaySelect.disabled = false;
+                            storeFormData();
                         });
 
                     // Try to fetch zip code for the city
@@ -424,17 +603,13 @@
                         .then(data => {
                             if (data.zip_code) {
                                 zipCodeInput.value = data.zip_code;
+                                storeFormData();
                             }
                         });
                 });
             }
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            const deleteModal = document.getElementById('deleteModal');
-            const cancelDeleteBtn = document.getElementById('cancelDelete');
-            const confirmDeleteBtn = document.getElementById('confirmDelete');
-            const checkoutForm = document.querySelector('form[action="{{ route('checkout') }}"]');
 
-            let currentProductIdToDelete = null;
+            // ================ CART FUNCTIONALITY ================
 
             // Handle Quantity Updates
             document.querySelectorAll('.update-quantity').forEach(button => {
@@ -494,7 +669,7 @@
                 }
             });
 
-            // Update the updateCart function to handle quantity properly
+            // AJAX Function for Updating Cart
             function updateCart(productId, quantity) {
                 fetch(`/cart/update/${productId}`, {
                         method: 'POST',
@@ -507,25 +682,17 @@
                         })
                     })
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
+                        if (!response.ok) throw new Error('Network response was not ok');
                         return response.json();
                     })
                     .then(data => {
                         if (data.success) {
-                            // Update the input value
                             const quantityInput = document.querySelector(
                                 `.quantity-input[data-id="${productId}"]`);
-                            if (quantityInput) {
-                                quantityInput.value = data.quantity;
-                            }
+                            if (quantityInput) quantityInput.value = data.quantity;
 
-                            // Update the price display
                             const priceElement = document.querySelector(`.item-price[data-id="${productId}"]`);
-                            if (priceElement) {
-                                priceElement.textContent = `$${data.price}`;
-                            }
+                            if (priceElement) priceElement.textContent = `$${data.price}`;
 
                             updateOrderSummary(data);
                         }
@@ -535,37 +702,6 @@
                         alert('An error occurred while updating the cart');
                     });
             }
-
-            // Update the quantity button event listeners
-            document.querySelectorAll('.update-quantity').forEach(button => {
-                button.addEventListener('click', function() {
-                    let productId = this.getAttribute('data-id');
-                    let action = this.getAttribute('data-action');
-                    let quantityInput = document.querySelector(
-                        `.quantity-input[data-id="${productId}"]`);
-                    let quantity = parseInt(quantityInput.value) || 1; // Ensure we have at least 1
-
-                    if (action === 'plus') {
-                        quantity += 1;
-                    } else if (action === 'minus') {
-                        quantity = Math.max(1, quantity - 1); // Ensure quantity doesn't go below 1
-                    }
-
-                    quantityInput.value = quantity; // Update the input immediately
-                    updateCart(productId, quantity);
-                });
-            });
-
-            // Handle direct quantity input changes
-            document.querySelectorAll('.quantity-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    let productId = this.getAttribute('data-id');
-                    let quantity = parseInt(this.value) || 1;
-                    quantity = Math.max(1, quantity); // Ensure quantity is at least 1
-                    this.value = quantity; // Update the input with validated value
-                    updateCart(productId, quantity);
-                });
-            });
 
             // AJAX Function for Removing Items
             function removeItem(productId) {
@@ -577,9 +713,7 @@
                         }
                     })
                     .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
+                        if (!response.ok) throw new Error('Network response was not ok');
                         return response.json();
                     })
                     .then(data => {
@@ -587,7 +721,6 @@
                             document.querySelector(`.cart-item[data-id="${productId}"]`)?.remove();
                             updateOrderSummary(data);
 
-                            // If cart is now empty, reload the page to show empty state
                             if (document.querySelectorAll('.cart-item').length === 0) {
                                 location.reload();
                             }
@@ -615,7 +748,7 @@
                 }
             }
 
-            // Update your form submission handler
+            // Form Submission Handler
             if (checkoutForm) {
                 checkoutForm.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -624,65 +757,68 @@
                     const submitButton = form.querySelector('button[type="submit"]');
                     const originalButtonText = submitButton.innerHTML;
 
-                    // Show loading state
                     submitButton.innerHTML = '<i class="bx bx-loader bx-spin mr-2"></i> Processing...';
                     submitButton.disabled = true;
 
-                    fetch(form.action, {
-                            method: 'POST',
-                            body: new FormData(form),
-                            headers: {
-                                'Accept': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest',
-                                'X-CSRF-TOKEN': csrfToken
-                            }
-                        })
-                        .then(async response => {
-                            const contentType = response.headers.get('content-type');
+                    setTimeout(() => {
+                        fetch(form.action, {
+                                method: 'POST',
+                                body: new FormData(form),
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'X-CSRF-TOKEN': csrfToken
+                                }
+                            })
+                            .then(async response => {
+                                const contentType = response.headers.get('content-type');
 
-                            // Handle JSON response
-                            if (contentType && contentType.includes('application/json')) {
-                                const data = await response.json();
+                                if (contentType && contentType.includes(
+                                        'application/json')) {
+                                    const data = await response.json();
 
-                                if (!response.ok) {
-                                    // Handle validation errors
-                                    if (data.errors) {
-                                        let errorMessages = Object.values(data.errors).flat().join(
-                                            '\n');
-                                        throw new Error(errorMessages);
+                                    if (!response.ok) {
+                                        if (data.errors) {
+                                            let errorMessages = Object.values(data.errors)
+                                                .flat().join(
+                                                    '\n');
+                                            throw new Error(errorMessages);
+                                        }
+                                        throw new Error(data.message ||
+                                            'An error occurred');
                                     }
-                                    throw new Error(data.message || 'An error occurred');
+
+                                    if (data.redirect) {
+                                        // Clear saved form data when successfully proceeding to checkout
+                                        sessionStorage.removeItem('shippingFormData');
+                                        window.location.href = data.redirect;
+                                    }
+                                    return;
                                 }
 
-                                // Handle successful response
-                                if (data.redirect) {
-                                    window.location.href = data.redirect;
+                                const text = await response.text();
+                                if (response.redirected) {
+                                    sessionStorage.removeItem('shippingFormData');
+                                    window.location.href = response.url;
+                                    return;
                                 }
-                                return;
-                            }
 
-                            // Handle HTML response (fallback for non-JSON responses)
-                            const text = await response.text();
-
-                            // Check if this is a redirect in HTML (Laravel sometimes does this)
-                            if (response.redirected) {
-                                window.location.href = response.url;
-                                return;
-                            }
-
-                            // If we got HTML but expected JSON, something went wrong
-                            throw new Error('Server returned unexpected response');
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Error: ' + error.message);
-                        })
-                        .finally(() => {
-                            submitButton.innerHTML = originalButtonText;
-                            submitButton.disabled = false;
-                        });
+                                throw new Error('Server returned unexpected response');
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Error: ' + error.message);
+                            })
+                            .finally(() => {
+                                submitButton.innerHTML = originalButtonText;
+                                submitButton.disabled = false;
+                            });
+                    }, 2500);
                 });
             }
+
+            // Initialize form data restoration
+            restoreFormData();
         });
     </script>
 </x-app-layout>

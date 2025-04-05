@@ -299,6 +299,19 @@
                             class="ml-auto text-xs bg-rose-500/20 text-rose-300 px-2 py-1 rounded-full animate-pulse">{{ App\Models\User::count() }}</span>
                     </a>
                 </li>
+
+                <li>
+                    <button onclick="openModal('profile-settings-modal')"
+                        class="w-full flex items-center p-3 rounded-xl transition-all duration-200 group hover:bg-gray-800/50 hover:shadow-lg hover:shadow-amber-500/10">
+                        <div
+                            class="p-2 mr-3 rounded-lg bg-gray-800/50 group-hover:bg-amber-600/20 transition-all duration-300 group-hover:-rotate-12">
+                            <i class='bx bx-cog text-lg text-amber-400 group-hover:text-amber-300'></i>
+                        </div>
+                        <span class="font-medium text-gray-300 group-hover:text-white tracking-wide">Profile
+                            Settings</span>
+                        <i class='bx bx-chevron-right text-indigo-400/50 ml-auto group-hover:text-indigo-300'></i>
+                    </button>
+                </li>
             </ul>
         </nav>
 
@@ -308,9 +321,10 @@
                 class="flex items-center justify-between p-3 rounded-xl transition-all duration-300 hover:bg-gray-800/50 hover:shadow-lg hover:shadow-indigo-500/10 group cursor-pointer">
                 <div class="flex items-center space-x-3">
                     <div class="relative">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=6366f1&color=fff"
-                            alt="Admin"
-                            class="w-10 h-10 rounded-xl border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-all duration-300">
+                        <img id="profile-image"
+                            class="w-10 h-10 rounded-xl border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-all duration-300"
+                            src="{{ asset('images/' . auth()->user()->avatar) }}"
+                            onerror="this.src='{{ asset('images/default-avatar.png') }}'" alt="Profile photo">
                         <div
                             class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-gray-900 animate-pulse">
                         </div>
@@ -341,6 +355,158 @@
         <i class='bx bx-x text-xl text-indigo-100 group-hover:text-white group-hover:rotate-180 transition-transform duration-300'
             x-show="open"></i>
     </button>
+</div>
+
+<!-- Enhanced Profile Settings Modal -->
+<div id="profile-settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <!-- Backdrop with gradient and blur -->
+    <div @click="closeModal('profile-settings-modal')"
+        class="fixed inset-0 bg-gradient-to-br from-gray-900/80 to-indigo-900/30 backdrop-blur-sm transition-opacity duration-300">
+    </div>
+
+    <!-- Modal Container -->
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 ease-out overflow-hidden"
+        id="profile-settings-modal-content">
+        <!-- Modal Header with Gradient -->
+        <div
+            class="border-b border-white/10 px-6 py-5 flex items-center justify-between bg-gradient-to-r from-indigo-600 to-purple-600">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
+                    <i class='bx bx-user-circle text-white text-xl'></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-white">Profile Settings</h3>
+                    <p class="text-xs text-indigo-200/80">Update your account details</p>
+                </div>
+            </div>
+            <button onclick="closeModal('profile-settings-modal')"
+                class="p-1.5 rounded-full hover:bg-white/10 transition-colors text-white hover:text-gray-200 transform hover:rotate-90 transition-transform">
+                <i class='bx bx-x text-xl'></i>
+            </button>
+        </div>
+
+        <!-- Loading Overlay (hidden by default) -->
+        <div id="profile-loading-overlay"
+            class="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center hidden z-10">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+
+        <!-- Success Message (hidden by default) -->
+        <div id="profile-success-message" class="hidden p-4 bg-emerald-50 border-b border-emerald-200">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <i class='bx bx-check-circle text-emerald-500 text-xl'></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-emerald-800">Profile updated successfully!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-6">
+            <form id="profile-settings-form" method="post" action="{{ route('profile.update') }}"
+                enctype="multipart/form-data" class="space-y-5">
+                @csrf
+                @method('patch')
+
+                <!-- Avatar Upload Section -->
+                <div class="flex flex-col items-center">
+                    <div class="relative group">
+                        <div
+                            class="relative h-24 w-24 rounded-full overflow-hidden border-4 border-white shadow-lg ring-2 ring-indigo-500/30">
+                            @if (auth()->user()->avatar)
+                                <img id="profile-preview" class="h-full w-full object-cover"
+                                    src="{{ asset('images/' . auth()->user()->avatar) }}" alt="Profile photo">
+                            @else
+                                <div id="profile-preview"
+                                    class="h-full w-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center text-indigo-600 font-bold text-4xl">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </div>
+                            @endif
+                        </div>
+                        <label for="profile-avatar"
+                            class="absolute -bottom-2 -right-2 bg-white p-2.5 rounded-full shadow-lg cursor-pointer hover:bg-gray-50 transition-all group-hover:scale-110">
+                            <i class='bx bx-camera text-indigo-600 text-lg'></i>
+                            <input type="file" id="profile-avatar" name="avatar" accept="image/*"
+                                class="hidden">
+                        </label>
+                    </div>
+                    <p class="mt-3 text-xs text-gray-500 text-center">Click on camera to upload new photo</p>
+                    <x-input-error class="mt-2 text-center" :messages="$errors->get('avatar')" />
+                </div>
+
+                <!-- Name Field -->
+                <div>
+                    <label for="profile-name" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <i class='bx bx-user mr-2 text-indigo-500'></i> Full Name
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class='bx bx-id-card text-gray-400'></i>
+                        </div>
+                        <input id="profile-name" name="name" type="text"
+                            class="block w-full pl-10 pr-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                            value="{{ old('name', auth()->user()->name) }}" required autofocus>
+                    </div>
+                    <x-input-error class="mt-1" :messages="$errors->get('name')" />
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <label for="profile-email" class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        <i class='bx bx-envelope mr-2 text-indigo-500'></i> Email Address
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class='bx bx-at text-gray-400'></i>
+                        </div>
+                        <input id="profile-email" name="email" type="email"
+                            class="block w-full pl-10 pr-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+                            value="{{ old('email', auth()->user()->email) }}" required>
+                    </div>
+                    <x-input-error class="mt-1" :messages="$errors->get('email')" />
+                </div>
+
+                <!-- Email Verification Status -->
+                @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
+                    <div class="p-3 bg-amber-50 rounded-lg border border-amber-100 flex items-start">
+                        <i class='bx bx-error-circle text-amber-500 mt-0.5 mr-2'></i>
+                        <div>
+                            <p class="text-sm text-amber-700">
+                                Your email is unverified. Click the verification link sent to your email.
+                            </p>
+                            <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="text-amber-600 hover:text-amber-500 text-xs underline mt-1 inline-flex items-center">
+                                    Resend verification email
+                                    <i class='bx bx-send ml-1'></i>
+                                </button>
+                            </form>
+                            @if (session('status') === 'verification-link-sent')
+                                <p class="mt-1 text-xs text-emerald-600 flex items-center">
+                                    <i class='bx bx-check-circle mr-1'></i> Verification link sent!
+                                </p>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Modal Footer -->
+                <div class="pt-3 flex justify-end space-x-3 border-t border-gray-100">
+                    <button type="button" onclick="closeModal('profile-settings-modal')"
+                        class="px-5 py-2.5 text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors flex items-center">
+                        <i class='bx bx-x mr-1.5'></i> Cancel
+                    </button>
+                    <button type="submit"
+                        class="px-5 py-2.5 text-sm bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg flex items-center">
+                        <i class='bx bx-save mr-1.5'></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -388,28 +554,120 @@
     .hover\:shadow-glow:hover {
         box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
     }
+
+    @keyframes modalEnter {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes modalExit {
+        from {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+        }
+    }
 </style>
 
 <script>
+    // Modal Handling Functions
     function openModal(modalId) {
         const modal = document.getElementById(modalId);
+        if (!modal) {
+            console.error(`Modal with ID ${modalId} does not exist.`);
+            return;
+        }
+
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+
+        const content = document.getElementById(modalId + '-content');
+        if (content) {
+            content.classList.add('animate-[modalEnter_0.3s_ease-out]');
+        }
     }
 
     function closeModal(modalId) {
         const modal = document.getElementById(modalId);
-        modal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
+        if (!modal) {
+            console.error(`Modal with ID ${modalId} does not exist.`);
+            return;
+        }
+
+        const content = document.getElementById(modalId + '-content');
+        if (content) {
+            content.classList.add('animate-[modalExit_0.3s_ease-in]');
+        }
+
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            if (content) {
+                content.classList.remove('animate-[modalEnter_0.3s_ease-out]',
+                    'animate-[modalExit_0.3s_ease-in]');
+            }
+            document.body.style.overflow = 'auto';
+        }, 250);
     }
 
     // Close modal when clicking outside
     window.addEventListener('click', function(event) {
-        if (event.target.classList.contains('bg-black')) {
-            const openModals = document.querySelectorAll('.bg-black:not(.hidden)');
+        if (event.target.classList.contains('bg-black/30')) {
+            const openModals = document.querySelectorAll('.bg-black/30:not(.hidden)');
             openModals.forEach(modal => {
                 closeModal(modal.id);
             });
         }
+    });
+
+    // Profile avatar preview
+    document.getElementById('profile-avatar')?.addEventListener('change', function(e) {
+        const preview = document.getElementById('profile-preview');
+        const file = e.target.files?.[0];
+
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                if (preview?.tagName === 'IMG') {
+                    preview.src = e.target.result;
+                } else {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'h-24 w-24 rounded-full object-cover border-4 border-white shadow-md';
+                    preview?.parentNode?.replaceChild(img, preview);
+                    img.id = 'profile-preview';
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Handle form submission feedback
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="bx bx-loader bx-spin mr-1.5"></i> Saving...';
+            }
+        });
+    });
+
+    // Additional Animations and Interactions
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add any additional initialization or animations here
+        console.log('Dashboard initialized successfully.');
     });
 </script>

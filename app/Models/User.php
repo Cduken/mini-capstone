@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar', // Add this line
     ];
 
     /**
@@ -78,5 +79,13 @@ class User extends Authenticatable
     public function carts(): HasMany
     {
         return $this->hasMany(Cart::class);
+    }
+
+    public function getAvatarUrl()
+    {
+        if ($this->avatar) {
+            return asset('images/' . $this->avatar);
+        }
+        return null;
     }
 }

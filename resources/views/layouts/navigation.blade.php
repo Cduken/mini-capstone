@@ -58,9 +58,15 @@
                         <div class="relative">
                             <button @click="dropdownOpen = !dropdownOpen"
                                 class="flex items-center focus:outline-none group">
+                                <!-- Replace the initial letter with the avatar -->
                                 <div
                                     class="w-9 h-9 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-white font-medium group-hover:bg-gray-700 transition-colors">
-                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                    @if (Auth::user()->avatar)
+                                        <img src="{{ Auth::user()->getAvatarUrl() }}" alt="{{ Auth::user()->name }}"
+                                            class="w-full h-full rounded-full object-cover">
+                                    @else
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                    @endif
                                 </div>
                                 <svg class="w-4 h-4 ml-1 text-gray-400 transition-transform duration-200"
                                     :class="{ 'rotate-180': dropdownOpen }" fill="none" viewBox="0 0 24 24"
@@ -171,8 +177,13 @@
                 <div class="flex items-center px-2">
                     <div class="flex-shrink-0">
                         <div
-                            class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-white font-medium">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-white font-medium overflow-hidden">
+                            @if (Auth::user()->avatar)
+                                <img src="{{ Auth::user()->getAvatarUrl() }}" alt="{{ Auth::user()->name }}"
+                                    class="w-full h-full object-cover">
+                            @else
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            @endif
                         </div>
                     </div>
                     <div class="ml-3">
