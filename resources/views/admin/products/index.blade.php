@@ -547,7 +547,6 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
     <div id="delete-product-modal"
         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden transition-opacity duration-300">
         <div class="bg-white rounded-xl shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0"
@@ -568,12 +567,22 @@
 
             <!-- Modal Body -->
             <div class="p-6">
-                <div class="text-center">
-                    <p class="text-gray-600 mb-4">
-                        <span id="delete-product-title" class="font-medium text-gray-900"></span>
-                    </p>
-                    <p class="text-sm text-gray-500">This action cannot be undone. Are you sure you want to delete this
-                        product?</p>
+                <div class="flex items-start space-x-4">
+                    <!-- Product Image -->
+                    <div class="flex-shrink-0 h-16 w-16 rounded-lg overflow-hidden border border-gray-200">
+                        <img id="delete-product-image" src="" alt="Product image"
+                            class="h-full w-full object-cover">
+                    </div>
+
+                    <!-- Product Info -->
+                    <div>
+                        <p class="text-gray-600 mb-1">
+                            <span id="delete-product-title" class="font-medium text-gray-900 block"></span>
+                            <span id="delete-product-category" class="text-xs text-gray-500"></span>
+                        </p>
+                        <p class="text-sm text-gray-500 mt-2">This action cannot be undone. Are you sure you want to
+                            delete this product?</p>
+                    </div>
                 </div>
 
                 <!-- Modal Footer -->
@@ -680,10 +689,19 @@
             fetch(`/admin/products/${productId}/json`)
                 .then(response => response.json())
                 .then(data => {
+                    // Set product info in modal
                     document.getElementById('delete-product-title').textContent = data.title;
+                    document.getElementById('delete-product-category').textContent = data.category;
+
+                    // Set product image - make sure this uses the full URL if needed
+                    const imageUrl = data.image.startsWith('http') ? data.image : `/${data.image}`;
+                    document.getElementById('delete-product-image').src = imageUrl;
+
+                    // Set up delete button action
                     document.getElementById('delete-product-confirm').addEventListener('click', function() {
                         document.getElementById(`delete-form-${productId}`).submit();
                     });
+
                     openModal('delete-product-modal');
                 })
                 .catch(error => {
@@ -740,7 +758,7 @@
             const addImageInput = document.getElementById('image');
             if (addImageInput) {
                 addImageInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
+                    const file = e.target.files[0];
                     if (file) {
                         const reader = new FileReader();
                         reader.onload = function(event) {
@@ -916,6 +934,125 @@
                 return container;
             }
 
+            // Product Notification Functions
+            function showProductNotification() {
+                const notification = document.getElementById('product-added-notification');
+                const progressBar = document.getElementById('product-notification-progress');
+
+                if (notification && progressBar) {
+                    notification.classList.remove('hidden', 'notification-slide-out');
+                    notification.classList.add('notification-slide-in');
+
+                    // Reset progress bar
+                    progressBar.style.width = '0%';
+                    setTimeout(() => {
+                        progressBar.style.width = '100%';
+                    }, 50);
+
+                    // Auto-hide after 3 seconds
+                    setTimeout(() => {
+                        closeProductNotification();
+                    }, 3000);
+                }
+            }
+
+            // Handle add product form submission
+            document.getElementById('add-product-form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const form = e.target;
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="bx bx-loader bx-spin mr-1.5"></i> Adding...';
+                }
+
+                fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.ok ? response.json() : response.json().then(err => {
+                        throw err;
+                    }))
+                    .then(data => {
+                        if (data.success) {
+                            // Show success notification
+                            showProductNotification();
+
+                            // Close the modal
+                            closeModal('add-product-modal');
+
+                            // Reset the form
+                            form.reset();
+
+                            // Hide image preview if exists
+                            const previewContainer = document.getElementById('image-preview-container');
+                            if (previewContainer) {
+                                previewContainer.classList.add('hidden');
+                            }
+
+                            // Reload the page or update the table via AJAX
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            // Handle errors
+                            if (data.errors) {
+                                Object.entries(data.errors).forEach(([field, messages]) => {
+                                    const input = form.querySelector(`[name="${field}"]`);
+                                    if (input) {
+                                        const errorDiv = document.createElement('div');
+                                        errorDiv.className =
+                                            'error-message text-xs text-red-600 mt-1 flex items-center';
+                                        errorDiv.innerHTML =
+                                            `<i class='bx bx-error-circle mr-1 text-xs'></i> ${messages.join('<br>')}`;
+
+                                        const parent = input.closest('div');
+                                        if (parent) {
+                                            // Remove existing error if any
+                                            const existingError = parent.querySelector(
+                                                '.error-message');
+                                            if (existingError) existingError.remove();
+
+                                            parent.appendChild(errorDiv);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Show error message
+                        alert('An error occurred while adding the product');
+                    })
+                    .finally(() => {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = '<i class="bx bx-save mr-1.5"></i> Add Product';
+                        }
+                    });
+            });
+
+            function closeProductNotification() {
+                const notification = document.getElementById('product-added-notification');
+                if (notification) {
+                    notification.classList.remove('notification-slide-in');
+                    notification.classList.add('notification-slide-out');
+
+                    setTimeout(() => {
+                        notification.classList.add('hidden');
+                    }, 500);
+                }
+            }
+
             // Add CSS for spinner animation if not already present
             if (!document.getElementById('pagination-spinner-style')) {
                 const style = document.createElement('style');
@@ -935,6 +1072,48 @@
     </script>
 
     <style>
+        #product-added-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            width: 320px;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        #product-added-notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-slide-in {
+            animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        .notification-slide-out {
+            animation: slideOutRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(120%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(120%);
+            }
+        }
+
         .tooltip-text {
             visibility: hidden;
             width: 60px;
@@ -978,4 +1157,39 @@
             background: #a1a1a1;
         }
     </style>
+
+    <!-- Product Added Success Notification -->
+    <div id="product-added-notification"
+        class="hidden fixed top-4 right-4 z-[9999] w-80 transition-all duration-500 ease-[cubic-bezier(0.68,-0.55,0.265,1.55)] translate-x-[120%]">
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden border border-green-300">
+            <!-- Header with icon and close button -->
+            <div class="p-4 flex items-center bg-green-600">
+                <div class="flex-shrink-0 p-2 bg-white/10 rounded-full">
+                    <i class='bx bx-check-circle text-xl text-white'></i>
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm text-white/90 mt-1">Product added successfully</p>
+                </div>
+                <button onclick="closeProductNotification()"
+                    class="ml-4 text-white hover:text-white/80 transition-colors">
+                    <i class='bx bx-x text-xl'></i>
+                </button>
+            </div>
+
+            <!-- Content area -->
+            <div class="p-4 bg-white">
+                <div class="flex items-center text-green-700">
+                    <i class='bx bx-package text-xl mr-2'></i>
+                    <span class="text-sm font-medium">Your product has been added to inventory</span>
+                </div>
+            </div>
+
+            <!-- Animated progress bar -->
+            <div class="h-1.5 bg-gray-100 w-full">
+                <div id="product-notification-progress"
+                    class="h-full bg-green-500 transition-all duration-3000 ease-linear">
+                </div>
+            </div>
+        </div>
+    </div>
 </x-app-layout>

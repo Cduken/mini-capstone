@@ -19,8 +19,28 @@
                             {{ $order->created_at->format('M d, Y') }}</div>
                     </td>
                     <td class="py-4 px-5">
-                        <div class="font-medium">{{ $order->name }}</div>
-                        <div class="text-xs text-gray-500">{{ $order->email }}</div>
+                        <div class="flex items-center">
+                            <div
+                                class="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center">
+                                @if ($order->user->avatar && file_exists(public_path('images/' . $order->user->avatar)))
+                                    <img class="h-10 w-10 rounded-full object-cover"
+                                        src="{{ asset('images/' . $order->user->avatar) }}"
+                                        alt="{{ $order->user->name }}">
+                                @elseif ($order->user->profile_photo_path)
+                                    <img class="h-10 w-10 rounded-full object-cover"
+                                        src="{{ asset($order->user->profile_photo_path) }}"
+                                        alt="{{ $order->user->name }}">
+                                @else
+                                    <span class="text-blue-600 font-medium">
+                                        {{ strtoupper(substr($order->user->name, 0, 1)) }}
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="ml-3">
+                                <div class="font-medium">{{ $order->name }}</div>
+                                <div class="text-xs text-gray-500">{{ $order->email }}</div>
+                            </div>
+                        </div>
                     </td>
                     <td class="py-4 px-5 font-medium">
                         ${{ number_format($order->total, 2) }}

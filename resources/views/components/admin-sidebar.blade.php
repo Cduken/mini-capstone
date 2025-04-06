@@ -316,23 +316,25 @@
 
         <!-- User Profile Section -->
         <div class="pt-4 mt-auto border-t border-gray-800/50">
-            <div
-                class="flex items-center justify-between p-3 rounded-xl transition-all duration-300 hover:bg-gray-800/50 hover:shadow-lg hover:shadow-indigo-500/10 group cursor-pointer">
+            <div class="flex items-center justify-between p-3 rounded-xl transition-all duration-300 hover:bg-gray-800/50 hover:shadow-lg hover:shadow-indigo-500/10 group cursor-pointer">
                 <div class="flex items-center space-x-3">
                     <div class="relative">
-                        <img id="profile-image"
-                            class="profile-image w-10 h-10 rounded-xl border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-all duration-300"
-                            src="{{ asset('images/' . auth()->user()->avatar) }}"
-                            onerror="this.src='{{ asset('images/default-avatar.png') }}'" alt="Profile photo">
-                        <div
-                            class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-gray-900 animate-pulse">
-                        </div>
+                        @if(auth()->user()->avatar && file_exists(public_path('images/' . auth()->user()->avatar)))
+                            <img id="profile-image"
+                                class="profile-image w-10 h-10 rounded-xl border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-all duration-300"
+                                src="{{ asset('images/' . auth()->user()->avatar) }}"
+                                alt="Profile photo">
+                        @else
+                            <div class="profile-image w-10 h-10 rounded-xl border-2 border-indigo-500/50 group-hover:border-indigo-400 transition-all duration-300 bg-indigo-600 flex items-center justify-center text-white font-medium">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                            </div>
+                        @endif
+                        <div class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-gray-900 animate-pulse"></div>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-medium text-gray-200 group-hover:text-white profile-name-display">
                             {{ auth()->user()->name }}</p>
-                        <p
-                            class="text-xs text-indigo-300/60 truncate group-hover:text-indigo-200 profile-email-display">
+                        <p class="text-xs text-indigo-300/60 truncate group-hover:text-indigo-200 profile-email-display">
                             {{ auth()->user()->email }}
                         </p>
                     </div>

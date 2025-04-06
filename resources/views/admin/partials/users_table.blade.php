@@ -23,15 +23,22 @@
             <tr class="hover:bg-gray-50 transition-colors">
                 <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
-                        <div
-                            class="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center">
-                            @if ($user->profile_photo_path)
-                                <img class="h-10 w-10 rounded-full" src="{{ asset($user->profile_photo_path) }}"
-                                    alt="{{ $user->name }}">
-                            @else
-                                <span
-                                    class="text-blue-600 font-medium">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
-                            @endif
+                        <div class="flex items-center">
+                            <div
+                                class="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center">
+                                @if ($user->avatar && file_exists(public_path('images/' . $user->avatar)))
+                                    <img class="h-10 w-10 rounded-full object-cover"
+                                        src="{{ asset('images/' . $user->avatar) }}" alt="{{ $user->name }}">
+                                @elseif ($user->profile_photo_path)
+                                    <img class="h-10 w-10 rounded-full object-cover"
+                                        src="{{ asset($user->profile_photo_path) }}" alt="{{ $user->name }}">
+                                @else
+                                    <span class="text-blue-600 font-medium">
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    </span>
+                                @endif
+                            </div>
+
                         </div>
                         <div class="ml-4">
                             <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>

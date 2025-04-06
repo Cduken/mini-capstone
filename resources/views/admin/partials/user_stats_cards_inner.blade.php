@@ -1,6 +1,6 @@
 <!-- Total Users Card -->
 <div
-    class="bg-gradient-to-r from-purple-200 to-white rounded-xl shadow-xs border border-purple-300 overflow-hidden hover:shadow-lg cursor-pointer hover:shadow-purple-300 hover:transform hover:scale-105 transition duration-300">
+    class="bg-gradient-to-r from-purple-200 to-white rounded-xl shadow-xs border border-purple-300 overflow-hidden hover:shadow-lg  hover:shadow-purple-300 hover:transform hover:scale-105 transition duration-300">
     <div class="p-5 flex items-start justify-between">
         <div>
             <div class="flex items-center gap-2">
@@ -34,7 +34,7 @@
 
 <!-- Active Today Card -->
 <div
-    class="bg-gradient-to-r from-green-200 to-white rounded-xl shadow-xs border border-green-300 overflow-hidden hover:shadow-lg cursor-pointer hover:shadow-green-300 hover:transform hover:scale-105 transition duration-300">
+    class="bg-gradient-to-r from-green-200 to-white rounded-xl shadow-xs border border-green-300 overflow-hidden hover:shadow-lg  hover:shadow-green-300 hover:transform hover:scale-105 transition duration-300">
     <div class="p-5 flex items-start justify-between">
         <div>
             <div class="flex items-center gap-2">
@@ -57,7 +57,7 @@
                 <span class="text-gray-500 text-xs ml-2">vs yesterday</span>
             </div>
         </div>
-        <div class="p-3 rounded-lg bg-green-50 text-green-600">
+        <div class="p-3 rounded-lg border border-green-200 bg-green-50 text-green-600">
             <i class='bx bx-user-check text-2xl'></i>
         </div>
     </div>
@@ -68,7 +68,7 @@
 
 <!-- Verified Users Card -->
 <div
-    class="bg-gradient-to-r from-blue-200 to-white rounded-xl shadow-xs border border-blue-300 overflow-hidden hover:shadow-lg cursor-pointer hover:shadow-blue-300 hover:transform hover:scale-105 transition duration-300">
+    class="bg-gradient-to-r from-blue-200 to-white rounded-xl shadow-xs border border-blue-300 overflow-hidden hover:shadow-lg  hover:shadow-blue-300 hover:transform hover:scale-105 transition duration-300">
     <div class="p-5 flex items-start justify-between">
         <div>
             <div class="flex items-center gap-2">
@@ -84,7 +84,7 @@
                 <span class="text-gray-500 text-xs ml-2">of total</span>
             </div>
         </div>
-        <div class="p-3 rounded-lg bg-blue-50 text-blue-600">
+        <div class="p-3 rounded-lg border border-blue-200 bg-blue-50 text-blue-600">
             <i class='bx bx-badge-check text-2xl'></i>
         </div>
     </div>
@@ -95,7 +95,7 @@
 
 <!-- Administrators Card -->
 <div
-    class="bg-gradient-to-r from-red-200 to-white rounded-xl shadow-xs border border-red-300 overflow-hidden hover:shadow-lg cursor-pointer hover:shadow-red-300 hover:transform hover:scale-105 transition duration-300">
+    class="bg-gradient-to-r from-red-200 to-white rounded-xl shadow-xs border border-red-300 overflow-hidden hover:shadow-lg  hover:shadow-red-300 hover:transform hover:scale-105 transition duration-300">
     <div class="p-5 flex items-start justify-between">
         <div>
             <div class="flex items-center gap-2">
@@ -112,7 +112,7 @@
                 </div>
             @endif
         </div>
-        <div class="p-3 rounded-lg bg-red-50 text-red-600">
+        <div class="p-3 rounded-lg border border-red-200 bg-red-50 text-red-600">
             <i class='bx bx-shield-alt-2 text-2xl'></i>
         </div>
     </div>
