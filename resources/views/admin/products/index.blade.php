@@ -31,10 +31,7 @@
                         </div>
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">No Products Found</h3>
                         <p class="text-gray-600 mb-6">Get started by adding your first product to inventory</p>
-                        <button onclick="openModal('add-product-modal')"
-                            class="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-2 px-6 rounded-lg shadow-sm hover:shadow-md transition-all">
-                            <i class='bx bx-plus mr-2'></i> Add Product
-                        </button>
+
                     </div>
                 </div>
             @else

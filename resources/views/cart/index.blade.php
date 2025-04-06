@@ -322,7 +322,7 @@
                                 </div>
 
                                 <button type="submit" id="checkout-button"
-                                    class="mt-8 w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-400 transition-all shadow-md flex items-center justify-center">
+                                    class="mt-8 w-full bg-gray-800 text-white py-3 rounded-lg font-bold hover:bg-gray-900 transition-all shadow-md flex items-center justify-center">
                                     <i class='bx bx-lock-alt text-xl mr-2'></i> Proceed to Checkout
                                 </button>
                             </form>

@@ -110,6 +110,13 @@
                                         <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
                                     </label>
                                 </div>
+                                @if ($user->avatar)
+                                    <button type="button" x-data
+                                        @click="$dispatch('open-modal', 'confirm-avatar-deletion')"
+                                        class="text-sm text-red-600 hover:text-red-500 mt-2 flex items-center">
+                                        <i class='bx bx-trash mr-1'></i> Remove Profile Picture
+                                    </button>
+                                @endif
                             </div>
 
                             <!-- Email Verification -->
@@ -186,7 +193,7 @@
                                         <i class='bx bx-key text-gray-400'></i>
                                     </div>
                                     <x-text-input id="update_password_current_password" name="current_password"
-                                        type="password" class="block w-full pl-10" autocomplete="current-password"  />
+                                        type="password" class="block w-full pl-10" autocomplete="current-password" />
                                 </div>
                                 <x-input-error :messages="$errors->updatePassword->get('current_password')" class="mt-2" />
                             </div>
@@ -201,7 +208,7 @@
                                             <i class='bx bx-lock text-gray-400'></i>
                                         </div>
                                         <x-text-input id="update_password_password" name="password" type="password"
-                                            class="block w-full pl-10" autocomplete="new-password"  />
+                                            class="block w-full pl-10" autocomplete="new-password" />
                                     </div>
                                     <p class="mt-2 text-xs text-gray-500">Minimum 8 characters with at least one
                                         special character</p>
@@ -219,7 +226,7 @@
                                         </div>
                                         <x-text-input id="update_password_password_confirmation"
                                             name="password_confirmation" type="password" class="block w-full pl-10"
-                                            autocomplete="new-password"  />
+                                            autocomplete="new-password" />
                                     </div>
                                     <x-input-error :messages="$errors->updatePassword->get('password_confirmation')" class="mt-2" />
                                 </div>
@@ -329,33 +336,81 @@
         </form>
     </x-modal>
 
+    <!-- Delete Avatar Modal -->
+    <x-modal name="confirm-avatar-deletion" focusable>
+        <form method="post" action="{{ route('avatar.destroy') }}" class="p-6">
+            @csrf
+            @method('delete')
+
+            <div class="flex items-start">
+                <div class="flex-shrink-0 bg-red-100 p-2 rounded-full">
+                    <i class='bx bx-error text-red-600 text-xl'></i>
+                </div>
+                <div class="ml-4">
+                    <h2 class="text-lg font-medium text-gray-900">Remove Profile Picture</h2>
+                    <p class="mt-1 text-sm text-gray-600">
+                        Are you sure you want to delete your profile picture? This action cannot be undone.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end space-x-3">
+                <x-secondary-button x-on:click="$dispatch('close')" class="px-4 py-2.5">
+                    Cancel
+                </x-secondary-button>
+
+                <x-danger-button class="flex items-center px-4 py-2.5">
+                    <i class='bx bx-trash mr-2'></i> Delete Picture
+                </x-danger-button>
+            </div>
+        </form>
+    </x-modal>
+
     <!-- Avatar Preview Script -->
     <script>
-        document.getElementById('avatar').addEventListener('change', function(e) {
-            const preview = document.getElementById('preview-avatar');
-            const file = e.target.files[0];
+        document.addEventListener('DOMContentLoaded', function() {
+            // Avatar preview
+            document.getElementById('avatar')?.addEventListener('change', function(e) {
+                const preview = document.getElementById('preview-avatar');
+                const file = e.target.files[0];
 
-            if (file) {
-                const reader = new FileReader();
+                if (file) {
+                    const reader = new FileReader();
 
-                reader.onload = function(e) {
-                    // If preview is an image
-                    if (preview.tagName === 'IMG') {
-                        preview.src = e.target.result;
+                    reader.onload = function(e) {
+                        // If preview is an image
+                        if (preview.tagName === 'IMG') {
+                            preview.src = e.target.result;
+                        }
+                        // If preview is a div (initial state)
+                        else {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className =
+                                'h-20 w-20 rounded-full object-cover border-2 border-gray-200 shadow-sm';
+                            preview.parentNode.replaceChild(img, preview);
+                            img.id = 'preview-avatar';
+                        }
                     }
-                    // If preview is a div (initial state)
-                    else {
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.className =
-                        'h-20 w-20 rounded-full object-cover border-2 border-gray-200 shadow-sm';
-                        preview.parentNode.replaceChild(img, preview);
-                        img.id = 'preview-avatar';
-                    }
+
+                    reader.readAsDataURL(file);
                 }
+            });
 
-                reader.readAsDataURL(file);
-            }
+            // Handle avatar deletion success
+            @if (session('status') === 'avatar-deleted')
+                const preview = document.getElementById('preview-avatar');
+                const initial = '{{ strtoupper(substr($user->name, 0, 1)) }}';
+
+                // Replace with initial avatar
+                const div = document.createElement('div');
+                div.id = 'preview-avatar';
+                div.className =
+                    'h-20 w-20 rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center text-gray-500 font-bold text-2xl shadow-sm';
+                div.textContent = initial;
+
+                preview.parentNode.replaceChild(div, preview);
+            @endif
         });
     </script>
 </x-app-layout>

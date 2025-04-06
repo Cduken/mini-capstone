@@ -6,7 +6,6 @@
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="flex items-center group">
                     <x-application-logo class="block h-9 w-auto text-white transition-transform group-hover:scale-105" />
-
                 </a>
             </div>
 
@@ -21,7 +20,11 @@
                         {{ __('Products') }}
                     </x-nav-link>
 
-                    @if (!request()->routeIs('products.index') && !request()->routeIs('cart.index') && !request()->routeIs('products.show'))
+                    @if (
+                        !request()->routeIs('products.index') &&
+                            !request()->routeIs('cart.index') &&
+                            !request()->routeIs('products.show') &&
+                            !request()->routeIs('profile.edit'))
                         <x-nav-link href="#about" :active="request()->is('#about')" class="group">
                             {{ __('About') }}
                         </x-nav-link>
@@ -148,7 +151,7 @@
                 <i class='bx bx-package mr-3 text-gray-400'></i> {{ __('Products') }}
             </x-responsive-nav-link>
 
-            @if (!request()->routeIs('products.index') && !request()->routeIs('cart.index'))
+            @if (!request()->routeIs('products.index') && !request()->routeIs('cart.index') && !request()->routeIs('profile.edit'))
                 <x-responsive-nav-link href="#about" :active="request()->is('#about')"
                     class="block pl-3 pr-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md">
                     <i class='bx bx-info-circle mr-3 text-gray-400'></i> {{ __('About') }}

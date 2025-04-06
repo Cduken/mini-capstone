@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::delete('/profile/avatar', [ProfileController::class, 'destroyAvatar'])->name('avatar.destroy');
+
     // Cart Management
     Route::prefix('cart')->group(function () {
         Route::post('/update/{product}', [CartController::class, 'update'])->name('cart.update');
