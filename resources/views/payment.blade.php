@@ -42,7 +42,7 @@
                     <div class="bg-white rounded-xl shadow-sm p-6 md:p-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">Payment Method</h2>
 
-                        <!-- Replace the payment tabs section with this -->
+                        <!-- Payment Tabs -->
                         <div class="border-b border-gray-200 mb-6">
                             <nav class="flex flex-wrap gap-2 md:gap-4">
                                 <button type="button" onclick="showPaymentMethod('card')"
@@ -211,7 +211,6 @@
                                 </div>
                             </div>
                         </form>
-
 
                         <div class="mt-8 flex flex-col-reverse sm:flex-row justify-between gap-4">
                             <a href="{{ route('cart.index') }}"
@@ -540,9 +539,7 @@
     </div>
 
     <style>
-        /* Your existing styles remain unchanged */
-
-        /* New loading overlay styles */
+        /* Existing styles remain unchanged */
         #loadingOverlay {
             transition: opacity 0.3s ease;
         }
@@ -587,7 +584,6 @@
             background-color: rgba(16, 185, 129, 0.1);
         }
 
-        /* Modal animations */
         @keyframes modalSlideIn {
             0% {
                 opacity: 0;
@@ -644,7 +640,6 @@
             animation: modalSlideOut 0.3s ease-out forwards;
         }
 
-        /* Star bounce animation */
         @keyframes starBounce {
 
             0%,
@@ -661,20 +656,9 @@
             animation: starBounce 0.5s ease;
         }
 
-        /* Loading animations */
         @keyframes spin {
             to {
                 transform: rotate(360deg);
-            }
-        }
-
-        @keyframes progress {
-            0% {
-                width: 0%;
-            }
-
-            100% {
-                width: 100%;
             }
         }
 
@@ -690,39 +674,6 @@
             animation: progress 3s ease-out forwards;
         }
 
-        /* Add these to your existing styles */
-        #loadingOverlay {
-            transition: opacity 0.3s ease;
-        }
-
-        #loadingOverlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        #loadingOverlay:not(.hidden) {
-            opacity: 1;
-        }
-
-        /* Make the progress bar animation smoother */
-        .animate-progress {
-            animation: progress 2.5s ease-in-out forwards;
-        }
-
-        @keyframes progress {
-            0% {
-                width: 0%;
-            }
-
-            80% {
-                width: 90%;
-            }
-
-            100% {
-                width: 100%;
-            }
-        }
-
         .min-w-max {
             min-width: max-content;
         }
@@ -731,7 +682,6 @@
             overflow-x: auto;
         }
 
-        /* Add this to your style section */
         .payment-tab {
             flex: 1 0 auto;
             min-width: 80px;
@@ -785,15 +735,13 @@
             setTimeout(() => {
                 ratingModal.classList.add('hidden');
                 ratingModal.classList.remove('hide');
+                window.location.href = "{{ route('purchases.index') }}"; // Redirect only after rating modal closes
             }, 300);
         }
 
-        // Skip rating and redirect to products page
+        // Skip rating and redirect to purchases page
         function skipRating() {
             closeRatingModal();
-            setTimeout(() => {
-                window.location.href = "{{ route('purchases.index') }}";
-            }, 300);
         }
 
         // Initialize star ratings with enhanced animations
@@ -803,13 +751,9 @@
                     const rating = parseInt(this.dataset.rating);
                     const form = this.closest('.rating-form');
 
-                    // Add active class for animation
                     this.classList.add('active');
-                    setTimeout(() => {
-                        this.classList.remove('active');
-                    }, 500);
+                    setTimeout(() => this.classList.remove('active'), 500);
 
-                    // Update stars
                     this.parentElement.querySelectorAll('.star-rating i').forEach((icon, index) => {
                         if (index < rating) {
                             icon.classList.remove('bx-star', 'text-gray-300');
@@ -820,7 +764,6 @@
                         }
                     });
 
-                    // Update hidden input
                     form.querySelector('input[name="rating"]').value = rating;
                 });
             });
@@ -828,18 +771,10 @@
 
         // Payment Method Toggle
         function showPaymentMethod(method) {
-            // Hide all payment forms
-            document.querySelectorAll('.payment-method').forEach(form => {
-                form.classList.add('hidden');
-            });
-
-            // Show selected payment form
+            document.querySelectorAll('.payment-method').forEach(form => form.classList.add('hidden'));
             document.getElementById(method + 'Form').classList.remove('hidden');
-
-            // Update submit button target
             document.getElementById('submitButton').setAttribute('form', method + 'Form');
 
-            // Update tab styling
             document.querySelectorAll('.payment-tab').forEach(tab => {
                 if (tab.dataset.method === method) {
                     tab.classList.add('border-blue-500', 'text-blue-600');
@@ -852,7 +787,6 @@
                 }
             });
 
-            // Change button for COD
             const submitButton = document.getElementById('submitButton');
             if (method === 'cod') {
                 submitButton.innerHTML = `<i class='bx bx-package mr-2'></i> Place Order (COD)`;
@@ -868,14 +802,11 @@
 
         // Form Submission Handler
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize payment method tabs
             showPaymentMethod('card'); // Default to card payment
 
-            // Handle rating form submissions
             document.querySelectorAll('.rating-form').forEach(form => {
                 form.addEventListener('submit', async function(e) {
                     e.preventDefault();
-
                     const submitBtn = this.querySelector('button[type="submit"]');
                     const originalText = submitBtn.innerHTML;
                     const formData = new FormData(this);
@@ -893,29 +824,24 @@
                                 'Accept': 'application/json'
                             }
                         });
-
                         const data = await response.json();
 
                         if (response.ok) {
                             const productDiv = this.closest('.bg-gradient-to-br');
                             productDiv.innerHTML = `
-                    <div class="text-center py-4">
-                        <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-2">
-                            <i class='bx bxs-check-circle text-xl text-green-500'></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-700">${data.message || 'Thank you for your feedback!'}</p>
-                    </div>
-                `;
+                                <div class="text-center py-4">
+                                    <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-2">
+                                        <i class='bx bxs-check-circle text-xl text-green-500'></i>
+                                    </div>
+                                    <p class="text-sm font-medium text-gray-700">${data.message || 'Thank you for your feedback!'}</p>
+                                </div>
+                            `;
 
-                            // Check if all ratings are submitted
                             const remainingForms = document.querySelectorAll(
                                 '.rating-form:not(.hidden)');
                             if (remainingForms.length === 0) {
-                                // Close modal and redirect after a delay
                                 setTimeout(() => {
                                     closeRatingModal();
-                                    window.location.href =
-                                        "{{ route('purchases.index') }}";
                                 }, 1500);
                             }
                         } else {
@@ -934,7 +860,6 @@
             document.querySelectorAll('.payment-method').forEach(form => {
                 form.addEventListener('submit', async function(e) {
                     e.preventDefault();
-
                     const submitButton = document.getElementById('submitButton');
                     const originalButtonText = submitButton.innerHTML;
                     const loadingOverlay = document.getElementById('loadingOverlay');
@@ -948,7 +873,6 @@
                     }, 100);
 
                     try {
-                        // Show loading state
                         submitButton.disabled = true;
                         submitButton.innerHTML =
                             `<i class='bx bx-loader-alt animate-spin mr-2'></i> Processing...`;
@@ -964,22 +888,16 @@
                                     'meta[name="csrf-token"]').content
                             }
                         });
-
                         const data = await response.json();
 
-                        if (!response.ok) {
-                            throw new Error(data.message || 'Payment failed');
-                        }
+                        if (!response.ok) throw new Error(data.message || 'Payment failed');
 
-                        // Ensure minimum 2.5s loading time
                         const elapsed = Date.now() - startTime;
                         const remainingDelay = Math.max(2500 - elapsed, 0);
 
-                        // Complete progress animation
                         clearInterval(progressInterval);
                         progressPercentage.textContent = '100%';
 
-                        // Add delays for smooth transition
                         await new Promise(resolve => setTimeout(resolve, remainingDelay + 300));
                         loadingOverlay.classList.add('hidden');
                         await new Promise(resolve => setTimeout(resolve, 300));
@@ -991,18 +909,15 @@
                                 input.value = data.order_id;
                             });
 
+                        // Handle backdrop click to show rating modal instead of redirecting
                         document.getElementById('successModal').addEventListener('click',
                             function(e) {
-                                if (e.target.id === 'submitButton' || e.target.closest(
-                                        '#submitButton')) {
-                                    return;
+                                if (e.target === this) { // Click on backdrop
+                                    closeSuccessModalAndShowRating();
                                 }
-                                skipRating();
                             });
 
-                        if (typeof updateCartCount === 'function') {
-                            updateCartCount(0);
-                        }
+                        if (typeof updateCartCount === 'function') updateCartCount(0);
 
                     } catch (error) {
                         clearInterval(progressInterval);

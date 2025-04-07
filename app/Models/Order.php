@@ -10,7 +10,7 @@ class Order extends Model
         'user_id',
         'name',
         'email',
-        'address_line_1',  // Changed from 'address'
+        'address_line_1',
         'address_line_2',
         'region',
         'region_code',
@@ -29,20 +29,28 @@ class Order extends Model
         'tax',
         'shipping',
         'total',
-        'status'
+        'status',
+        'cancelled_at', // Added this to allow mass assignment
     ];
 
     protected $casts = [
         'payment_details' => 'array',
         'items' => 'array',
-        'shipping_details' => 'array'
+        'shipping_details' => 'array',
+        'cancelled_at' => 'datetime', // Cast cancelled_at as a datetime
+    ];
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'cancelled_at', // Ensure proper date handling
     ];
 
     public function getStatusColorAttribute()
     {
         return [
             'pending' => 'yellow-500',
+            'processing' => 'blue-500', // Added processing if you use it
             'completed' => 'green-500',
             'cancelled' => 'red-500',
         ][$this->status] ?? 'gray-500';
@@ -69,6 +77,11 @@ class Order extends Model
     {
         $items = is_array($value) ? $value : json_decode($value, true);
 
+        // Handle case where items might be null or invalid
+        if (!is_array($items)) {
+            return [];
+        }
+
         // Ensure each item has at least a product_name
         return array_map(function ($item) {
             return array_merge([
@@ -78,5 +91,13 @@ class Order extends Model
                 'image' => 'default.jpg'
             ], $item);
         }, $items);
+    }
+
+    /**
+     * Check if the order can be cancelled
+     */
+    public function canBeCancelled()
+    {
+        return $this->payment_method === 'cod' && in_array($this->status, ['pending', 'processing']);
     }
 }

@@ -97,7 +97,13 @@
                                     <i class='bx bx-user mr-3 text-gray-400'></i> {{ __('Profile') }}
                                 </x-dropdown-link>
                                 <x-dropdown-link :href="route('purchases.index')"
-                                    class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white">
+                                    class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white relative">
+                                    @if (App\Models\Order::where('user_id', Auth::id())->exists())
+                                        <span
+                                            class="absolute top-2 right-[4px] bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                            {{ App\Models\Order::where('user_id', Auth::id())->count() }}
+                                        </span>
+                                    @endif
                                     <i class='bx bx-notepad mr-3 text-gray-400'></i> {{ __('My Purchase') }}
                                 </x-dropdown-link>
                                 <form method="POST" action="{{ route('logout') }}">

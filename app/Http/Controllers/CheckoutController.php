@@ -357,4 +357,43 @@ class CheckoutController extends Controller
 
         return view('purchases.index', compact('orders'));
     }
+
+    public function cancelOrder(Order $order)
+    {
+        try {
+            // Check if the order belongs to the authenticated user
+            if ($order->user_id !== Auth::id()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized action'
+                ], 403);
+            }
+
+            // Check if order can be cancelled
+            if (!$order->canBeCancelled()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This order cannot be cancelled. Current status: ' . $order->status
+                ], 400);
+            }
+
+            // Update order status
+            $order->update([
+                'status' => 'cancelled',
+                'cancelled_at' => now()
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order cancelled successfully',
+                'order_status' => 'cancelled'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Order cancellation error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to cancel order: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

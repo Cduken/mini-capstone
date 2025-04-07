@@ -73,6 +73,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/success/{order}', [CheckoutController::class, 'orderSuccess'])
         ->name('orders.success');
 
+    Route::post('/orders/{order}/cancel', [CheckoutController::class, 'cancelOrder'])->name('orders.cancel')->middleware('auth');
+
     // Product Ratings
     Route::post('/products/{product}/rate', [ProductPageController::class, 'rate'])
         ->name('products.rate');
