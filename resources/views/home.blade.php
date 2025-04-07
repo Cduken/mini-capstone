@@ -491,12 +491,11 @@
             <div class="h-14.5 hidden lg:block"></div>
         @endif
 
-        <!-- Load EmailJS SDK -->
+
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
         <script>
-            // Initialize EmailJS with your public key
-            emailjs.init('1k-kTv6PrhhLmY97i'); // Replace with your actual public key if different
+            emailjs.init('1k-kTv6PrhhLmY97i');
 
             document.getElementById('contact-form').addEventListener('submit', function(event) {
                 event.preventDefault();
@@ -507,14 +506,14 @@
                 const successMessage = document.getElementById('success-message');
                 const errorMessage = document.getElementById('error-message');
 
-                // Get form values
+
                 const formData = {
                     from_name: document.getElementById('name').value.trim(),
                     from_email: document.getElementById('email').value.trim(),
                     message: document.getElementById('message').value.trim()
                 };
 
-                // Validate form
+
                 if (!formData.from_name || !formData.from_email || !formData.message) {
                     errorMessage.textContent = 'Please fill in all fields';
                     errorMessage.classList.remove('hidden');
@@ -527,27 +526,27 @@
                     return;
                 }
 
-                // Change button state
+
                 buttonText.textContent = 'Sending...';
                 spinner.classList.remove('hidden');
                 submitBtn.disabled = true;
 
-                // Hide any previous messages
+
                 successMessage.classList.add('hidden');
                 errorMessage.classList.add('hidden');
 
-                // Send the email using EmailJS
+
                 emailjs.send('service_kkv6sr4', 'template_s74uso9', formData)
                     .then(function(response) {
                         console.log('SUCCESS!', response.status, response.text);
-                        // Show success message
+
                         successMessage.textContent = 'Message sent successfully! We\'ll get back to you soon.';
                         successMessage.classList.remove('hidden');
-                        // Reset form
+
                         document.getElementById('contact-form').reset();
                     }, function(error) {
                         console.log('FAILED...', error);
-                        // Show error message
+
                         errorMessage.textContent =
                             'There was an error sending your message. Please try again later.';
                         if (error.text.includes('quota')) {
@@ -555,12 +554,10 @@
                         }
                         errorMessage.classList.remove('hidden');
                     })
-                    .finally(function() {
-                        // Reset button state
-                        buttonText.textContent = 'Send Message';
-                        spinner.classList.add('hidden');
-                        submitBtn.disabled = false;
-                    });
+                    .fi
+                buttonText.textContent = 'Send Message';
+                spinner.classList.add('hidden');
+                submitBtn.disabled = false;
             });
         </script>
     </body>

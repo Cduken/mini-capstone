@@ -64,4 +64,19 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function getItemsAttribute($value)
+    {
+        $items = is_array($value) ? $value : json_decode($value, true);
+
+        // Ensure each item has at least a product_name
+        return array_map(function ($item) {
+            return array_merge([
+                'product_name' => 'Product',
+                'quantity' => 1,
+                'price' => 0,
+                'image' => 'default.jpg'
+            ], $item);
+        }, $items);
+    }
 }

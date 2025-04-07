@@ -96,6 +96,10 @@
                                     class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white">
                                     <i class='bx bx-user mr-3 text-gray-400'></i> {{ __('Profile') }}
                                 </x-dropdown-link>
+                                <x-dropdown-link :href="route('purchases.index')"
+                                    class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white">
+                                    <i class='bx bx-notepad mr-3 text-gray-400'></i> {{ __('My Purchase') }}
+                                </x-dropdown-link>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <x-dropdown-link :href="route('logout')"

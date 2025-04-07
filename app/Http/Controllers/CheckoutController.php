@@ -196,16 +196,29 @@ class CheckoutController extends Controller
             $shipping = 10.00;
             $total = $subtotal + $tax + $shipping;
 
+            $cartItems = Cart::with('product') // Add this to ensure product is loaded
+                ->where('user_id', Auth::id())
+                ->get();
+
             // Prepare order items
             $items = $cartItems->map(function ($cartItem) {
                 return [
                     'product_id' => $cartItem->product_id,
-                    'product_name' => $cartItem->product->name ?? 'Unknown Product',
+                    'product_name' => $cartItem->product->title, // Use ->title instead of ->name if that's your field
                     'quantity' => $cartItem->quantity,
                     'price' => $cartItem->price,
-                    'image' => $cartItem->product->image ?? null
+                    'image' => $cartItem->product->image ?? 'default.jpg' // Ensure default image
                 ];
             });
+
+            foreach ($cartItems as $item) {
+                if (!$item->product) {
+                    throw new \Exception("Product not found for cart item ID: {$item->id}");
+                }
+                if (empty($item->product->title)) { // or ->name depending on your DB
+                    throw new \Exception("Product title is empty for product ID: {$item->product_id}");
+                }
+            }
 
             // Prepare payment details
             $paymentDetails = [
@@ -284,7 +297,7 @@ class CheckoutController extends Controller
                 'success' => true,
                 'order' => $order,
                 'order_id' => $order->id,
-                'redirect_url' => route('orders.success', $order)
+                'redirect_url' => route('purchases.index', $order)
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -302,7 +315,9 @@ class CheckoutController extends Controller
             abort(403);
         }
 
-        $order->load('products');
+        $order->load(['products' => function ($query) {
+            $query->select('products.id', 'products.title', 'products.image');
+        }]);
 
         return view('orders.success', [
             'order' => $order,
@@ -329,5 +344,17 @@ class CheckoutController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function purchases()
+    {
+        $orders = Order::with(['products' => function ($query) {
+            $query->select('products.id', 'products.title', 'products.image'); // Add other needed fields
+        }])
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('purchases.index', compact('orders'));
     }
 }

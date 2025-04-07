@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,6 +66,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment', [CheckoutController::class, 'showPaymentPage'])->name('payment');
     Route::post('/payment/process', [CheckoutController::class, 'processPayment'])->name('payment.process');
     Route::post('/payment/clear', [CheckoutController::class, 'clearSession'])->name('payment.clear');
+
+    Route::get('/purchases', [CheckoutController::class, 'purchases'])->name('purchases.index');
 
     // Order Success
     Route::get('/orders/success/{order}', [CheckoutController::class, 'orderSuccess'])

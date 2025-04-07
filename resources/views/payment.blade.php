@@ -280,7 +280,7 @@
                                 </div>
 
                                 <!-- Shipping Method -->
-                            <h3 class="text-sm font-medium text-gray-900 mb-3">Shipping Information</h3>
+                                <h3 class="text-sm font-medium text-gray-900 mb-3">Shipping Information</h3>
 
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 pt-0.5 mr-2">
@@ -792,7 +792,7 @@
         function skipRating() {
             closeRatingModal();
             setTimeout(() => {
-                window.location.href = "{{ route('home') }}";
+                window.location.href = "{{ route('purchases.index') }}";
             }, 300);
         }
 
@@ -915,7 +915,7 @@
                                 setTimeout(() => {
                                     closeRatingModal();
                                     window.location.href =
-                                        "{{ route('home') }}";
+                                        "{{ route('purchases.index') }}";
                                 }, 1500);
                             }
                         } else {
@@ -989,6 +989,15 @@
                         document.querySelectorAll('.rating-form input[name="order_id"]')
                             .forEach(input => {
                                 input.value = data.order_id;
+                            });
+
+                        document.getElementById('successModal').addEventListener('click',
+                            function(e) {
+                                if (e.target.id === 'submitButton' || e.target.closest(
+                                        '#submitButton')) {
+                                    return;
+                                }
+                                skipRating();
                             });
 
                         if (typeof updateCartCount === 'function') {
