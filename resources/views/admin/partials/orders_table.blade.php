@@ -21,24 +21,24 @@
                     <td class="py-4 px-5">
                         <div class="flex items-center">
                             <div
-                                class="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center">
-                                @if ($order->user->avatar && file_exists(public_path('images/' . $order->user->avatar)))
-                                    <img class="h-10 w-10 rounded-full object-cover"
+                                class="flex-shrink-0 h-11 w-11 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 flex items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                                @if ($order->user && $order->user->avatar && file_exists(public_path('images/' . $order->user->avatar)))
+                                    <img class="h-11 w-11 rounded-full object-cover"
                                         src="{{ asset('images/' . $order->user->avatar) }}"
-                                        alt="{{ $order->user->name }}">
-                                @elseif ($order->user->profile_photo_path)
-                                    <img class="h-10 w-10 rounded-full object-cover"
+                                        alt="{{ $order->user->name ?? 'User' }}">
+                                @elseif ($order->user && $order->user->profile_photo_path)
+                                    <img class="h-11 w-11 rounded-full object-cover"
                                         src="{{ asset($order->user->profile_photo_path) }}"
-                                        alt="{{ $order->user->name }}">
+                                        alt="{{ $order->user->name ?? 'User' }}">
                                 @else
-                                    <span class="text-blue-600 font-medium">
-                                        {{ strtoupper(substr($order->user->name, 0, 1)) }}
-                                    </span>
+                                    <span
+                                        class="text-blue-600 font-semibold text-lg">{{ strtoupper(substr($order->user->name ?? 'GUEST', 0, 1)) }}</span>
                                 @endif
                             </div>
-                            <div class="ml-3">
-                                <div class="font-medium">{{ $order->name }}</div>
-                                <div class="text-xs text-gray-500">{{ $order->email }}</div>
+                            <div class="ml-4">
+                                <div class="text-sm font-semibold text-gray-900">
+                                    {{ $order->user->name ?? 'Guest User' }}</div>
+                                <div class="text-xs text-gray-500">ID: {{ $order->id }}</div>
                             </div>
                         </div>
                     </td>

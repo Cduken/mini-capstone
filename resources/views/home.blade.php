@@ -16,8 +16,10 @@
                     <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-[80px] text-[#FFFFFF] font-thin leading-tight">
                         IPhone 16 <span class="font-bold">Pro</span>
                     </h1>
-                    <p class="text-[#F5F5F5] text-base sm:text-lg mt-4">Created to change everything for the better. For
-                        everyone</p>
+                    <p class="text-[#F5F5F5] text-base sm:text-lg mt-4">
+                        ShopEase brings you the latest gadgets at unbeatable prices. Discover tech that fits your
+                        lifestyle and budget.
+                    </p>
 
                     <div class="mt-6 flex justify-center md:justify-start">
                         <a href="{{ route('products.index') }}">
@@ -243,159 +245,216 @@
                 </section>
             @endif
 
-            <section class="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-[120px] bg-gray-100 pt-8 pb-16" id="about">
-                <h2 class="text-lg sm:text-xl font-bold border-b border-gray-400 pb-4 mb-8 mt-8 sm:mt-11 sm:mb-11">
-                    About Us</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-                    <!-- About Content -->
-                    <div class="space-y-4 sm:space-y-6">
-                        <h3 class="text-3xl sm:text-4xl font-bold text-gray-800">Who We Are</h3>
-                        <p class="text-gray-600 text-base sm:text-lg">
-                            We are ShopEase, your ultimate destination for the latest and greatest in technology. Our
-                            mission is to provide you with high-quality products that enhance your lifestyle and keep
-                            you connected to the world.
-                        </p>
-                        <p class="text-gray-600 text-base sm:text-lg">
-                            From cutting-edge smartphones to powerful laptops and innovative gadgets, we bring you the
-                            best from top brands like Apple, Samsung, and more. Our team is passionate about technology
-                            and dedicated to helping you find the perfect product for your needs.
-                        </p>
-                        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                            <div class="flex items-center space-x-2">
-                                <i class='bx bx-check-shield text-2xl sm:text-3xl text-blue-600'></i>
-                                <span class="text-gray-700 font-medium sm:font-semibold">Quality Assurance</span>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <i class='bx bx-headphone text-2xl sm:text-3xl text-green-600'></i>
-                                <span class="text-gray-700 font-medium sm:font-semibold">24/7 Support</span>
-                            </div>
-                        </div>
-                        <a href="#contact" class="inline-block">
-                            <button
-                                class="px-6 sm:px-8 py-2 sm:py-3 bg-black text-white rounded-md hover:bg-gray-800 transition duration-300 mt-4 sm:mt-6">
-                                Contact Us
-                            </button>
-                        </a>
-                    </div>
+            <section
+                class="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-32 py-16 md:py-24 bg-gradient-to-br from-gray-50 to-blue-50"
+                id="about">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Heading -->
+                    <h2
+                        class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-12 pb-4 border-b-2 border-blue-200 tracking-tight text-center">
+                        About ShopEase
+                    </h2>
 
-                    <!-- About Image -->
-                    <div class="relative mt-8 md:mt-0">
-                        <img src="{{ asset('images/6174398.jpg') }}" alt="About Us"
-                            class="w-full rounded-lg shadow-xl">
-                        <div
-                            class="absolute -bottom-4 sm:-bottom-6 md:-bottom-8 -right-4 sm:-right-6 md:-right-8 bg-white p-3 sm:p-4 md:p-6 rounded-lg shadow-md">
-                            <h4 class="text-xl sm:text-2xl font-bold text-gray-800">5+ Years</h4>
-                            <p class="text-sm sm:text-base text-gray-600">of Experience</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <!-- About Content -->
+                        <div class="space-y-6">
+                            <h3 class="text-3xl md:text-4xl font-bold text-gray-800">Who We Are</h3>
+                            <p class="text-gray-600 text-base md:text-lg leading-relaxed">
+                                At ShopEase, we’re your go-to destination for cutting-edge technology. Our mission is to
+                                deliver high-quality products that elevate your lifestyle and keep you connected to the
+                                world.
+                            </p>
+                            <p class="text-gray-600 text-base md:text-lg leading-relaxed">
+                                From sleek smartphones to powerful laptops and innovative gadgets, we curate the best
+                                from top brands like Apple, Samsung, and beyond. Our passionate team is dedicated to
+                                helping you find the perfect tech for your needs.
+                            </p>
+                            <div class="flex flex-col sm:flex-row gap-6">
+                                <div class="flex items-center space-x-3 group">
+                                    <div
+                                        class="p-3 bg-blue-100 rounded-full text-blue-600 group-hover:bg-blue-200 transition-all duration-300">
+                                        <i class='bx bx-check-shield text-2xl'></i>
+                                    </div>
+                                    <span class="text-gray-700 font-semibold">Unmatched Quality</span>
+                                </div>
+                                <div class="flex items-center space-x-3 group">
+                                    <div
+                                        class="p-3 bg-green-100 rounded-full text-green-600 group-hover:bg-green-200 transition-all duration-300">
+                                        <i class='bx bx-headphone text-2xl'></i>
+                                    </div>
+                                    <span class="text-gray-700 font-semibold">24/7 Support</span>
+                                </div>
+                            </div>
+                            <a href="#contact" class="inline-block">
+                                <button
+                                    class="px-8 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium transform hover:-translate-y-1">
+                                    Get in Touch
+                                </button>
+                            </a>
+                        </div>
+
+                        <!-- About Image -->
+                        <div class="relative mt-8 md:mt-0">
+                            <div
+                                class="bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                                <img src="{{ asset('images/6174398.jpg') }}" alt="About Us"
+                                    class="w-full rounded-xl object-cover h-80 md:h-96">
+                                <div
+                                    class="absolute -bottom-6 -right-6 bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 md:p-6 rounded-xl shadow-md transform hover:scale-105 transition-all duration-300">
+                                    <h4 class="text-xl md:text-2xl font-bold">5+ Years</h4>
+                                    <p class="text-sm md:text-base">of Excellence</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="px-4 sm:px-6 lg:px-8 xl:px-32 2xl:px-40 bg-white py-10 md:py-16" id="contact">
-                <div class="max-w-7xl mx-auto">
-                    <h2
-                        class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 md:mb-12 pb-4 border-b border-gray-200">
-                        Contact Us</h2>
+            <style>
+                /* Custom Animation */
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-fade-in-up {
+                    animation: fadeInUp 0.6s ease-out forwards;
+                }
+            </style>
+
+            <section
+                class="px-4 sm:px-6 lg:px-8 xl:px-32 2xl:px-40 py-16 md:py-24 bg-gradient-to-br from-gray-50 to-blue-50"
+                id="contact">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Heading -->
+                    <h2
+                        class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-12 pb-4 border-b-2 border-blue-200 tracking-tight">
+                        Let’s Connect
+                    </h2>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         <!-- Contact Form -->
                         <div
-                            class="bg-gray-50 p-6 md:p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
-                            <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">Get in Touch</h3>
-                            <form action="#" method="POST" class="space-y-4 md:space-y-6">
-                                <div>
-                                    <label for="name"
-                                        class="block text-sm md:text-base font-medium text-gray-700">Your Name</label>
-                                    <input type="text" id="name" name="name" required
-                                        class="mt-1 block w-full px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            class="bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                            <h3 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-8">Send Us a Message</h3>
+                            <form id="contact-form" class="space-y-6">
+                                <div class="relative">
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your
+                                        Name</label>
+                                    <input type="text" id="name" name="from_name" required
+                                        class="w-full px-5 py-3 text-base bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 placeholder-gray-400">
                                 </div>
-                                <div>
-                                    <label for="email"
-                                        class="block text-sm md:text-base font-medium text-gray-700">Your Email</label>
-                                    <input type="email" id="email" name="email" required
-                                        class="mt-1 block w-full px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <div class="relative">
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Your
+                                        Email</label>
+                                    <input type="email" id="email" name="from_email" required
+                                        class="w-full px-5 py-3 text-base bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 placeholder-gray-400">
                                 </div>
-                                <div>
-                                    <label for="message"
-                                        class="block text-sm md:text-base font-medium text-gray-700">Your
+                                <div class="relative">
+                                    <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Your
                                         Message</label>
                                     <textarea id="message" name="message" rows="4" required
-                                        class="mt-1 block w-full px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+                                        class="w-full px-5 py-3 text-base bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 placeholder-gray-400 resize-none"></textarea>
                                 </div>
                                 <div>
-                                    <button type="submit"
-                                        class="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-800 transition duration-300 text-sm md:text-base font-medium">
-                                        Send Message
+                                    <button type="submit" id="submit-btn"
+                                        class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 px-6 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 font-medium flex items-center justify-center transform hover:-translate-y-1">
+                                        <span id="button-text">Send Message</span>
+                                        <svg id="spinner" class="hidden w-5 h-5 ml-2 animate-spin"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
                                     </button>
                                 </div>
                             </form>
+                            <div id="success-message"
+                                class="hidden mt-6 p-4 bg-green-100 text-green-800 rounded-xl font-medium animate-fade-in">
+                                Message sent successfully! We’ll reach out soon.
+                            </div>
+                            <div id="error-message"
+                                class="hidden mt-6 p-4 bg-red-100 text-red-800 rounded-xl font-medium animate-fade-in">
+                                Oops! Something went wrong. Please try again.
+                            </div>
                         </div>
 
                         <!-- Contact Information -->
-                        <div class="space-y-6 md:space-y-8">
-                            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Contact Information</h3>
-                            <div class="space-y-4 md:space-y-6">
+                        <div class="space-y-8">
+                            <h3 class="text-2xl md:text-3xl font-semibold text-gray-800">Reach Out</h3>
+                            <div class="space-y-6">
                                 <!-- Address -->
-                                <div class="flex items-start space-x-3 md:space-x-4">
-                                    <div class="p-2 bg-blue-100 rounded-lg text-blue-600">
-                                        <i class='bx bx-map text-xl md:text-2xl'></i>
+                                <div class="flex items-center space-x-4 group">
+                                    <div
+                                        class="p-3 bg-blue-100 rounded-full text-blue-600 group-hover:bg-blue-200 transition-all duration-300">
+                                        <i class='bx bx-map text-2xl'></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-base md:text-lg font-semibold text-gray-800">Our Office</h4>
-                                        <p class="text-gray-600 text-sm md:text-base">Tubigon, Bohol</p>
+                                        <h4 class="text-lg font-semibold text-gray-800">Our Office</h4>
+                                        <p class="text-gray-600">Tubigon, Bohol</p>
                                     </div>
                                 </div>
 
                                 <!-- Phone -->
-                                <div class="flex items-start space-x-3 md:space-x-4">
-                                    <div class="p-2 bg-green-100 rounded-lg text-green-600">
-                                        <i class='bx bx-phone text-xl md:text-2xl'></i>
+                                <div class="flex items-center space-x-4 group">
+                                    <div
+                                        class="p-3 bg-green-100 rounded-full text-green-600 group-hover:bg-green-200 transition-all duration-300">
+                                        <i class='bx bx-phone text-2xl'></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-base md:text-lg font-semibold text-gray-800">Phone</h4>
-                                        <p class="text-gray-600 text-sm md:text-base">+(69) 123-456-789</p>
+                                        <h4 class="text-lg font-semibold text-gray-800">Phone</h4>
+                                        <p class="text-gray-600">+(69) 123-456-789</p>
                                     </div>
                                 </div>
 
                                 <!-- Email -->
-                                <div class="flex items-start space-x-3 md:space-x-4">
-                                    <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
-                                        <i class='bx bx-envelope text-xl md:text-2xl'></i>
+                                <div class="flex items-center space-x-4 group">
+                                    <div
+                                        class="p-3 bg-purple-100 rounded-full text-purple-600 group-hover:bg-purple-200 transition-all duration-300">
+                                        <i class='bx bx-envelope text-2xl'></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-base md:text-lg font-semibold text-gray-800">Email</h4>
-                                        <p class="text-gray-600 text-sm md:text-base break-all">
-                                            ernestojrcabarrubias@gmail.com</p>
+                                        <h4 class="text-lg font-semibold text-gray-800">Email</h4>
+                                        <p class="text-gray-600 break-all">ernestojrcabarrubias@gmail.com</p>
                                     </div>
                                 </div>
 
-
-                                <div class="flex items-start space-x-3 md:space-x-4">
-                                    <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
-                                        <i class='bx bx-share-alt text-xl md:text-2xl'></i>
+                                <!-- Social Media -->
+                                <div class="flex items-center space-x-4">
+                                    <div class="p-3 bg-orange-100 rounded-full text-orange-600">
+                                        <i class='bx bx-share-alt text-2xl'></i>
                                     </div>
                                     <div>
-                                        <h4 class="text-base md:text-lg font-semibold text-gray-800">Follow Us</h4>
-                                        <div class="flex space-x-3 md:space-x-4 mt-2">
+                                        <h4 class="text-lg font-semibold text-gray-800">Follow Us</h4>
+                                        <div class="flex space-x-4 mt-3">
                                             <a href="https://www.facebook.com/cdukenzxc" target="_blank"
                                                 rel="noopener noreferrer"
-                                                class="text-gray-600 hover:text-blue-600 transition">
-                                                <i class='bx bxl-facebook text-2xl md:text-3xl'></i>
+                                                class="text-gray-600 hover:text-blue-600 transition-all duration-300 transform hover:scale-110">
+                                                <i class='bx bxl-facebook text-3xl'></i>
                                             </a>
                                             <a href="https://www.instagram.com/cdukenzxc/" target="_blank"
                                                 rel="noopener noreferrer"
-                                                class="text-gray-600 hover:text-pink-600 transition">
-                                                <i class='bx bxl-instagram text-2xl md:text-3xl'></i>
+                                                class="text-gray-600 hover:text-pink-600 transition-all duration-300 transform hover:scale-110">
+                                                <i class='bx bxl-instagram text-3xl'></i>
                                             </a>
                                             <a href="https://discord.com/channels/@me" target="_blank"
                                                 rel="noopener noreferrer"
-                                                class="text-gray-600 hover:text-violet-500 transition">
-                                                <i class='bx bxl-discord text-2xl md:text-3xl'></i>
+                                                class="text-gray-600 hover:text-violet-500 transition-all duration-300 transform hover:scale-110">
+                                                <i class='bx bxl-discord text-3xl'></i>
                                             </a>
                                             <a href="https://www.linkedin.com/in/ernestojr-cabarrubias-3154342a1/"
                                                 target="_blank" rel="noopener noreferrer"
-                                                class="text-gray-600 hover:text-blue-600 transition">
-                                                <i class='bx bxl-linkedin text-2xl md:text-3xl'></i>
+                                                class="text-gray-600 hover:text-blue-600 transition-all duration-300 transform hover:scale-110">
+                                                <i class='bx bxl-linkedin text-3xl'></i>
                                             </a>
                                         </div>
                                     </div>
@@ -406,12 +465,104 @@
                 </div>
             </section>
 
+            <style>
+                /* Custom Animation */
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-fade-in {
+                    animation: fadeIn 0.5s ease-out forwards;
+                }
+            </style>
+
             <x-footer />
         </div>
 
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+
+        <!-- Load EmailJS SDK -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+        <script>
+            // Initialize EmailJS with your public key
+            emailjs.init('1k-kTv6PrhhLmY97i'); // Replace with your actual public key if different
+
+            document.getElementById('contact-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const submitBtn = document.getElementById('submit-btn');
+                const buttonText = document.getElementById('button-text');
+                const spinner = document.getElementById('spinner');
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+
+                // Get form values
+                const formData = {
+                    from_name: document.getElementById('name').value.trim(),
+                    from_email: document.getElementById('email').value.trim(),
+                    message: document.getElementById('message').value.trim()
+                };
+
+                // Validate form
+                if (!formData.from_name || !formData.from_email || !formData.message) {
+                    errorMessage.textContent = 'Please fill in all fields';
+                    errorMessage.classList.remove('hidden');
+                    return;
+                }
+
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.from_email)) {
+                    errorMessage.textContent = 'Please enter a valid email address';
+                    errorMessage.classList.remove('hidden');
+                    return;
+                }
+
+                // Change button state
+                buttonText.textContent = 'Sending...';
+                spinner.classList.remove('hidden');
+                submitBtn.disabled = true;
+
+                // Hide any previous messages
+                successMessage.classList.add('hidden');
+                errorMessage.classList.add('hidden');
+
+                // Send the email using EmailJS
+                emailjs.send('service_kkv6sr4', 'template_s74uso9', formData)
+                    .then(function(response) {
+                        console.log('SUCCESS!', response.status, response.text);
+                        // Show success message
+                        successMessage.textContent = 'Message sent successfully! We\'ll get back to you soon.';
+                        successMessage.classList.remove('hidden');
+                        // Reset form
+                        document.getElementById('contact-form').reset();
+                    }, function(error) {
+                        console.log('FAILED...', error);
+                        // Show error message
+                        errorMessage.textContent =
+                            'There was an error sending your message. Please try again later.';
+                        if (error.text.includes('quota')) {
+                            errorMessage.textContent += ' (Daily email limit reached)';
+                        }
+                        errorMessage.classList.remove('hidden');
+                    })
+                    .finally(function() {
+                        // Reset button state
+                        buttonText.textContent = 'Send Message';
+                        spinner.classList.add('hidden');
+                        submitBtn.disabled = false;
+                    });
+            });
+        </script>
     </body>
 
 </x-app-layout>

@@ -7,7 +7,8 @@
                     <x-application-logo />
                 </div>
                 <p class="text-gray-400 text-sm mt-4 text-center md:text-left">
-                    We are a residential interior design firm located in Portland. Our boutique-studio offers more than
+                    ShopEase is your premier destination for cutting edge gadgets and tech essentials.
+                    Discover curated collections, exclusive deals, and seamless shopping all in one place.
                 </p>
                 <div class="flex justify-center md:justify-start space-x-4 mt-8 md:mt-[200px]">
                     <a href="https://discord.com/channels/@me"

@@ -36,14 +36,13 @@
             </div>
 
             <div id="stats-cards">
-
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                     @include('admin.partials.user_stats_cards_inner', [
                         'users' => $users,
                         'activeUsers' => $activeUsers,
                         'usersPercentageChange' => $usersPercentageChange,
                         'verifiedPercentage' => $verifiedPercentage,
-                        'adminCount' => $adminCount
+                        'adminCount' => $adminCount,
                     ])
                 </div>
             </div>
@@ -82,6 +81,35 @@
                     </button>
                 </div>
             @endif
+        </div>
+    </div>
+
+    <!-- Success Notification -->
+    <div id="success-notification"
+        class="fixed top-4 right-4 z-50 transform translate-x-full transition-transform duration-300">
+        <div class="bg-green-50 border border-green-200 rounded-lg shadow-lg overflow-hidden w-80">
+            <div class="flex items-start p-4">
+                <div class="flex-shrink-0">
+                    <svg class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div class="ml-3 w-0 flex-1 pt-0.5">
+                    <p class="text-sm font-medium text-green-800" id="notification-title">Success</p>
+                    <p class="mt-1 text-sm text-green-600" id="notification-message">User deleted successfully.</p>
+                </div>
+                <div class="ml-4 flex-shrink-0 flex">
+                    <button onclick="hideNotification()"
+                        class="bg-white rounded-md inline-flex text-green-400 hover:text-green-500 focus:outline-none">
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="bg-green-400 h-1 w-full" id="notification-progress"></div>
         </div>
     </div>
 
@@ -251,6 +279,177 @@
                 document.head.appendChild(style);
             }
         });
+
+        // Show success notification
+        function showSuccessNotification(message = 'User deleted successfully.') {
+            const notification = document.getElementById('success-notification');
+            const title = document.getElementById('notification-title');
+            const msg = document.getElementById('notification-message');
+            const progress = document.getElementById('notification-progress');
+
+            // Set message
+            msg.textContent = message;
+
+            // Reset animation
+            notification.classList.remove('translate-x-full');
+            notification.classList.add('translate-x-0');
+
+            // Reset progress bar
+            progress.style.width = '100%';
+            progress.style.transition = 'width 5s linear';
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                hideNotification();
+            }, 5000);
+
+            // Start progress bar animation
+            setTimeout(() => {
+                progress.style.width = '0%';
+            }, 50);
+        }
+
+        // Hide notification
+        function hideNotification() {
+            const notification = document.getElementById('success-notification');
+            notification.classList.remove('translate-x-0');
+            notification.classList.add('translate-x-full');
+        }
+
+        // Close modal function
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('opacity-100');
+            modal.querySelector('.transform').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 200);
+        }
+
+        // Delete user form handler
+        document.addEventListener('click', function(e) {
+            const deleteButton = e.target.closest('.delete-user-button');
+            if (deleteButton) {
+                e.preventDefault();
+                const userId = deleteButton.getAttribute('data-user-id');
+                const userName = deleteButton.getAttribute('data-user-name');
+
+                // Update modal content
+                document.getElementById('modal-title').textContent = `Delete ${userName}`;
+
+                // Set form action
+                document.getElementById('delete-user-form').action = `/admin/users/${userId}`;
+
+                // Show modal with animation
+                const modal = document.getElementById('delete-user-modal');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.add('opacity-100');
+                    modal.querySelector('.transform').classList.remove('scale-95');
+                }, 10);
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        // Add delete form submission handler
+        document.getElementById('delete-user-form')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            try {
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                    },
+                    body: new FormData(this)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to delete user');
+                }
+
+                // Close delete modal
+                closeModal('delete-user-modal');
+
+                // Show success notification
+                showSuccessNotification('User deleted successfully.');
+
+                // Update the table via AJAX instead of refreshing
+                if (typeof loadPage === 'function') {
+                    // Create a new URL without the page parameter to go back to first page
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('page');
+                    loadPage(url.toString());
+                }
+
+            } catch (error) {
+                alert(error.message);
+                closeModal('delete-user-modal');
+            }
+        });
+
+        // Modify the loadPage function to handle the notification
+        const loadPage = async (url) => {
+            if (isLoading) return;
+
+            const normalizedUrl = normalizeUrl(url);
+            const normalizedCurrentUrl = normalizeUrl(currentPageUrl);
+
+            if (normalizedUrl === normalizedCurrentUrl) return;
+
+            isLoading = true;
+
+            // Show loading indicator only on the table, not cards
+            const oldTableContent = container.innerHTML;
+            container.innerHTML = loadingHTML;
+
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const data = await response.json();
+
+                // Update the cards and table
+                document.querySelector('#stats-cards .grid').innerHTML = data.cards;
+                container.innerHTML = data.table;
+
+                currentPageUrl = url;
+
+                // Update the active filter state
+                const urlObj = new URL(url);
+                const filterValue = urlObj.searchParams.get('filter') || 'all';
+                updateActiveFilter(filterValue);
+
+                window.history.pushState({
+                    url
+                }, '', url);
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = oldTableContent;
+
+                // Show error message (matches products table style)
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'p-4 bg-red-50 text-red-600 rounded-lg mb-4';
+                errorDiv.innerHTML = `
+                <div class="flex items-center">
+                    <i class='bx bx-error-circle text-xl mr-2'></i>
+                    <span>Failed to load content. Please try again.</span>
+                </div>
+            `;
+                container.appendChild(errorDiv);
+            } finally {
+                isLoading = false;
+            }
+        };
     </script>
     <style>
         .tooltip-text {
@@ -294,6 +493,25 @@
 
         .overflow-y-auto::-webkit-scrollbar-thumb:hover {
             background: #a1a1a1;
+        }
+
+        /* Notification animations */
+        #success-notification {
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        #notification-progress {
+            transition: width 5s linear;
+        }
+
+        /* Slide in from right */
+        .translate-x-0 {
+            transform: translateX(0);
+        }
+
+        /* Slide out to right */
+        .translate-x-full {
+            transform: translateX(calc(100% + 1rem));
         }
     </style>
 </x-app-layout>
