@@ -9,7 +9,7 @@ class AddCancelledAtToOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->timestamp('cancelled_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable()->after('status');
         });
     }
 

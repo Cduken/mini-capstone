@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -28,14 +29,14 @@ class OrderController extends Controller
                 'tax' => $order->tax,
                 'shipping' => $order->shipping,
                 'created_at' => $order->created_at,
-                'address' => $order->address_line_1, // Changed from address to address_line_1
+                'address' => $order->address_line_1,
                 'address_line_1' => $order->address_line_1,
                 'address_line_2' => $order->address_line_2,
                 'city' => $order->city,
-                'state' => $order->province, // Changed from state to province
+                'state' => $order->province,
                 'province' => $order->province,
                 'zip_code' => $order->zip_code,
-                'country' => 'Philippines', // Hardcoded or from your DB
+                'country' => 'Philippines',
                 'payment_method' => $order->payment_method,
                 'payment_details' => is_array($order->payment_details) ?
                     $order->payment_details :
@@ -68,5 +69,52 @@ class OrderController extends Controller
             'tax' => $order->tax,
             'total' => $order->total
         ]);
+    }
+
+    public function track(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $order->load(['products' => function ($query) {
+            $query->select('products.id', 'products.title', 'products.image');
+        }]);
+
+        return view('orders.track', [
+            'order' => $order,
+            'trackingHistory' => $order->tracking_history ?? [],
+            'trackingNumber' => $order->tracking_number,
+            'currentStatus' => $order->getTrackingStatus(),
+            'isTrackingMoving' => $order->isTrackingMoving(),
+        ]);
+    }
+
+    // New method to start dynamic tracking
+    public function startDynamicTracking(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // Generate a random tracking number if none exists
+        if (!$order->tracking_number) {
+            $order->tracking_number = 'TRK-' . Str::upper(Str::random(8));
+        }
+
+        // Initialize tracking history if empty
+        if (empty($order->tracking_history)) {
+            $order->tracking_history = [
+                [
+                    'status' => 'Order Processed',
+                    'date' => now()->toDateTimeString(),
+                    'location' => 'Warehouse #' . rand(1, 5),
+                ],
+            ];
+        }
+
+        $order->save();
+
+        return redirect()->route('orders.track', $order)->with('success', 'Dynamic tracking started!');
     }
 }

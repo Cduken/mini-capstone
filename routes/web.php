@@ -48,7 +48,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     Route::delete('/profile/avatar', [ProfileController::class, 'destroyAvatar'])->name('avatar.destroy');
 
     // Cart Management
@@ -70,14 +69,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchases', [CheckoutController::class, 'purchases'])->name('purchases.index');
 
     // Order Success
-    Route::get('/orders/success/{order}', [CheckoutController::class, 'orderSuccess'])
-        ->name('orders.success');
+    Route::get('/orders/success/{order}', [CheckoutController::class, 'orderSuccess'])->name('orders.success');
 
-    Route::post('/orders/{order}/cancel', [CheckoutController::class, 'cancelOrder'])->name('orders.cancel')->middleware('auth');
+    Route::post('/orders/{order}/cancel', [CheckoutController::class, 'cancelOrder'])->name('orders.cancel');
+
+    // Track Order (Moved here)
+    Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
+    Route::get('/orders/{order}/start-tracking', [OrderController::class, 'startDynamicTracking'])->name('orders.start-tracking');
 
     // Product Ratings
-    Route::post('/products/{product}/rate', [ProductPageController::class, 'rate'])
-        ->name('products.rate');
+    Route::post('/products/{product}/rate', [ProductPageController::class, 'rate'])->name('products.rate');
 });
 
 /*

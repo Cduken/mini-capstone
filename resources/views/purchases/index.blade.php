@@ -163,14 +163,11 @@
 
                             <!-- Order footer -->
                             <div class="px-6 py-4 sm:px-6 bg-gray-50 flex flex-wrap justify-end gap-3">
-                                <a href="#"
+                                <a href="{{ route('orders.start-tracking', $order) }}"
                                     class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
-                                    <i class='bx bx-map mr-2'></i> Track Order
+                                    <i class='bx bx-play mr-2'></i> Start Tracking
                                 </a>
-                                <a href="#"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
-                                    <i class='bx bx-receipt mr-2'></i> View Invoice
-                                </a>
+
                                 @if ($order->canBeCancelled())
                                     <button type="button"
                                         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 transform hover:-translate-y-0.5"
