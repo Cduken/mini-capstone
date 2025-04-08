@@ -117,4 +117,20 @@ class OrderController extends Controller
 
         return redirect()->route('orders.track', $order)->with('success', 'Dynamic tracking started!');
     }
+
+    public function getTrackingUpdates(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return response()->json([
+            'trackingHistory' => $order->tracking_history ?? [],
+            'currentStatus' => $order->getTrackingStatus(),
+            'lastUpdated' => !empty($order->tracking_history)
+                ? \Carbon\Carbon::parse(end($order->tracking_history)['date'])->format('F j, Y, g:i A')
+                : null,
+            'isTrackingMoving' => $order->isTrackingMoving(),
+        ]);
+    }
 }

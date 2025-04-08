@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
 
     // Track Order (Moved here)
     Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
+    Route::post('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.tracking-updates');
     Route::get('/orders/{order}/start-tracking', [OrderController::class, 'startDynamicTracking'])->name('orders.start-tracking');
 
     // Product Ratings
