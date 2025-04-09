@@ -46,7 +46,6 @@ class ProductController extends Controller
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('images'), $imageName);
-
             $imagePath = 'images/' . $imageName;
         } else {
             $imagePath = null;
@@ -59,6 +58,14 @@ class ProductController extends Controller
             'inStock' => $request->inStock,
             'image' => $imagePath,
         ]);
+
+        // Check if the request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product created successfully.'
+            ]);
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
@@ -113,6 +120,12 @@ class ProductController extends Controller
 
     public function getProductJson(Product $product)
     {
-        return response()->json($product);
+        // Ensure the image URL is complete if it's stored as a relative path
+        $productData = $product->toArray();
+        if ($product->image && !filter_var($product->image, FILTER_VALIDATE_URL)) {
+            $productData['image'] = asset($product->image);
+        }
+
+        return response()->json($productData);
     }
 }

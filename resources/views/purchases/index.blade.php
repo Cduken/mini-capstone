@@ -161,12 +161,16 @@
                                 </div>
                             </div>
 
+
                             <!-- Order footer -->
                             <div class="px-6 py-4 sm:px-6 bg-gray-50 flex flex-wrap justify-end gap-3">
-                                <a href="{{ route('orders.start-tracking', $order) }}"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
-                                    <i class='bx bx-play mr-2'></i> Start Tracking
-                                </a>
+                                @if ($order->status !== 'cancelled')
+                                    <a href="{{ route('orders.start-tracking', $order) }}"
+                                        class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 {{ $order->status === 'cancelled' ? 'opacity-50 cursor-not-allowed pointer-events-none' : '' }}"
+                                        {{ $order->status === 'cancelled' ? 'disabled' : '' }}>
+                                        <i class='bx bx-play mr-2'></i> Track Order
+                                    </a>
+                                @endif
 
                                 @if ($order->canBeCancelled())
                                     <button type="button"
@@ -231,7 +235,6 @@
             </div>
         </div>
     </div>
-
     <style>
         .bx {
             vertical-align: middle;
@@ -280,11 +283,21 @@
             animation-delay: 0.5s;
         }
 
-        .custom-toast {
+        /* Updated toast styles */
+        .custom-toast-success {
             background: white !important;
             padding: 1rem;
             border-radius: 0.5rem;
-            border-left: 4px solid currentColor;
+            border-left: 4px solid #10B981;
+            min-width: 300px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .custom-toast-error {
+            background: white !important;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #EF4444;
             min-width: 300px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
@@ -308,16 +321,31 @@
             document.getElementById('orderIdDisplay').textContent = orderId;
             document.getElementById('cancelOrderModal').classList.remove('hidden');
             document.body.classList.add('overflow-hidden');
+
+            // Temporarily disable the Start Tracking button
+            const trackingButton = document.querySelector(`a[href="/orders/${orderId}/start-tracking"]`);
+            if (trackingButton) {
+                trackingButton.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+                trackingButton.setAttribute('disabled', 'disabled');
+            }
         }
 
         function closeCancelModal() {
             document.getElementById('cancelOrderModal').classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
+
+            // Only re-enable if cancellation wasn't confirmed
+            if (currentOrderId) {
+                const trackingButton = document.querySelector(`a[href="/orders/${currentOrderId}/start-tracking"]`);
+                if (trackingButton && !trackingButton.classList.contains('permanently-disabled')) {
+                    trackingButton.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+                    trackingButton.removeAttribute('disabled');
+                }
+            }
         }
 
         document.getElementById('confirmCancelBtn').addEventListener('click', function() {
             if (currentOrderId) {
-                // Show loading state
                 const btn = this;
                 const originalText = btn.innerHTML;
                 btn.innerHTML = '<i class="bx bx-loader bx-spin mr-2"></i> Processing...';
@@ -341,7 +369,6 @@
                         data
                     }) => {
                         if (status === 200 && data.success) {
-                            // Success notification with icon
                             Toastify({
                                 node: createNotificationElement(
                                     'bx bx-check-circle',
@@ -354,17 +381,19 @@
                                 gravity: "top",
                                 position: "right",
                                 stopOnFocus: true,
-                                style: {
-                                    background: 'transparent',
-                                    boxShadow: '0 4px 15px rgba(16, 185, 129, 0.2)'
-                                }
+                                className: 'custom-toast-success'
                             }).showToast();
 
-                            // Close modal and reload
+                            // Mark as permanently disabled until page reload
+                            const trackingButton = document.querySelector(
+                                `a[href="/orders/${currentOrderId}/start-tracking"]`);
+                            if (trackingButton) {
+                                trackingButton.classList.add('permanently-disabled');
+                            }
+
                             closeCancelModal();
                             setTimeout(() => window.location.reload(), 1500);
                         } else {
-                            // Error notification with icon
                             Toastify({
                                 node: createNotificationElement(
                                     'bx bx-error-alt',
@@ -377,16 +406,21 @@
                                 gravity: "top",
                                 position: "right",
                                 stopOnFocus: true,
-                                style: {
-                                    background: 'transparent',
-                                    boxShadow: '0 4px 15px rgba(239, 68, 68, 0.2)'
-                                }
+                                className: 'custom-toast-error'
                             }).showToast();
+
+                            // Re-enable if cancellation fails
+                            const trackingButton = document.querySelector(
+                                `a[href="/orders/${currentOrderId}/start-tracking"]`);
+                            if (trackingButton) {
+                                trackingButton.classList.remove('opacity-50', 'cursor-not-allowed',
+                                    'pointer-events-none');
+                                trackingButton.removeAttribute('disabled');
+                            }
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        // Network error notification
                         Toastify({
                             node: createNotificationElement(
                                 'bx bx-wifi-off',
@@ -399,36 +433,39 @@
                             gravity: "top",
                             position: "right",
                             stopOnFocus: true,
-                            style: {
-                                background: 'transparent',
-                                boxShadow: '0 4px 15px rgba(107, 114, 128, 0.2)'
-                            }
+                            className: 'custom-toast-error'
                         }).showToast();
+
+                        const trackingButton = document.querySelector(
+                            `a[href="/orders/${currentOrderId}/start-tracking"]`);
+                        if (trackingButton) {
+                            trackingButton.classList.remove('opacity-50', 'cursor-not-allowed',
+                                'pointer-events-none');
+                            trackingButton.removeAttribute('disabled');
+                        }
                     })
                     .finally(() => {
                         btn.innerHTML = originalText;
                         btn.disabled = false;
                     });
             }
-
-            // Helper function to create notification element with icon
-            function createNotificationElement(iconClass, iconBgColor, title, message) {
-                const div = document.createElement('div');
-                div.className = 'custom-toast';
-                div.innerHTML = `
-        <div class="flex items-start">
-            <div class="flex-shrink-0 p-2 rounded-full" style="background-color: ${iconBgColor}20">
-                <i class="${iconClass} text-lg" style="color: ${iconBgColor}"></i>
-            </div>
-            <div class="ml-3">
-                <p class="text-sm font-medium text-gray-900">${title}</p>
-                <p class="text-sm text-gray-500 mt-1">${message}</p>
-            </div>
-        </div>
-    `;
-                return div;
-            }
         });
+
+        function createNotificationElement(iconClass, iconBgColor, title, message) {
+            const div = document.createElement('div');
+            div.innerHTML = `
+            <div class="flex items-start">
+                <div class="flex-shrink-0 p-2 rounded-full" style="background-color: ${iconBgColor}20">
+                    <i class="${iconClass} text-lg" style="color: ${iconBgColor}"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">${title}</p>
+                    <p class="text-sm text-gray-500 mt-1">${message}</p>
+                </div>
+            </div>
+        `;
+            return div;
+        }
     </script>
 
     <!-- Toastify for notifications -->

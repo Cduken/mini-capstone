@@ -139,8 +139,8 @@ class AdminDashboardController extends Controller
     // Add this to your AdminDashboardController
     public function getOrderDetails(Order $order)
     {
-        // The payment_details will be automatically cast to array by the model
-        // No need for manual json_decode()
+        // Load the products relationship
+        $order->load('products');
 
         return response()->json([
             'id' => $order->id,
@@ -149,14 +149,26 @@ class AdminDashboardController extends Controller
             'status' => $order->status,
             'total' => $order->total,
             'created_at' => $order->created_at->toDateTimeString(),
-            'address' => $order->address_line_1,
+            'address_line_1' => $order->address_line_1,
+            'address_line_2' => $order->address_line_2,
+            'barangay' => $order->barangay,
             'city' => $order->city,
-            'state' => $order->province,
+            'province' => $order->province,
+            'region' => $order->region,
             'zip_code' => $order->zip_code,
             'country' => 'Philippines',
             'payment_method' => $order->payment_method,
-            'payment_details' => $order->payment_details ?? [], // Ensure it's always an array
-            'shipping_method' => $order->shipping_method
+            'payment_details' => $order->payment_details ?? [],
+            'shipping_method' => $order->shipping_method,
+            'products' => $order->products->map(function ($product) {
+                return [
+                    'title' => $product->title,
+                    'image' => $product->image ? asset($product->image) : asset('default.jpg'),
+                    'quantity' => $product->pivot->quantity,
+                    'price' => $product->pivot->price,
+                    'total' => $product->pivot->quantity * $product->pivot->price
+                ];
+            })->toArray()
         ]);
     }
 }

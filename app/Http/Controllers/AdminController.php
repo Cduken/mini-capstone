@@ -35,11 +35,9 @@ class AdminController extends Controller
         }
 
         $users = $query->orderBy('created_at', 'desc')->paginate(4);
-        $activeUsers = $this->getActiveUsersStats();
 
         // Calculate statistics
         $stats = $this->calculateStatistics($users);
-
 
         if ($request->ajax()) {
             return response()->json([
@@ -59,22 +57,25 @@ class AdminController extends Controller
 
     protected function calculateStatistics($users)
     {
-
-        $currentMonthUsers = User::whereMonth('created_at', now())->count();
-        $lastMonthUsers = User::whereMonth('created_at', now()->subMonth())->count();
+        $currentMonthUsers = User::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        $lastMonthUsers = User::whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->count();
 
         $usersPercentageChange = 0;
         if ($lastMonthUsers > 0) {
             $usersPercentageChange = (($currentMonthUsers - $lastMonthUsers) / $lastMonthUsers) * 100;
-        } elseif ($currentMonthUsers > 0) {
-            $usersPercentageChange = 100;
+        } elseif ($currentMonthUsers > 0 && $lastMonthUsers === 0) {
+            $usersPercentageChange = 100; // 100% increase if there were no users last month
         }
 
         $verifiedPercentage = $users->total() > 0
             ? ($users->whereNotNull('email_verified_at')->count() / $users->total()) * 100
             : 0;
 
-        $adminCount = $users->where('userType', 'admin')->count();
+        $adminCount = User::where('userType', 'admin')->count(); // Use full User query, not paginated
 
         return [
             'activeUsers' => $this->getActiveUsersStats(),
@@ -87,15 +88,18 @@ class AdminController extends Controller
     protected function getActiveUsersStats()
     {
         return cache()->remember('active_users_stats', now()->addMinutes(1), function () {
-            $activeToday = User::where('last_login_at', '>=', Carbon::now()->subDay(1))->count();
-            $activeYesterday = User::whereBetween('last_login_at', [
-                Carbon::now()->subDays(2),
-                Carbon::now()->subDay()
-            ])->count();
+            $activeToday = User::where('last_login_at', '>=', Carbon::today())->count();
+            $activeYesterday = User::where('last_login_at', '>=', Carbon::yesterday())
+                ->where('last_login_at', '<', Carbon::today())
+                ->count();
 
             $percentageChange = 0;
             if ($activeYesterday > 0) {
                 $percentageChange = (($activeToday - $activeYesterday) / $activeYesterday) * 100;
+            } elseif ($activeToday > 0 && $activeYesterday === 0) {
+                $percentageChange = 100; // 100% increase if no active users yesterday
+            } elseif ($activeToday === 0 && $activeYesterday > 0) {
+                $percentageChange = -100; // 100% decrease if no active users today
             }
 
             return [

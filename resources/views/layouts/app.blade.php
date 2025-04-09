@@ -44,6 +44,8 @@
         <!-- Page Content -->
         <main>
             {{ $slot }}
+            @stack('styles')
+            @stack('scripts')
         </main>
 
     </div>

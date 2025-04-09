@@ -10,7 +10,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PurchaseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +23,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Product Display
 Route::get('/products', [ProductPageController::class, 'index'])->name('products.index');
-Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 // Address System
 Route::get('/regions', [AddressController::class, 'getRegions'])->name('regions');
@@ -65,15 +64,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/payment', [CheckoutController::class, 'showPaymentPage'])->name('payment');
     Route::post('/payment/process', [CheckoutController::class, 'processPayment'])->name('payment.process');
     Route::post('/payment/clear', [CheckoutController::class, 'clearSession'])->name('payment.clear');
-
     Route::get('/purchases', [CheckoutController::class, 'purchases'])->name('purchases.index');
 
     // Order Success
     Route::get('/orders/success/{order}', [CheckoutController::class, 'orderSuccess'])->name('orders.success');
-
     Route::post('/orders/{order}/cancel', [CheckoutController::class, 'cancelOrder'])->name('orders.cancel');
 
-    // Track Order (Moved here)
+    // Track Order
     Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
     Route::post('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.tracking-updates');
     Route::get('/orders/{order}/start-tracking', [OrderController::class, 'startDynamicTracking'])->name('orders.start-tracking');
@@ -98,7 +95,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::post('/store', [ProductController::class, 'store'])->name('admin.products.store');
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
         Route::put('/{product}/update', [ProductController::class, 'update'])->name('admin.products.update');
-        Route::get('/{product}/json', [ProductController::class, 'getProductJson'])->name('admin.products.json');
+        Route::get('/product{product}/json', [ProductController::class, 'getProductJson'])->name('admin.products.json');
         Route::delete('/{product}/destroy', [ProductController::class, 'destroy'])->name('admin.products.destroy');
     });
 
@@ -113,10 +110,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Orders Management
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('admin.orders.index');
-        Route::get('/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
+        Route::get('/{order}', [AdminDashboardController::class, 'getOrderDetails'])->name('admin.orders.show');
     });
-
-    Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
 
     // Static Assets
     Route::get('/images/default-product.png', function () {

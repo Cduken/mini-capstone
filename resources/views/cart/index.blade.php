@@ -304,15 +304,15 @@
                                                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white">
                                                 <option value="Standard Shipping"
                                                     @if (old('shipping_method', 'Standard Shipping') == 'Standard Shipping') selected @endif>
-                                                    Standard Shipping (5-7 business days)
+                                                    Standard Shipping
                                                 </option>
                                                 <option value="Express Shipping"
                                                     @if (old('shipping_method') == 'Express Shipping') selected @endif>
-                                                    Express Shipping (2-3 business days)
+                                                    Express Shipping
                                                 </option>
                                                 <option value="Overnight Shipping"
                                                     @if (old('shipping_method') == 'Overnight Shipping') selected @endif>
-                                                    Overnight Shipping (1 business day)
+                                                    Overnight Shipping
                                                 </option>
                                             </select>
                                             <i
