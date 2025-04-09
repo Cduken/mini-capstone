@@ -43,10 +43,6 @@ class CreateOrdersTable extends Migration
 
             // Status and timestamps
             $table->string('status')->default('pending');
-            $table->string('tracking_number')->nullable();      // Added for tracking
-            $table->json('tracking_history')->nullable();       // Added for tracking
-            $table->timestamp('shipped_at')->nullable();        // Added for tracking
-            $table->timestamp('delivered_at')->nullable();      // Added for tracking
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');

@@ -285,62 +285,63 @@
         class="fixed inset-0 bg-black/40 z-50 hidden overflow-y-auto backdrop-blur-sm transition-opacity duration-300 ease-in-out opacity-0">
         <div class="flex items-center justify-center min-h-screen p-4 sm:p-6">
             <div
-                class="inline-block w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-in-out scale-95">
+                class="inline-block w-full max-w-3xl bg-gradient-to-br from-gray-800/50 to-indigo-900/50 backdrop-blur-xl rounded-2xl shadow-2xl border border-indigo-500/20 overflow-hidden transform transition-all duration-300 ease-in-out scale-95">
                 <!-- Modal Header -->
-                <div class="relative px-5 py-4 bg-gradient-to-r from-indigo-600 to-blue-500 text-white">
+                <div class="relative px-6 py-5 border-b border-indigo-500/30">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
-                            <div class="p-2 rounded-full bg-white/20 animate-pulse">
+                            <div
+                                class="p-2 rounded-full bg-indigo-600/20 text-indigo-300 border border-indigo-500/50 glow animate-pulse">
                                 <i class='bx bx-receipt text-xl'></i>
                             </div>
                             <div>
-                                <h3 class="text-lg font-bold tracking-tight">Order #<span id="modalOrderId"></span>
-                                </h3>
+                                <h3 class="text-lg font-bold text-white drop-shadow-md">Order #<span
+                                        id="modalOrderId"></span></h3>
                                 <span id="modalOrderStatus"
-                                    class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-white/30"></span>
+                                    class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-500/20 text-indigo-300 glow-sm"></span>
                             </div>
                         </div>
                         <button id="closeModal"
                             class="text-white/80 hover:text-white transition-colors focus:outline-none">
-                            <i class='bx bx-x text-2xl'></i>
+                            <i class='bx bx-x text-2xl glow'></i>
                         </button>
                     </div>
-                    <div class="absolute bottom-0 left-0 w-full h-1 bg-white/10"></div>
                 </div>
 
                 <!-- Modal Body -->
-                <div class="p-5 sm:p-6 space-y-6 bg-gray-50">
+                <div class="p-6 space-y-6">
                     <!-- Customer & Order Summary -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Customer Information -->
                         <div
-                            class="bg-white rounded-lg shadow-sm p-4 border border-gray-100 transition-all duration-300 hover:shadow-md">
-                            <div class="flex items-center space-x-2 mb-3">
-                                <div class="p-1.5 rounded-lg bg-indigo-100 text-indigo-600">
-                                    <i class='bx bx-user-circle text-lg'></i>
+                            class="bg-gradient-to-br from-cyan-500/20 to-blue-800/20 backdrop-blur-lg rounded-xl shadow-lg border border-cyan-500/30 p-5 transform hover:scale-102 transition-all duration-300">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div
+                                    class="p-2 rounded-full bg-cyan-600/30 text-cyan-300 border border-cyan-500/50 glow">
+                                    <i class='bx bx-user-circle text-xl'></i>
                                 </div>
-                                <h4 class="text-base font-semibold text-gray-800">Customer Details</h4>
+                                <h4 class="text-base font-semibold text-white drop-shadow-md">Customer Details</h4>
                             </div>
-                            <div class="space-y-3 text-xs">
+                            <div class="space-y-4 text-sm">
                                 <div class="flex items-center">
-                                    <i class='bx bx-id-card text-gray-500 mr-2'></i>
+                                    <i class='bx bx-id-card text-cyan-400 mr-3 glow'></i>
                                     <div>
-                                        <p class="text-xs text-gray-500 font-medium uppercase">Name</p>
-                                        <p id="modalCustomerName" class="font-medium text-gray-800"></p>
+                                        <p class="text-xs font-semibold text-cyan-200 tracking-wider">NAME</p>
+                                        <p id="modalCustomerName" class="font-medium text-white"></p>
                                     </div>
                                 </div>
                                 <div class="flex items-center">
-                                    <i class='bx bx-envelope text-gray-500 mr-2'></i>
+                                    <i class='bx bx-envelope text-cyan-400 mr-3 glow'></i>
                                     <div>
-                                        <p class="text-xs text-gray-500 font-medium uppercase">Email</p>
-                                        <p id="modalCustomerEmail" class="font-medium text-gray-800"></p>
+                                        <p class="text-xs font-semibold text-cyan-200 tracking-wider">EMAIL</p>
+                                        <p id="modalCustomerEmail" class="font-medium text-white"></p>
                                     </div>
                                 </div>
                                 <div class="flex items-center">
-                                    <i class='bx bx-wallet text-gray-500 mr-2'></i>
+                                    <i class='bx bx-wallet text-cyan-400 mr-3 glow'></i>
                                     <div>
-                                        <p class="text-xs text-gray-500 font-medium uppercase">Payment Method</p>
-                                        <p id="modalPaymentMethod" class="font-medium text-gray-800"></p>
+                                        <p class="text-xs font-semibold text-cyan-200 tracking-wider">PAYMENT</p>
+                                        <p id="modalPaymentMethod" class="font-medium text-white"></p>
                                     </div>
                                 </div>
                             </div>
@@ -348,33 +349,35 @@
 
                         <!-- Order Summary -->
                         <div
-                            class="bg-white rounded-lg shadow-sm p-4 border border-gray-100 transition-all duration-300 hover:shadow-md">
-                            <div class="flex items-center space-x-2 mb-3">
-                                <div class="p-1.5 rounded-lg bg-blue-100 text-blue-600">
-                                    <i class='bx bx-cart-alt text-lg'></i>
+                            class="bg-gradient-to-br from-emerald-500/20 to-green-800/20 backdrop-blur-lg rounded-xl shadow-lg border border-emerald-500/30 p-5 transform hover:scale-102 transition-all duration-300">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div
+                                    class="p-2 rounded-full bg-emerald-600/30 text-emerald-300 border border-emerald-500/50 glow">
+                                    <i class='bx bx-cart-alt text-xl'></i>
                                 </div>
-                                <h4 class="text-base font-semibold text-gray-800">Order Summary</h4>
+                                <h4 class="text-base font-semibold text-white drop-shadow-md">Order Summary</h4>
                             </div>
-                            <div class="space-y-3 text-xs">
+                            <div class="space-y-4 text-sm">
                                 <div class="flex items-center">
-                                    <i class='bx bx-calendar text-gray-500 mr-2'></i>
+                                    <i class='bx bx-calendar text-emerald-400 mr-3 glow'></i>
                                     <div>
-                                        <p class="text-xs text-gray-500 font-medium uppercase">Date</p>
-                                        <p id="modalOrderDate" class="font-medium text-gray-800"></p>
+                                        <p class="text-xs font-semibold text-emerald-200 tracking-wider">DATE</p>
+                                        <p id="modalOrderDate" class="font-medium text-white"></p>
                                     </div>
                                 </div>
                                 <div class="flex items-center">
-                                    <i class='bx bx-truck text-gray-500 mr-2'></i>
+                                    <i class='bx bx-truck text-emerald-400 mr-3 glow'></i>
                                     <div>
-                                        <p class="text-xs text-gray-500 font-medium uppercase">Shipping Method</p>
-                                        <p id="modalShippingMethod" class="font-medium text-gray-800"></p>
+                                        <p class="text-xs font-semibold text-emerald-200 tracking-wider">SHIPPING</p>
+                                        <p id="modalShippingMethod" class="font-medium text-white"></p>
                                     </div>
                                 </div>
                                 <div class="flex items-center">
-                                    <i class='bx bx-dollar-circle text-gray-500 mr-2'></i>
+                                    <i class='bx bx-dollar-circle text-emerald-400 mr-3 glow'></i>
                                     <div>
-                                        <p class="text-xs text-gray-500 font-medium uppercase">Total Amount</p>
-                                        <p id="modalOrderTotal" class="text-lg font-bold text-blue-600"></p>
+                                        <p class="text-xs font-semibold text-emerald-200 tracking-wider">TOTAL</p>
+                                        <p id="modalOrderTotal"
+                                            class="text-lg font-bold text-emerald-300 drop-shadow-md"></p>
                                     </div>
                                 </div>
                             </div>
@@ -383,37 +386,39 @@
 
                     <!-- Order Items -->
                     <div
-                        class="bg-white rounded-lg shadow-sm p-4 border border-gray-100 transition-all duration-300 hover:shadow-md">
-                        <div class="flex items-center space-x-2 mb-3">
-                            <div class="p-1.5 rounded-lg bg-green-100 text-green-600">
-                                <i class='bx bx-package text-lg'></i>
+                        class="bg-gradient-to-br from-purple-500/20 to-indigo-800/20 backdrop-blur-lg rounded-xl shadow-lg border border-purple-500/30 p-5 transform hover:scale-102 transition-all duration-300">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div
+                                class="p-2 rounded-full bg-purple-600/30 text-purple-300 border border-purple-500/50 glow">
+                                <i class='bx bx-package text-xl'></i>
                             </div>
-                            <h4 class="text-base font-semibold text-gray-800">Purchased Items</h4>
+                            <h4 class="text-base font-semibold text-white drop-shadow-md">Purchased Items</h4>
                         </div>
-                        <div id="modalOrderItems" class="space-y-2"></div>
+                        <div id="modalOrderItems" class="space-y-3"></div>
                     </div>
 
                     <!-- Shipping Information -->
                     <div
-                        class="bg-white rounded-lg shadow-sm p-4 border border-gray-100 transition-all duration-300 hover:shadow-md">
-                        <div class="flex items-center space-x-2 mb-3">
-                            <div class="p-1.5 rounded-lg bg-purple-100 text-purple-600">
-                                <i class='bx bx-map-alt text-lg'></i>
+                        class="bg-gradient-to-br from-yellow-500/20 to-amber-800/20 backdrop-blur-lg rounded-xl shadow-lg border border-yellow-500/30 p-5 transform hover:scale-102 transition-all duration-300">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div
+                                class="p-2 rounded-full bg-yellow-600/30 text-yellow-300 border border-yellow-500/50 glow">
+                                <i class='bx bx-map-alt text-xl'></i>
                             </div>
-                            <h4 class="text-base font-semibold text-gray-800">Shipping Address</h4>
+                            <h4 class="text-base font-semibold text-white drop-shadow-md">Shipping Address</h4>
                         </div>
                         <div class="flex items-start">
-                            <i class='bx bx-location-plus text-gray-500 mr-2 mt-1'></i>
-                            <p id="modalShippingAddress" class="text-gray-800 text-xs leading-relaxed flex-1"></p>
+                            <i class='bx bx-location-plus text-yellow-400 mr-3 mt-1 glow'></i>
+                            <p id="modalShippingAddress" class="text-white text-sm leading-relaxed flex-1"></p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="px-5 py-3 bg-gray-100 border-t border-gray-200 flex justify-end items-center space-x-3">
+                <div class="px-6 py-4 border-t border-indigo-500/30 flex justify-end">
                     <button type="button" id="closeModalBtn"
-                        class="flex items-center px-3 py-1.5 text-sm font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 transition-all duration-200 shadow-sm hover:shadow">
-                        <i class='bx bx-x-circle mr-1'></i> Close
+                        class="flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-indigo-600 to-blue-500 text-white hover:from-indigo-700 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg glow-sm">
+                        <i class='bx bx-x-circle mr-2'></i> Close
                     </button>
                 </div>
             </div>
@@ -421,7 +426,6 @@
     </div>
 
     <style>
-        /* Custom Animations */
         #orderModal.show {
             opacity: 1;
         }
@@ -430,10 +434,9 @@
             scale: 1;
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 640px) {
             #orderModal .max-w-3xl {
-                max-width: 90%;
+                max-width: 95%;
             }
 
             #orderModal .grid {
@@ -441,13 +444,11 @@
             }
 
             #orderModal .text-lg {
-                font-size: 1rem;
-                /* 16px */
+                font-size: 1.125rem;
             }
 
             #orderModal .text-base {
-                font-size: 0.875rem;
-                /* 14px */
+                font-size: 0.9375rem;
             }
         }
 
@@ -624,11 +625,12 @@
                 const statusElement = document.getElementById('modalOrderStatus');
                 const status = order.status || 'pending';
                 statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-                statusElement.className = 'inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium ' +
-                    (status === 'completed' ? 'bg-green-100 text-green-800' :
-                        status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                        'bg-gray-100 text-gray-800');
+                statusElement.className =
+                    'inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-xs font-medium glow-sm ' +
+                    (status === 'completed' ? 'bg-emerald-500/20 text-emerald-300' :
+                        status === 'pending' ? 'bg-yellow-500/20 text-yellow-300' :
+                        status === 'cancelled' ? 'bg-red-500/20 text-red-300' :
+                        'bg-gray-500/20 text-gray-300');
 
                 // Format amounts
                 document.getElementById('modalOrderTotal').textContent =
@@ -678,32 +680,32 @@
 
                 // Populate order items
                 const itemsContainer = document.getElementById('modalOrderItems');
-                itemsContainer.innerHTML = ''; // Clear existing content
+                itemsContainer.innerHTML = '';
                 if (order.products && order.products.length > 0) {
                     order.products.forEach(product => {
                         const itemElement = document.createElement('div');
                         itemElement.className =
-                            'flex items-start p-1 rounded-lg hover:bg-gray-50 transition-colors duration-150';
+                            'flex items-start p-2 rounded-lg bg-purple-600/10 hover:bg-purple-600/20 transition-all duration-200';
                         itemElement.innerHTML = `
-                <div class="flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border border-gray-200">
+                <div class="flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border border-purple-500/30 glow-sm">
                     <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-300">
                 </div>
                 <div class="ml-4 flex-1">
                     <div class="flex items-start justify-between">
                         <div>
-                            <h5 class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-200">
+                            <h5 class="text-sm font-semibold text-white hover:text-purple-300 transition-colors duration-200">
                                 ${product.title}
                             </h5>
                             <div class="mt-1 flex flex-wrap gap-2">
-                                <p class="text-sm text-gray-500 flex items-center">
-                                    <i class='bx bx-cube mr-1'></i> Qty: ${product.quantity}
+                                <p class="text-xs text-purple-200 flex items-center">
+                                    <i class='bx bx-cube mr-1 glow'></i> Qty: ${product.quantity}
                                 </p>
-                                <p class="text-sm text-gray-500 flex items-center">
+                                <p class="text-xs text-purple-200 flex items-center">
                                     $${parseFloat(product.price).toFixed(2)} each
                                 </p>
                             </div>
                         </div>
-                        <p class="ml-4 text-base font-semibold text-gray-900">
+                        <p class="ml-4 text-base font-semibold text-purple-300 drop-shadow-md">
                             $${parseFloat(product.total).toFixed(2)}
                         </p>
                     </div>
@@ -712,7 +714,7 @@
                         itemsContainer.appendChild(itemElement);
                     });
                 } else {
-                    itemsContainer.innerHTML = '<p class="text-gray-600">No items found for this order.</p>';
+                    itemsContainer.innerHTML = '<p class="text-purple-200">No items found for this order.</p>';
                 }
             }
 
