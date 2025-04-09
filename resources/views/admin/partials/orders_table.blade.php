@@ -101,7 +101,7 @@
 
                 <!-- Page Indicator -->
                 <span
-                    class="text-sm px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                    class="text-sm px-3 py-1 rounded-full  text-gray-300 ">
                     Page {{ $recentOrders->currentPage() }}
                 </span>
 
