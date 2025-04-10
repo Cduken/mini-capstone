@@ -1,4 +1,4 @@
-<nav x-data="{ open: false, dropdownOpen: false }"
+<nav x-data="{ open: false, dropdownOpen: false, notifOpen: false }"
     class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50 backdrop-blur-sm bg-opacity-90">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-20 items-center">
@@ -60,29 +60,61 @@
                                 </span>
                             </a>
 
-                            <!-- Wishlist Icon -->
-                            <a href="{{ route('wishlist.index') }}"
-                                class="relative p-1 text-gray-300 hover:text-white transition-colors">
-                                <i class='bx bx-heart text-2xl'></i>
-                                @if (App\Models\Wishlist::where('user_id', Auth::id())->exists())
-                                    <span
-                                        class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                                        {{ App\Models\Wishlist::where('user_id', Auth::id())->count() }}
-                                    </span>
-                                @endif
-                            </a>
+                            <!-- Notification Icon -->
+                            <div class="relative" x-data="{ notifOpen: false }">
+                                <button @click="notifOpen = !notifOpen"
+                                    class="relative p-1 text-gray-300 hover:text-white transition-colors">
+                                    <i class='bx bx-bell text-2xl'></i>
+                                    @php
+                                        $unreadNotifications = App\Models\Order::where('user_id', Auth::id())
+                                            ->whereIn('status', ['shipped', 'delivered', 'processing'])
+                                            ->count();
+                                    @endphp
+                                    @if ($unreadNotifications > 0)
+                                        <span
+                                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                            {{ $unreadNotifications }}
+                                        </span>
+                                    @endif
+                                </button>
 
-                            <!-- My Purchase Icon -->
-                            <a href="{{ route('purchases.index') }}"
-                                class="relative p-1 text-gray-300 hover:text-white transition-colors">
-                                <i class='bx bx-notepad text-2xl'></i>
-                                @if (App\Models\Order::where('user_id', Auth::id())->exists())
-                                    <span
-                                        class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                                        {{ App\Models\Order::where('user_id', Auth::id())->count() }}
-                                    </span>
-                                @endif
-                            </a>
+                                <!-- Notification Dropdown -->
+                                <div x-show="notifOpen" @click.away="notifOpen = false" x-cloak
+                                    x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="transform opacity-0 scale-95"
+                                    x-transition:enter-end="transform opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="transform opacity-100 scale-100"
+                                    x-transition:leave-end="transform opacity-0 scale-95"
+                                    class="absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-xl py-1 z-50 border border-gray-700 max-h-96 overflow-y-auto">
+                                    @php
+                                        $orders = App\Models\Order::where('user_id', Auth::id())
+                                            ->latest()
+                                            ->take(10)
+                                            ->get();
+                                    @endphp
+
+                                    @forelse ($orders as $order)
+                                        <a href="{{ route('orders.track', $order) }}"
+                                            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white border-b border-gray-700 last:border-b-0">
+                                            <div class="flex items-center">
+                                                <i class='bx bx-package mr-3 text-gray-400'></i>
+                                                <div>
+                                                    <p class="font-medium">Order #{{ $order->id }}</p>
+                                                    <p class="text-xs capitalize">{{ $order->status }}</p>
+                                                    <p class="text-xs text-gray-400">
+                                                        {{ \Carbon\Carbon::parse($order->updated_at)->diffForHumans() }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @empty
+                                        <div class="px-4 py-2 text-sm text-gray-400 text-center">
+                                            No recent orders
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
                         @endif
 
                         <!-- Profile Dropdown -->
@@ -123,6 +155,28 @@
                                     class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white">
                                     <i class='bx bx-user mr-3 text-gray-400'></i> {{ __('Profile') }}
                                 </x-dropdown-link>
+                                @if (Auth::user()->userType !== 'admin')
+                                    <x-dropdown-link :href="route('wishlist.index')"
+                                        class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white">
+                                        <i class='bx bx-heart mr-3 text-gray-400'></i> {{ __('Wishlist') }}
+                                        @if (App\Models\Wishlist::where('user_id', Auth::id())->exists())
+                                            <span
+                                                class="ml-auto bg-gray-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                                {{ App\Models\Wishlist::where('user_id', Auth::id())->count() }}
+                                            </span>
+                                        @endif
+                                    </x-dropdown-link>
+                                    <x-dropdown-link :href="route('purchases.index')"
+                                        class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white">
+                                        <i class='bx bx-notepad mr-3 text-gray-400'></i> {{ __('My Purchases') }}
+                                        @if (App\Models\Order::where('user_id', Auth::id())->exists())
+                                            <span
+                                                class="ml-auto bg-gray-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                                {{ App\Models\Order::where('user_id', Auth::id())->count() }}
+                                            </span>
+                                        @endif
+                                    </x-dropdown-link>
+                                @endif
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <x-dropdown-link :href="route('logout')"
@@ -156,8 +210,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
-                    <svg class="h-6 w-6" :class="{ 'hidden': !open, 'block': open }" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
+                    <svg class="h-6 w-6" :class="{ 'hidden': !open, 'block': open }" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -210,26 +264,37 @@
                             {{ App\Models\Cart::where('user_id', Auth::id())->count() }}
                         </span>
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('wishlist.index')"
-                        class="block pl-3 pr-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md relative">
-                        <i class='bx bx-heart mr-3 text-gray-400'></i> {{ __('Wishlist') }}
-                        @if (App\Models\Wishlist::where('user_id', Auth::id())->exists())
-                            <span
-                                class="absolute top-2 right-2 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                                {{ App\Models\Wishlist::where('user_id', Auth::id())->count() }}
-                            </span>
-                        @endif
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('purchases.index')"
-                        class="block pl-3 pr-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md relative">
-                        <i class='bx bx-notepad mr-3 text-gray-400'></i> {{ __('My Purchase') }}
-                        @if (App\Models\Order::where('user_id', Auth::id())->exists())
-                            <span
-                                class="absolute top-2 right-2 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                                {{ App\Models\Order::where('user_id', Auth::id())->count() }}
-                            </span>
-                        @endif
-                    </x-responsive-nav-link>
+
+                    <!-- Mobile Notifications -->
+                    <div class="border-t border-gray-800 pt-2">
+                        <div class="px-4 py-2 text-sm text-white font-medium flex items-center">
+                            <i class='bx bx-bell mr-3'></i>
+                            Notifications
+                        </div>
+                        @php
+                            $orders = App\Models\Order::where('user_id', Auth::id())->latest()->take(5)->get();
+                        @endphp
+
+                        @forelse ($orders as $order)
+                            <x-responsive-nav-link :href="route('orders.track', $order)"
+                                class="block pl-3 pr-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md">
+                                <div class="flex items-center">
+                                    <i class='bx bx-package mr-3 text-gray-400'></i>
+                                    <div>
+                                        <span class="font-medium">Order #{{ $order->id }}</span>
+                                        <span class="block text-xs capitalize">{{ $order->status }}</span>
+                                        <span class="block text-xs text-gray-400">
+                                            {{ \Carbon\Carbon::parse($order->updated_at)->diffForHumans() }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </x-responsive-nav-link>
+                        @empty
+                            <div class="pl-3 pr-4 py-3 text-gray-400 text-sm">
+                                No recent orders
+                            </div>
+                        @endforelse
+                    </div>
                 @endif
             @endauth
         </div>
@@ -259,6 +324,28 @@
                         class="block pl-3 pr-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md">
                         <i class='bx bx-user mr-3 text-gray-400'></i> {{ __('Profile') }}
                     </x-responsive-nav-link>
+                    @if (Auth::user()->userType !== 'admin')
+                        <x-responsive-nav-link :href="route('wishlist.index')"
+                            class="block pl-3 pr-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md relative">
+                            <i class='bx bx-heart mr-3 text-gray-400'></i> {{ __('Wishlist') }}
+                            @if (App\Models\Wishlist::where('user_id', Auth::id())->exists())
+                                <span
+                                    class="absolute top-2 right-2 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                    {{ App\Models\Wishlist::where('user_id', Auth::id())->count() }}
+                                </span>
+                            @endif
+                        </x-responsive-nav-link>
+                        <x-responsive-nav-link :href="route('purchases.index')"
+                            class="block pl-3 pr-4 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md relative">
+                            <i class='bx bx-notepad mr-3 text-gray-400'></i> {{ __('My Purchases') }}
+                            @if (App\Models\Order::where('user_id', Auth::id())->exists())
+                                <span
+                                    class="absolute top-2 right-2 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                    {{ App\Models\Order::where('user_id', Auth::id())->count() }}
+                                </span>
+                            @endif
+                        </x-responsive-nav-link>
+                    @endif
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <x-responsive-nav-link :href="route('logout')"
