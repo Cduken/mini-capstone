@@ -90,19 +90,19 @@ class OrderController extends Controller
         ]);
     }
 
-    // New method to start dynamic tracking
+
     public function startDynamicTracking(Order $order)
     {
         if ($order->user_id !== Auth::id()) {
             abort(403);
         }
 
-        // Generate a random tracking number if none exists
+
         if (!$order->tracking_number) {
             $order->tracking_number = 'TRK-' . Str::upper(Str::random(8));
         }
 
-        // Initialize tracking history if empty
+
         if (empty($order->tracking_history)) {
             $order->tracking_history = [
                 [
@@ -115,7 +115,7 @@ class OrderController extends Controller
 
         $order->save();
 
-        return redirect()->route('orders.track', $order)->with('success', 'Dynamic tracking started!');
+        return redirect()->route('orders.track', $order);
     }
 
     public function getTrackingUpdates(Order $order)

@@ -185,10 +185,10 @@
                                         <div class="flex items-center justify-between mb-4">
                                             <div>
                                                 <p class="text-xl font-bold text-gray-900">
-                                                    ${{ number_format($product->price, 2) }}</p>
+                                                    ₱{{ number_format($product->price, 2) }}</p>
                                                 @if ($product->original_price)
                                                     <p class="text-sm text-gray-500 line-through">
-                                                        ${{ number_format($product->original_price, 2) }}</p>
+                                                        ₱{{ number_format($product->original_price, 2) }}</p>
                                                 @endif
                                             </div>
 
@@ -297,7 +297,7 @@
                         <div class="relative mt-8 md:mt-0">
                             <div
                                 class="bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-                                <img src="{{ asset('images/6174398.jpg') }}" alt="About Us"
+                                <img src="{{ asset('images/aboutimg.jpg') }}" alt="About Us"
                                     class="w-full rounded-xl object-cover h-80 md:h-96">
                                 <div
                                     class="absolute -bottom-6 -right-6 bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 md:p-6 rounded-xl shadow-md transform hover:scale-105 transition-all duration-300">

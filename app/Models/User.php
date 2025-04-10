@@ -90,12 +90,8 @@ class User extends Authenticatable
         return null;
     }
 
-
-
-    // app/Models/User.php
-
-    // public function sendEmailVerificationNotification()
-    // {
-    //     $this->notify(new CustomVerifyEmail);
-    // }
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
 }

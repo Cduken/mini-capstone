@@ -23,9 +23,9 @@
                     </div>
                     <h3 class="text-lg font-medium text-gray-900 mb-1">No orders yet</h3>
                     <p class="text-gray-500 mb-6">Your purchased items will appear here</p>
-                    <a href="{{ route('home') }}"
-                        class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5">
-                        Start Shopping
+                    <a href="{{ route('products.index') }}"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200 text-sm">
+                        <i class='bx bx-store mr-2'></i> Start Shopping
                     </a>
                 </div>
             @else

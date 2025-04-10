@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->search;
-        $filter = $request->filter ?? 'all';
+        $search = $request->input('search');
+        $filter = $request->input('filter', 'all');
 
         $query = User::query();
 
@@ -31,6 +33,10 @@ class AdminController extends Controller
                 break;
             case 'pending':
                 $query->whereNull('email_verified_at');
+                break;
+            case 'all':
+            default:
+                // No additional filtering for 'all'
                 break;
         }
 
@@ -123,15 +129,44 @@ class AdminController extends Controller
             'userType' => 'required|string|in:user,admin',
         ]);
 
-        $user->update($request->all());
+        $user->update($request->only(['name', 'email', 'userType']));
 
         return redirect()->route('admin.users')->with('success', 'User updated successfully!');
     }
 
-    public function destroy(User $user)
+    public function destroy(Request $request, $id)
     {
-        $user->delete();
+        try {
+            $user = User::find($id);
 
-        return redirect()->route('admin.users')->with('success', 'User deleted successfully!');
+            if (!$user) {
+                if ($request->ajax()) {
+                    return response()->json(['message' => 'User not found'], 404);
+                }
+                return redirect()->route('admin.users')->with('error', 'User not found');
+            }
+
+            // Prevent admin from deleting themselves
+            if (Auth::check() && Auth::user()->id === $user->id) {
+                if ($request->ajax()) {
+                    return response()->json(['message' => 'You cannot delete yourself'], 403);
+                }
+                return redirect()->route('admin.users')->with('error', 'You cannot delete yourself');
+            }
+
+            $user->delete();
+
+            if ($request->ajax()) {
+                return response()->json(['message' => 'User deleted successfully']);
+            }
+
+            return redirect()->route('admin.users')->with('success', 'User deleted successfully!');
+        } catch (\Exception $e) {
+            Log::error('Error deleting user: ' . $e->getMessage());
+            if ($request->ajax()) {
+                return response()->json(['message' => 'Failed to delete user'], 500);
+            }
+            return redirect()->route('admin.users')->with('error', 'Failed to delete user');
+        }
     }
 }

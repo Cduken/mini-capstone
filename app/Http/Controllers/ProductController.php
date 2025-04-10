@@ -120,7 +120,7 @@ class ProductController extends Controller
 
     public function getProductJson(Product $product)
     {
-        // Ensure the image URL is complete if it's stored as a relative path
+
         $productData = $product->toArray();
         if ($product->image && !filter_var($product->image, FILTER_VALIDATE_URL)) {
             $productData['image'] = asset($product->image);

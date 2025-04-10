@@ -127,6 +127,13 @@
                             <div class="flex">
                                 <span class="w-24 text-gray-500">Name:</span>
                                 <span class="font-medium">{{ $order->name }}</span>
+
+                            </div>
+
+                            <div class="flex">
+                                <span class="w-24 text-gray-500">Email:</span>
+                                <span class="font-medium">{{ $order->email }}</span>
+
                             </div>
                             <div class="flex">
                                 <span class="w-24 text-gray-500">Address:</span>
@@ -152,7 +159,7 @@
                             <h2 class="text-xl font-semibold text-gray-900 flex items-center">
                                 <i class='bx bx-history mr-2 text-blue-600'></i> Tracking History
                             </h2>
-                            <span class="text-xs text-gray-500">Updates every 1-2  minutes</span>
+                            <span class="text-xs text-gray-500">Updates every 1-2 minutes</span>
                         </div>
 
                         <div id="trackingHistoryContainer">
@@ -291,9 +298,9 @@
                                                 </p>
                                             </div>
                                             ${event.location ? `
-                                                    <p class="mt-1 text-xs text-gray-500 flex items-center">
-                                                        <i class='bx bx-map-pin mr-1'></i> ${event.location}
-                                                    </p>` : ''}
+                                                            <p class="mt-1 text-xs text-gray-500 flex items-center">
+                                                                <i class='bx bx-map-pin mr-1'></i> ${event.location}
+                                                            </p>` : ''}
                                         </div>
                                     </div>
                                 `;

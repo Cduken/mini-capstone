@@ -50,18 +50,45 @@
                 <div class="flex items-center space-x-4">
                     @auth
                         @if (Auth::user()->userType !== 'admin')
+                            <!-- Cart Icon -->
                             <a href="{{ route('cart.index') }}"
                                 class="relative p-1 text-gray-300 hover:text-white transition-colors">
                                 <i class='bx bx-cart text-2xl'></i>
                                 <span
-                                    class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">{{ App\Models\Cart::where('user_id', Auth::id())->count() }}</span>
+                                    class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                    {{ App\Models\Cart::where('user_id', Auth::id())->count() }}
+                                </span>
+                            </a>
+
+                            <!-- Wishlist Icon -->
+                            <a href="{{ route('wishlist.index') }}"
+                                class="relative p-1 text-gray-300 hover:text-white transition-colors">
+                                <i class='bx bx-heart text-2xl'></i>
+                                @if (App\Models\Wishlist::where('user_id', Auth::id())->exists())
+                                    <span
+                                        class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                        {{ App\Models\Wishlist::where('user_id', Auth::id())->count() }}
+                                    </span>
+                                @endif
+                            </a>
+
+                            <!-- My Purchase Icon -->
+                            <a href="{{ route('purchases.index') }}"
+                                class="relative p-1 text-gray-300 hover:text-white transition-colors">
+                                <i class='bx bx-notepad text-2xl'></i>
+                                @if (App\Models\Order::where('user_id', Auth::id())->exists())
+                                    <span
+                                        class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                        {{ App\Models\Order::where('user_id', Auth::id())->count() }}
+                                    </span>
+                                @endif
                             </a>
                         @endif
 
+                        <!-- Profile Dropdown -->
                         <div class="relative">
                             <button @click="dropdownOpen = !dropdownOpen"
                                 class="flex items-center focus:outline-none group">
-                                <!-- Replace the initial letter with the avatar -->
                                 <div
                                     class="w-9 h-9 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-white font-medium group-hover:bg-gray-700 transition-colors">
                                     @if (Auth::user()->avatar)
@@ -95,16 +122,6 @@
                                 <x-dropdown-link :href="route('profile.edit')"
                                     class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white">
                                     <i class='bx bx-user mr-3 text-gray-400'></i> {{ __('Profile') }}
-                                </x-dropdown-link>
-                                <x-dropdown-link :href="route('purchases.index')"
-                                    class="flex items-center px-4 py-2 text-[#E0DBD1] hover:bg-gray-700 hover:text-white relative">
-                                    @if (App\Models\Order::where('user_id', Auth::id())->exists())
-                                        <span
-                                            class="absolute top-2 right-[4px] bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                                            {{ App\Models\Order::where('user_id', Auth::id())->count() }}
-                                        </span>
-                                    @endif
-                                    <i class='bx bx-notepad mr-3 text-gray-400'></i> {{ __('My Purchase') }}
                                 </x-dropdown-link>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -182,6 +199,39 @@
                     <i class='bx bx-list-ul mr-3 text-gray-400'></i> {{ __('Product List') }}
                 </x-responsive-nav-link>
             @endif
+
+            @auth
+                @if (Auth::user()->userType !== 'admin')
+                    <x-responsive-nav-link :href="route('cart.index')"
+                        class="block pl-3 pr-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md relative">
+                        <i class='bx bx-cart mr-3 text-gray-400'></i> {{ __('Cart') }}
+                        <span
+                            class="absolute top-2 right-2 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                            {{ App\Models\Cart::where('user_id', Auth::id())->count() }}
+                        </span>
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('wishlist.index')"
+                        class="block pl-3 pr-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md relative">
+                        <i class='bx bx-heart mr-3 text-gray-400'></i> {{ __('Wishlist') }}
+                        @if (App\Models\Wishlist::where('user_id', Auth::id())->exists())
+                            <span
+                                class="absolute top-2 right-2 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                {{ App\Models\Wishlist::where('user_id', Auth::id())->count() }}
+                            </span>
+                        @endif
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('purchases.index')"
+                        class="block pl-3 pr-4 py-3 text-gray-300 hover:text-white hover:bg-gray-800 rounded-md relative">
+                        <i class='bx bx-notepad mr-3 text-gray-400'></i> {{ __('My Purchase') }}
+                        @if (App\Models\Order::where('user_id', Auth::id())->exists())
+                            <span
+                                class="absolute top-2 right-2 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                                {{ App\Models\Order::where('user_id', Auth::id())->count() }}
+                            </span>
+                        @endif
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         <!-- Mobile User Menu -->
@@ -203,17 +253,6 @@
                         <div class="text-base font-medium text-white">{{ Auth::user()->name }}</div>
                         <div class="text-sm font-medium text-gray-400">{{ Auth::user()->email }}</div>
                     </div>
-                    @if (Auth::user()->userType !== 'admin')
-                        <a href="{{ route('cart.index') }}" class="ml-auto text-gray-400 hover:text-white relative">
-                            <i class='bx bx-cart text-2xl'></i>
-                            @auth
-                                <span
-                                    class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                                    {{ App\Models\Cart::where('user_id', Auth::id())->count() }}
-                                </span>
-                            @endauth
-                        </a>
-                    @endif
                 </div>
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')"
@@ -246,3 +285,9 @@
         @endauth
     </div>
 </nav>
+
+<style>
+    [x-cloak] {
+        display: none !important;
+    }
+</style>

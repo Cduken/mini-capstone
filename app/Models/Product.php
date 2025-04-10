@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
@@ -57,5 +58,14 @@ class Product extends Model
             ->withTimestamps();
     }
 
+    public function wishlistedBy()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
 
+    // Optional: Check if the product is wishlisted by the current user
+    public function isWishlistedByUser()
+    {
+        return $this->wishlistedBy()->where('user_id', Auth::id())->exists();
+    }
 }

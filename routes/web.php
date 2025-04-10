@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,6 +49,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profile/avatar', [ProfileController::class, 'destroyAvatar'])->name('avatar.destroy');
+
+    // Wishlist
+    Route::post('/wishlist/add/{product}', [WishlistController::class, 'add'])->name('wishlist.add');
+    Route::post('/wishlist/remove/{product}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
 
     // Cart Management
     Route::prefix('cart')->group(function () {
@@ -95,7 +101,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         Route::post('/store', [ProductController::class, 'store'])->name('admin.products.store');
         Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('admin.products.edit');
         Route::put('/{product}/update', [ProductController::class, 'update'])->name('admin.products.update');
-        Route::get('/product{product}/json', [ProductController::class, 'getProductJson'])->name('admin.products.json');
+        Route::get('/{product}/json', [ProductController::class, 'getProductJson'])->name('admin.products.json'); // Fixed route
         Route::delete('/{product}/destroy', [ProductController::class, 'destroy'])->name('admin.products.destroy');
     });
 
