@@ -15,7 +15,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->timestamps();
 
-            // Optional: Add unique constraint to prevent duplicate entries
+
             $table->primary(['order_id', 'product_id']);
         });
     }

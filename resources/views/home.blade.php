@@ -404,7 +404,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Phone -->
+
                                 <div class="flex items-center space-x-4 group">
                                     <div
                                         class="p-3 bg-green-100 rounded-full text-green-600 group-hover:bg-green-200 transition-all duration-300">
@@ -412,7 +412,7 @@
                                     </div>
                                     <div>
                                         <h4 class="text-lg font-semibold text-gray-800">Phone</h4>
-                                        <p class="text-gray-600">+(69) 123-456-789</p>
+                                        <p class="text-gray-600">+(63) 961-077-8098</p>
                                     </div>
                                 </div>
 

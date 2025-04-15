@@ -101,7 +101,7 @@
                                                 <i class='bx bx-package mr-3 text-gray-400'></i>
                                                 <div>
                                                     <p class="font-medium">Order #{{ $order->id }}</p>
-                                                    <p class="text-xs capitalize">{{ $order->status }}</p>
+                                                    <p class="text-xs capitalize">{{ $order->getTrackingStatus() }}</p>
                                                     <p class="text-xs text-gray-400">
                                                         {{ \Carbon\Carbon::parse($order->updated_at)->diffForHumans() }}
                                                     </p>
@@ -282,7 +282,7 @@
                                     <i class='bx bx-package mr-3 text-gray-400'></i>
                                     <div>
                                         <span class="font-medium">Order #{{ $order->id }}</span>
-                                        <span class="block text-xs capitalize">{{ $order->status }}</span>
+                                        <span class="block text-xs capitalize">{{ $order->getTrackingStatus() }}</span>
                                         <span class="block text-xs text-gray-400">
                                             {{ \Carbon\Carbon::parse($order->updated_at)->diffForHumans() }}
                                         </span>

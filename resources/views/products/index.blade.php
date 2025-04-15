@@ -1,187 +1,126 @@
 <x-app-layout>
-    <div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl mx-auto">
             <!-- Breadcrumbs -->
-            <div class="mb-6">
-                <nav class="flex" aria-label="Breadcrumb">
-                    <ol class="inline-flex items-center space-x-1 md:space-x-2">
-                        <li class="inline-flex items-center">
-                            <a href="{{ route('home') }}"
-                                class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-indigo-600">
-                                <i class='bx bx-home mr-2'></i>
-                                Home
-                            </a>
-                        </li>
-
-                        <li aria-current="page">
-                            <div class="flex items-center">
-                                <i class='bx bx-chevron-right text-gray-400'></i>
-                                <span class="ml-1 text-sm font-medium cursor-pointer text-indigo-600 md:ml-2">All
-                                    Products</span>
-                            </div>
-                        </li>
-                    </ol>
-                </nav>
-            </div>
+            <nav class="flex mb-6" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-2 text-sm font-medium">
+                    <li class="flex items-center">
+                        <a href="{{ route('home') }}"
+                            class="flex items-center text-gray-600 hover:text-indigo-600 transition-colors">
+                            <i class='bx bx-home mr-2'></i>
+                            Home
+                        </a>
+                    </li>
+                    <li class="flex items-center">
+                        <i class='bx bx-chevron-right text-gray-400'></i>
+                        <span class="ml-2 text-indigo-600">All Products</span>
+                    </li>
+                </ol>
+            </nav>
 
             <div class="flex flex-col lg:flex-row gap-8">
                 <!-- Sidebar Filters -->
                 <aside class="lg:w-1/4">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-4">
-                        <div class="flex justify-between items-center mb-6 pb-2 border-b border-gray-100">
-                            <h3 class="font-bold text-gray-900 text-xl">Filters</h3>
-                            {{-- <button class="text-sm text-indigo-600 hover:text-indigo-800">Reset All</button> --}}
+                    <div
+                        class="bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-neumorphic border border-gray-100 sticky top-4 transition-all duration-300">
+                        <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-200/50">
+                            <h3 class="text-xl font-semibold text-gray-900">Filters</h3>
+                            <button onclick="resetFilters()"
+                                class="text-sm text-indigo-600 hover:text-indigo-800 transition-colors">Reset
+                                All</button>
                         </div>
 
-
+                        <!-- Search -->
                         <div class="mb-6">
-                            <form method="GET" action="{{ route('products.index') }}">
+                            <form method="GET" action="{{ route('products.index') }}" id="search-form">
                                 <div class="relative">
                                     <input type="text" name="search" placeholder="Search products..."
                                         value="{{ request('search') }}"
-                                        class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class='bx bx-search text-gray-400'></i>
-                                    </div>
+                                        class="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-300 focus:border-transparent transition-all duration-200 text-gray-900 placeholder-gray-400"
+                                        aria-label="Search products">
+                                    <i
+                                        class='bx bx-search text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2'></i>
                                     @if (request('search'))
-                                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                            <a href="{{ route('products.index') }}"
-                                                class="text-gray-400 hover:text-gray-600">
-                                                <i class='bx bx-x'></i>
-                                            </a>
-                                        </div>
+                                        <a href="{{ route('products.index') }}"
+                                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                            <i class='bx bx-x'></i>
+                                        </a>
                                     @endif
                                 </div>
                             </form>
                         </div>
 
-
+                        <!-- Price Range -->
                         <div class="mb-6">
-                            <h4 class="font-semibold text-gray-800 mb-4">Price Range</h4>
-                            <div class="px-2">
-                                <div class="flex justify-between mb-2">
-                                    <span class="text-sm text-gray-500">₱<span id="min-price-value">100</span></span>
-                                    <span class="text-sm text-gray-500">₱<span id="max-price-value">5000</span></span>
+                            <button
+                                class="w-full flex justify-between items-center font-semibold text-gray-800 mb-4 focus:outline-none"
+                                onclick="toggleFilter('price-filter')">
+                                <span>Price Range</span>
+                                <i class='bx bx-chevron-down text-gray-500 transition-transform duration-300'></i>
+                            </button>
+                            <div id="price-filter" class="space-y-4">
+                                <div class="flex justify-between text-sm text-gray-600">
+                                    <span>₱<span id="min-price-value">100</span></span>
+                                    <span>₱<span id="max-price-value">5000</span></span>
                                 </div>
                                 <div class="relative">
-                                    <input type="range" id="price-range" min="100" max="5000" step="50"
-                                        value="{{ $maxPrice ?? 5000 }}"
-                                        class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer">
+                                    <input type="range" id="min-price" min="100" max="5000" step="50"
+                                        value="{{ request('min_price') ?? 100 }}"
+                                        class="w-full h-2 bg-indigo-100 rounded-lg cursor-pointer accent-indigo-600">
+                                    <input type="range" id="max-price" min="100" max="5000" step="50"
+                                        value="{{ request('max_price') ?? 5000 }}"
+                                        class="w-full h-2 bg-indigo-100 rounded-lg cursor-pointer accent-indigo-600">
                                 </div>
-                                <div class="flex justify-center mt-4">
-                                    <div class="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg">
-                                        <span class="text-sm text-gray-600">Range:</span>
-                                        <span class="font-medium text-indigo-600">
-                                            ₱<span id="current-min-price">100</span> - ₱<span
-                                                id="current-max-price">{{ $maxPrice ?? 5000 }}</span>
-                                        </span>
+                                <div class="flex justify-center">
+                                    <div class="bg-indigo-50 px-4 py-2 rounded-xl text-sm font-medium text-indigo-700">
+                                        ₱<span id="current-min-price">{{ request('min_price') ?? 100 }}</span> - ₱<span
+                                            id="current-max-price">{{ request('max_price') ?? 5000 }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- <!-- Brand Filter -->
-                        <div class="mb-6">
-                            <h4 class="font-semibold text-gray-800 mb-3 flex items-center justify-between">
-                                <span>Brands</span>
-                                <i class='bx bx-chevron-down text-gray-500'></i>
-                            </h4>
-                            <ul class="space-y-2">
-                                <li>
-                                    <label
-                                        class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                        <input type="checkbox"
-                                            class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                        <span class="text-gray-700">Apple</span>
-                                        <span class="ml-auto text-gray-400 text-sm">(128)</span>
-                                    </label>
-                                </li>
-                                <li>
-                                    <label
-                                        class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                        <input type="checkbox"
-                                            class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                        <span class="text-gray-700">Samsung</span>
-                                        <span class="ml-auto text-gray-400 text-sm">(86)</span>
-                                    </label>
-                                </li>
-                                <li>
-                                    <label
-                                        class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                        <input type="checkbox"
-                                            class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                        <span class="text-gray-700">Xiaomi</span>
-                                        <span class="ml-auto text-gray-400 text-sm">(64)</span>
-                                    </label>
-                                </li>
-                            </ul>
-                        </div> --}}
+
 
                         <!-- Rating Filter -->
-                        {{-- <div>
-                            <h4 class="font-semibold text-gray-800 mb-3 flex items-center justify-between">
+                        <div>
+                            <button
+                                class="w-full flex justify-between items-center font-semibold text-gray-800 mb-4 focus:outline-none"
+                                onclick="toggleFilter('rating-filter')">
                                 <span>Customer Reviews</span>
-                                <i class='bx bx-chevron-down text-gray-500'></i>
-                            </h4>
-                            <div class="space-y-2">
-                                <label
-                                    class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                    <input type="checkbox"
-                                        class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                    <div class="flex items-center">
-                                        <div class="flex">
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
+                                <i class='bx bx-chevron-down text-gray-500 transition-transform duration-300'></i>
+                            </button>
+                            <div id="rating-filter" class="space-y-2 hidden">
+                                @foreach ([5, 4, 3] as $rating)
+                                    <label
+                                        class="flex items-center space-x-3 cursor-pointer hover:bg-indigo-50 p-2 rounded-lg transition-colors">
+                                        <input type="checkbox" name="ratings[]" value="{{ $rating }}"
+                                            class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-300"
+                                            {{ in_array($rating, (array) request('ratings', [])) ? 'checked' : '' }}>
+                                        <div class="flex items-center">
+                                            <div class="flex text-yellow-400">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <i class='bx {{ $i <= $rating ? 'bxs-star' : 'bx-star' }}'></i>
+                                                @endfor
+                                            </div>
+                                            <span class="ml-2 text-gray-700">& Up</span>
                                         </div>
-                                        <span class="ml-2 text-gray-700">& Up</span>
-                                    </div>
-                                </label>
-                                <label
-                                    class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                    <input type="checkbox"
-                                        class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                    <div class="flex items-center">
-                                        <div class="flex">
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bx-star text-yellow-400'></i>
-                                        </div>
-                                        <span class="ml-2 text-gray-700">& Up</span>
-                                    </div>
-                                </label>
-                                <label
-                                    class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg">
-                                    <input type="checkbox"
-                                        class="form-checkbox h-4 w-4 text-indigo-600 rounded border-gray-300">
-                                    <div class="flex items-center">
-                                        <div class="flex">
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bxs-star text-yellow-400'></i>
-                                            <i class='bx bx-star text-yellow-400'></i>
-                                            <i class='bx bx-star text-yellow-400'></i>
-                                        </div>
-                                        <span class="ml-2 text-gray-700">& Up</span>
-                                    </div>
-                                </label>
+                                    </label>
+                                @endforeach
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </aside>
 
                 <!-- Main Product Section -->
                 <main class="lg:w-3/4">
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                        <!-- Header with sorting and view options -->
+                    <div
+                        class="bg-white/90 backdrop-blur-md rounded-2xl shadow-neumorphic border border-gray-100 overflow-hidden">
+                        <!-- Header -->
                         <div
-                            class="flex flex-col md:flex-row md:items-center md:justify-between p-6 border-b border-gray-100">
+                            class="flex flex-col md:flex-row md:items-center md:justify-between p-6 border-b border-gray-200/50">
                             <div>
-                                <h3 class="text-xl font-bold text-gray-900">
+                                <h3 class="text-2xl font-bold text-gray-900">
                                     <span class="text-indigo-600">{{ $products->count() }}</span> Products Found
                                 </h3>
                                 <p class="text-sm text-gray-500 mt-1">Based on your preferences</p>
@@ -189,16 +128,19 @@
                             <div class="flex items-center space-x-4 mt-4 md:mt-0">
                                 <div class="flex items-center space-x-2">
                                     <span class="text-sm text-gray-600">View:</span>
-                                    <button class="p-2 rounded-lg bg-indigo-50 text-indigo-600">
+                                    <button
+                                        class="p-2 rounded-xl bg-indigo-100 text-indigo-600 hover:bg-indigo-200 transition-colors"
+                                        onclick="toggleView('grid')">
                                         <i class='bx bx-grid-alt'></i>
                                     </button>
-                                    <button class="p-2 rounded-lg hover:bg-gray-100 text-gray-600">
+                                    <button class="p-2 rounded-xl hover:bg-gray-100 text-gray-600 transition-colors"
+                                        onclick="toggleView('list')">
                                         <i class='bx bx-list-ul'></i>
                                     </button>
                                 </div>
                                 <div class="relative">
                                     <select
-                                        class="appearance-none bg-white border border-gray-200 rounded-lg pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 text-sm"
+                                        class="appearance-none bg-white border border-gray-200 rounded-xl pl-4 pr-10 py-2 focus:ring-2 focus:ring-indigo-300 focus:border-transparent text-sm transition-all duration-200 text-gray-900"
                                         onchange="updateUrlParam('sort', this.value)">
                                         <option value="latest" {{ $currentSort == 'latest' ? 'selected' : '' }}>
                                             Sort by: Featured
@@ -206,71 +148,77 @@
                                         <option value="price_asc" {{ $currentSort == 'price_asc' ? 'selected' : '' }}>
                                             Price: Low to High
                                         </option>
-                                        <option value="price_desc" {{ $currentSort == 'price_desc' ? 'selected' : '' }}>
+                                        <option value="price_desc"
+                                            {{ $currentSort == 'price_desc' ? 'selected' : '' }}>
                                             Price: High to Low
                                         </option>
                                         <option value="rating" {{ $currentSort == 'rating' ? 'selected' : '' }}>
                                             Customer Rating
                                         </option>
                                     </select>
-                                    <div
-                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                                        <i class='bx bx-chevron-down'></i>
-                                    </div>
+                                    <i
+                                        class='bx bx-chevron-down text-gray-400 absolute right-3 top-1/2 transform -translate-y-1/2'></i>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- No Products -->
                         @if ($products->isEmpty())
                             <div class="text-center py-16">
-                                <div class="inline-block p-6 bg-indigo-50 rounded-full mb-4">
+                                <div class="inline-block p-6 bg-indigo-100 rounded-full mb-4 animate-pulse">
                                     <i class='bx bx-package text-4xl text-indigo-600'></i>
                                 </div>
                                 <h4 class="text-lg font-medium text-gray-700 mb-2">No products found</h4>
-                                <p class="text-gray-500 max-w-md mx-auto mb-6">We couldn't find any products matching
-                                    your criteria. Try adjusting your filters or search for something else.</p>
-                                <button
-                                    class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium">
+                                <p class="text-gray-500 max-w-md mx-auto mb-6">Try adjusting your filters or search for
+                                    something else.</p>
+                                <button onclick="resetFilters()"
+                                    class="px-6 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium">
                                     Clear All Filters
                                 </button>
                             </div>
                         @else
-                            <!-- Product Grid -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                            <!-- Product Grid/List -->
+                            <div id="product-container"
+                                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6 transition-all duration-300">
                                 @foreach ($products as $product)
                                     <div
-                                        class="group relative bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                                        class="group relative bg-white/90 rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-neumorphic transition-all duration-300 hover:-translate-y-1">
                                         <!-- Badge -->
                                         @if ($product->discount)
                                             <div
-                                                class="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
+                                                class="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10 animate-pulse">
                                                 -{{ $product->discount }}%
                                             </div>
                                         @endif
 
-                                        <!-- Product Image -->
+
                                         <div class="relative overflow-hidden h-60 bg-gray-50">
                                             <a href="{{ route('products.show', $product->id) }}">
                                                 <img src="{{ $product->image }}" alt="{{ $product->name }}"
-                                                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 p-4">
+                                                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105 p-4 lazy-load"
+                                                    loading="lazy">
                                             </a>
 
-                                            <!-- Quick Actions -->
-                                            {{-- <div
-                                                class="absolute inset-x-0 bottom-0 bg-white bg-opacity-90 backdrop-blur-sm p-3 flex justify-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div
+                                                class="absolute inset-x-0 bottom-0 bg-white/80 backdrop-blur-md p-3 flex justify-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                <form action="{{ route('wishlist.add', $product->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button
+                                                        class="p-2 rounded-full bg-white shadow-md hover:bg-indigo-100 hover:text-indigo-600 transition-colors">
+                                                        <i class='bx bx-heart text-xl'></i>
+                                                    </button>
+                                                </form>
+
                                                 <button
-                                                    class="p-2 rounded-full bg-white shadow-md hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
-                                                    <i class='bx bx-heart text-xl'></i>
-                                                </button>
-                                                <button
-                                                    class="p-2 rounded-full bg-white shadow-md hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+                                                    class="p-2 rounded-full bg-white shadow-md hover:bg-indigo-100 hover:text-indigo-600 transition-colors">
                                                     <i class='bx bx-refresh text-xl'></i>
                                                 </button>
                                                 <button
-                                                    class="p-2 rounded-full bg-white shadow-md hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+                                                    class="p-2 rounded-full bg-white shadow-md hover:bg-indigo-100 hover:text-indigo-600 transition-colors">
                                                     <i class='bx bx-zoom-in text-xl'></i>
                                                 </button>
-                                            </div> --}}
+                                            </div>
                                         </div>
 
                                         <!-- Product Info -->
@@ -297,11 +245,11 @@
                                                             <i class='bx bx-star'></i>
                                                         @endfor
                                                     </div>
-                                                    <span class="text-xs text-gray-500 ml-1">(No reviews yet)</span>
+                                                    <span class="text-xs text-gray-500 ml-1">(No reviews)</span>
                                                 @endif
                                             </div>
                                             <a href="{{ route('products.show', $product->id) }}"
-                                                class="font-semibold text-gray-900 mb-1 line-clamp-1 hover:text-indigo-600 block">
+                                                class="font-semibold text-gray-900 mb-1 line-clamp-1 hover:text-indigo-600 transition-colors">
                                                 {{ $product->title }}
                                             </a>
                                             <p class="text-gray-500 text-sm mb-3 line-clamp-2">
@@ -311,16 +259,18 @@
                                                 <div>
                                                     @if ($product->discount)
                                                         <span
-                                                            class="text-lg font-bold text-gray-900"> ₱{{ number_format($product->price * (1 - $product->discount / 100), 2) }}</span>
+                                                            class="text-lg font-bold text-gray-900">₱{{ number_format($product->price * (1 - $product->discount / 100), 2) }}</span>
                                                         <span
-                                                            class="text-sm text-gray-400 line-through ml-2"> ₱{{ number_format($product->price, 2) }}</span>
+                                                            class="text-sm text-gray-400 line-through ml-2">₱{{ number_format($product->price, 2) }}</span>
                                                     @else
                                                         <span
-                                                            class="text-lg font-bold text-gray-900"> ₱{{ number_format($product->price, 2) }}</span>
+                                                            class="text-lg font-bold text-gray-900">₱{{ number_format($product->price, 2) }}</span>
                                                     @endif
                                                 </div>
-
-
+                                                {{-- <button
+                                                    class="px-3 py-1 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors">
+                                                    Add to Cart
+                                                </button> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -328,20 +278,19 @@
                             </div>
 
                             <!-- Pagination -->
-                            <!-- Pagination -->
                             <div
-                                class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+                                class="px-6 py-4 border-t border-gray-200/50 bg-gray-50 flex items-center justify-between">
                                 <div class="text-sm text-gray-600">
                                     Showing {{ $products->firstItem() }} to {{ $products->lastItem() }} of
                                     {{ $products->total() }} results
                                 </div>
-
                                 <div class="flex items-center space-x-1">
                                     {{ $products->appends([
                                             'search' => request('search'),
                                             'min_price' => request('min_price'),
                                             'max_price' => request('max_price'),
                                             'sort' => request('sort'),
+                                            'ratings' => request('ratings'),
                                         ])->onEachSide(1)->links('vendor.pagination.custom') }}
                                 </div>
                             </div>
@@ -350,37 +299,74 @@
                 </main>
             </div>
         </div>
-    </div>
 
-    <div id="loading-spinner"
-        class="fixed inset-0 bg-white bg-opacity-70 flex items-center justify-center z-50 hidden">
-        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-    </div>
+        <!-- Loading Spinner -->
+        <div id="loading-spinner"
+            class="fixed inset-0 bg-white/70 backdrop-blur-md flex items-center justify-center z-50 hidden transition-opacity duration-300">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+        </div>
 
+        <!-- Mobile Filter Toggle -->
+        <button id="mobile-filter-toggle"
+            class="lg:hidden fixed bottom-6 right-6 bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 transition-colors">
+            <i class='bx bx-filter-alt'></i>
+        </button>
+    </div>
     <script>
+        // Toggle filter sections
+        function toggleFilter(id) {
+            const section = document.getElementById(id);
+            const icon = section.previousElementSibling.querySelector('i');
+            section.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        // Mobile filter toggle
+        const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
+        const aside = document.querySelector('aside');
+        mobileFilterToggle.addEventListener('click', () => {
+            aside.classList.toggle('translate-x-full');
+            aside.classList.toggle('fixed');
+            aside.classList.toggle('inset-y-0');
+            aside.classList.toggle('right-0');
+            aside.classList.toggle('w-3/4');
+            aside.classList.toggle('bg-white');
+            aside.classList.toggle('shadow-xl');
+            aside.classList.toggle('z-50');
+        });
+
         // Price Range Filter
-        const priceRange = document.getElementById('price-range');
+        const minPrice = document.getElementById('min-price');
+        const maxPrice = document.getElementById('max-price');
         const minPriceValue = document.getElementById('min-price-value');
         const maxPriceValue = document.getElementById('max-price-value');
         const currentMinPrice = document.getElementById('current-min-price');
         const currentMaxPrice = document.getElementById('current-max-price');
         let debounceTimer;
 
-        // Initialize values
-        maxPriceValue.textContent = priceRange.max;
-        currentMaxPrice.textContent = priceRange.value;
+        // Update price display
+        function updatePriceDisplay() {
+            const minVal = parseInt(minPrice.value);
+            const maxVal = parseInt(maxPrice.value);
+            if (minVal > maxVal - 50) {
+                minPrice.value = maxVal - 50;
+            }
+            minPriceValue.textContent = minPrice.value;
+            maxPriceValue.textContent = maxPrice.value;
+            currentMinPrice.textContent = minPrice.value;
+            currentMaxPrice.textContent = maxPrice.value;
+        }
 
-        // Update display when slider moves
-        priceRange.addEventListener('input', function() {
-            currentMaxPrice.textContent = this.value;
-        });
-
-        // Fetch products when slider is released (with debounce)
-        priceRange.addEventListener('change', function() {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                updateFilters(0, this.value);
-            }, 500);
+        // Handle price range changes
+        [minPrice, maxPrice].forEach(input => {
+            input.addEventListener('input', updatePriceDisplay);
+            input.addEventListener('change', () => {
+                showLoadingSpinner();
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    updateFilters(minPrice.value, maxPrice.value);
+                }, 500);
+            });
         });
 
         // Search Filter
@@ -388,72 +374,131 @@
         if (searchInput) {
             searchInput.addEventListener('keyup', function(e) {
                 if (e.key === 'Enter' || e.target.value.length === 0) {
+                    showLoadingSpinner();
                     updateFilters();
                 }
             });
         }
 
-        function updateFilters(minPrice = null, maxPrice = null) {
-            // Get current URL parameters
+        // Rating Filter
+        document.querySelectorAll('input[name="ratings[]"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                showLoadingSpinner();
+                updateFilters();
+            });
+        });
+
+        function updateFilters(minPriceVal = null, maxPriceVal = null) {
             const url = new URL(window.location.href);
-            const params = new URLSearchParams(url.search);
+            const params = new URLSearchParams();
 
-            // Update price parameters if provided
-            if (minPrice !== null) params.set('min_price', minPrice);
-            if (maxPrice !== null) params.set('max_price', maxPrice);
+            // Price
+            if (minPriceVal !== null) params.set('min_price', minPriceVal);
+            if (maxPriceVal !== null) params.set('max_price', maxPriceVal);
 
-            // Update search parameter
+            // Search
             if (searchInput) {
                 const searchValue = searchInput.value.trim();
                 if (searchValue) {
                     params.set('search', searchValue);
-                } else {
-                    params.delete('search');
                 }
             }
 
-            // Remove page parameter to go back to first page
-            params.delete('page');
+            // Ratings
+            const ratings = Array.from(document.querySelectorAll('input[name="ratings[]"]:checked')).map(cb => cb.value);
+            ratings.forEach(rating => params.append('ratings[]', rating));
 
-            // Redirect with new parameters
+            params.delete('page');
             window.location.href = `${url.pathname}?${params.toString()}`;
         }
 
-        // Function to update URL parameter for sorting
+        // Reset filters
+        function resetFilters() {
+            showLoadingSpinner();
+            window.location.href = "{{ route('products.index') }}";
+        }
+
+        // View toggle
+        function toggleView(type) {
+            const container = document.getElementById('product-container');
+            if (type === 'grid') {
+                container.classList.remove('grid-cols-1', 'sm:grid-cols-1');
+                container.classList.add('sm:grid-cols-2', 'lg:grid-cols-3');
+            } else {
+                container.classList.remove('sm:grid-cols-2', 'lg:grid-cols-3');
+                container.classList.add('grid-cols-1', 'sm:grid-cols-1');
+            }
+        }
+
+        // Sorting
         function updateUrlParam(key, value) {
+            showLoadingSpinner();
             const url = new URL(window.location.href);
             const params = new URLSearchParams(url.search);
-
             if (value === 'latest') {
                 params.delete(key);
             } else {
                 params.set(key, value);
             }
-
-            // Remove page parameter when changing sort
             params.delete('page');
-
             window.location.href = `${url.pathname}?${params.toString()}`;
         }
+
+        // Loading spinner
+        function showLoadingSpinner() {
+            const spinner = document.getElementById('loading-spinner');
+            spinner.classList.remove('hidden');
+            setTimeout(() => {
+                spinner.classList.add('hidden');
+            }, 2000); // Adjust based on actual loading time
+        }
+
+        // Lazy load placeholder
+        document.querySelectorAll('.lazy-load').forEach(img => {
+            img.addEventListener('load', () => {
+                img.classList.remove('bg-gray-200', 'animate-shimmer');
+            });
+        });
     </script>
 
     <style>
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
         }
 
-        .animate-spin {
-            animation: spin 1s linear infinite;
+        /* Range Slider Styling */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #4f46e5;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #4f46e5;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Lazy Load Placeholder */
+        .lazy-load:not([src]) {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        /* Backdrop Blur for Glassmorphism */
+        .backdrop-blur-md {
+            backdrop-filter: blur(8px);
         }
     </style>
-
-
 
     <x-footer />
 </x-app-layout>

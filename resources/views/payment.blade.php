@@ -403,7 +403,7 @@
 
                 <!-- Action Buttons -->
                 <div class="grid grid-cols-2 gap-3">
-                    <button onclick="closeSuccessModalAndShowRating()"
+                    <button onclick="closeSuccessModal()"
                         class="p-2 bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 text-white rounded-lg text-xs font-medium transition-all flex items-center justify-center shadow">
                         <i class='bx bx-x mr-1 text-sm'></i> Close
                     </button>
@@ -416,7 +416,7 @@
         </div>
     </div>
 
-    <!-- Rating Modal -->
+    {{-- <!-- Rating Modal -->
     <div id="ratingModal"
         class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden" style="max-height: 90vh;">
@@ -505,7 +505,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div id="loadingOverlay"
         class="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center z-50 hidden">
@@ -696,239 +696,118 @@
         }
     </style>
 
-    <script>
-        // Show success modal with animation
-        function showSuccessModal() {
-            const successModal = document.getElementById('successModal');
-            successModal.classList.remove('hidden');
-            successModal.classList.add('show');
+<script>
+    // Show success modal with animation
+    function showSuccessModal() {
+        const successModal = document.getElementById('successModal');
+        successModal.classList.remove('hidden');
+        successModal.classList.add('show');
+    }
+
+    // Close success modal and redirect to purchases page
+    function closeSuccessModal() {
+        const successModal = document.getElementById('successModal');
+        successModal.classList.remove('show');
+        successModal.classList.add('hide');
+        setTimeout(() => {
+            successModal.classList.add('hidden');
+            successModal.classList.remove('hide');
+            window.location.href = "{{ route('purchases.index') }}";
+        }, 300);
+    }
+
+    // Payment Method Toggle (unchanged)
+    function showPaymentMethod(method) {
+        document.querySelectorAll('.payment-method').forEach(form => form.classList.add('hidden'));
+        document.getElementById(method + 'Form').classList.remove('hidden');
+        document.getElementById('submitButton').setAttribute('form', method + 'Form');
+        document.querySelectorAll('.payment-tab').forEach(tab => {
+            if (tab.dataset.method === method) {
+                tab.classList.add('border-blue-500', 'text-blue-600');
+                tab.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+            } else {
+                tab.classList.remove('border-blue-500', 'text-blue-600');
+                tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
+            }
+        });
+        const submitButton = document.getElementById('submitButton');
+        if (method === 'cod') {
+            submitButton.innerHTML = `<i class='bx bx-package mr-2'></i> Place Order (COD)`;
+            submitButton.classList.remove('from-blue-600', 'to-blue-700', 'hover:from-blue-700', 'hover:to-blue-800');
+            submitButton.classList.add('from-green-600', 'to-green-700', 'hover:from-green-700', 'hover:to-green-800');
+        } else {
+            submitButton.innerHTML = `<i class='bx bx-lock-alt mr-2'></i> Pay ${{ number_format($total, 2) }}`;
+            submitButton.classList.remove('from-green-600', 'to-green-700', 'hover:from-green-700', 'hover:to-green-800');
+            submitButton.classList.add('from-blue-600', 'to-blue-700', 'hover:from-blue-700', 'hover:to-blue-800');
         }
+    }
 
-        // Close success modal and show rating modal with enhanced animation
-        function closeSuccessModalAndShowRating() {
-            const successModal = document.getElementById('successModal');
-            const ratingModal = document.getElementById('ratingModal');
+    // Form Submission Handler
+    document.addEventListener('DOMContentLoaded', function() {
+        showPaymentMethod('card'); // Default to card payment
 
-            // Animate out the success modal
-            successModal.classList.remove('show');
-            successModal.classList.add('hide');
+        document.querySelectorAll('.payment-method').forEach(form => {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const submitButton = document.getElementById('submitButton');
+                const originalButtonText = submitButton.innerHTML;
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                const progressPercentage = document.getElementById('progressPercentage');
 
-            setTimeout(() => {
-                successModal.classList.add('hidden');
-                successModal.classList.remove('hide');
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 5;
+                    if (progress > 90) progress = 90;
+                    progressPercentage.textContent = `${progress}%`;
+                }, 100);
 
-                // Show rating modal with animation
-                ratingModal.classList.remove('hidden');
-                ratingModal.classList.add('show');
+                try {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = `<i class='bx bx-loader-alt animate-spin mr-2'></i> Processing...`;
+                    loadingOverlay.classList.remove('hidden');
 
-                // Initialize star ratings
-                initializeStarRatings();
-            }, 300);
-        }
+                    const startTime = Date.now();
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    });
+                    const data = await response.json();
 
-        // Close rating modal with animation
-        function closeRatingModal() {
-            const ratingModal = document.getElementById('ratingModal');
-            ratingModal.classList.remove('show');
-            ratingModal.classList.add('hide');
+                    if (!response.ok) throw new Error(data.message || 'Payment failed');
 
-            setTimeout(() => {
-                ratingModal.classList.add('hidden');
-                ratingModal.classList.remove('hide');
-                window.location.href = "{{ route('purchases.index') }}"; // Redirect only after rating modal closes
-            }, 300);
-        }
+                    const elapsed = Date.now() - startTime;
+                    const remainingDelay = Math.max(2500 - elapsed, 0);
 
-        // Skip rating and redirect to purchases page
-        function skipRating() {
-            closeRatingModal();
-        }
+                    clearInterval(progressInterval);
+                    progressPercentage.textContent = '100%';
 
-        // Initialize star ratings with enhanced animations
-        function initializeStarRatings() {
-            document.querySelectorAll('.star-rating').forEach(star => {
-                star.addEventListener('click', function() {
-                    const rating = parseInt(this.dataset.rating);
-                    const form = this.closest('.rating-form');
+                    await new Promise(resolve => setTimeout(resolve, remainingDelay + 300));
+                    loadingOverlay.classList.add('hidden');
+                    await new Promise(resolve => setTimeout(resolve, 300));
 
-                    this.classList.add('active');
-                    setTimeout(() => this.classList.remove('active'), 500);
+                    showSuccessModal();
 
-                    this.parentElement.querySelectorAll('.star-rating i').forEach((icon, index) => {
-                        if (index < rating) {
-                            icon.classList.remove('bx-star', 'text-gray-300');
-                            icon.classList.add('bxs-star', 'text-yellow-400');
-                        } else {
-                            icon.classList.remove('bxs-star', 'text-yellow-400');
-                            icon.classList.add('bx-star', 'text-gray-300');
+                    document.getElementById('successModal').addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            closeSuccessModal();
                         }
                     });
 
-                    form.querySelector('input[name="rating"]').value = rating;
-                });
-            });
-        }
-
-        // Payment Method Toggle
-        function showPaymentMethod(method) {
-            document.querySelectorAll('.payment-method').forEach(form => form.classList.add('hidden'));
-            document.getElementById(method + 'Form').classList.remove('hidden');
-            document.getElementById('submitButton').setAttribute('form', method + 'Form');
-
-            document.querySelectorAll('.payment-tab').forEach(tab => {
-                if (tab.dataset.method === method) {
-                    tab.classList.add('border-blue-500', 'text-blue-600');
-                    tab.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700',
-                        'hover:border-gray-300');
-                } else {
-                    tab.classList.remove('border-blue-500', 'text-blue-600');
-                    tab.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700',
-                        'hover:border-gray-300');
+                    if (typeof updateCartCount === 'function') updateCartCount(0);
+                } catch (error) {
+                    clearInterval(progressInterval);
+                    loadingOverlay.classList.add('hidden');
+                    alert(error.message || 'An error occurred. Please try again.');
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalButtonText;
                 }
             });
-
-            const submitButton = document.getElementById('submitButton');
-            if (method === 'cod') {
-                submitButton.innerHTML = `<i class='bx bx-package mr-2'></i> Place Order (COD)`;
-                submitButton.classList.remove('from-blue-600', 'to-blue-700', 'hover:from-blue-700', 'hover:to-blue-800');
-                submitButton.classList.add('from-green-600', 'to-green-700', 'hover:from-green-700', 'hover:to-green-800');
-            } else {
-                submitButton.innerHTML = `<i class='bx bx-lock-alt mr-2'></i> Pay ${{ number_format($total, 2) }}`;
-                submitButton.classList.remove('from-green-600', 'to-green-700', 'hover:from-green-700',
-                    'hover:to-green-800');
-                submitButton.classList.add('from-blue-600', 'to-blue-700', 'hover:from-blue-700', 'hover:to-blue-800');
-            }
-        }
-
-        // Form Submission Handler
-        document.addEventListener('DOMContentLoaded', function() {
-            showPaymentMethod('card'); // Default to card payment
-
-            document.querySelectorAll('.rating-form').forEach(form => {
-                form.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.innerHTML;
-                    const formData = new FormData(this);
-
-                    try {
-                        submitBtn.disabled = true;
-                        submitBtn.innerHTML =
-                            '<i class="bx bx-loader-alt animate-spin mr-2"></i> Submitting...';
-
-                        const response = await fetch(this.action, {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json'
-                            }
-                        });
-                        const data = await response.json();
-
-                        if (response.ok) {
-                            const productDiv = this.closest('.bg-gradient-to-br');
-                            productDiv.innerHTML = `
-                                <div class="text-center py-4">
-                                    <div class="inline-flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mb-2">
-                                        <i class='bx bxs-check-circle text-xl text-green-500'></i>
-                                    </div>
-                                    <p class="text-sm font-medium text-gray-700">${data.message || 'Thank you for your feedback!'}</p>
-                                </div>
-                            `;
-
-                            const remainingForms = document.querySelectorAll(
-                                '.rating-form:not(.hidden)');
-                            if (remainingForms.length === 0) {
-                                setTimeout(() => {
-                                    closeRatingModal();
-                                }, 1500);
-                            }
-                        } else {
-                            alert(data.message || 'Failed to submit rating');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        alert('An error occurred');
-                    } finally {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = originalText;
-                    }
-                });
-            });
-
-            document.querySelectorAll('.payment-method').forEach(form => {
-                form.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    const submitButton = document.getElementById('submitButton');
-                    const originalButtonText = submitButton.innerHTML;
-                    const loadingOverlay = document.getElementById('loadingOverlay');
-                    const progressPercentage = document.getElementById('progressPercentage');
-
-                    let progress = 0;
-                    const progressInterval = setInterval(() => {
-                        progress += 5;
-                        if (progress > 90) progress = 90;
-                        progressPercentage.textContent = `${progress}%`;
-                    }, 100);
-
-                    try {
-                        submitButton.disabled = true;
-                        submitButton.innerHTML =
-                            `<i class='bx bx-loader-alt animate-spin mr-2'></i> Processing...`;
-                        loadingOverlay.classList.remove('hidden');
-
-                        const startTime = Date.now();
-                        const response = await fetch(this.action, {
-                            method: 'POST',
-                            body: new FormData(this),
-                            headers: {
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector(
-                                    'meta[name="csrf-token"]').content
-                            }
-                        });
-                        const data = await response.json();
-
-                        if (!response.ok) throw new Error(data.message || 'Payment failed');
-
-                        const elapsed = Date.now() - startTime;
-                        const remainingDelay = Math.max(2500 - elapsed, 0);
-
-                        clearInterval(progressInterval);
-                        progressPercentage.textContent = '100%';
-
-                        await new Promise(resolve => setTimeout(resolve, remainingDelay + 300));
-                        loadingOverlay.classList.add('hidden');
-                        await new Promise(resolve => setTimeout(resolve, 300));
-
-                        showSuccessModal();
-
-                        document.querySelectorAll('.rating-form input[name="order_id"]')
-                            .forEach(input => {
-                                input.value = data.order_id;
-                            });
-
-                        // Handle backdrop click to show rating modal instead of redirecting
-                        document.getElementById('successModal').addEventListener('click',
-                            function(e) {
-                                if (e.target === this) { // Click on backdrop
-                                    closeSuccessModalAndShowRating();
-                                }
-                            });
-
-                        if (typeof updateCartCount === 'function') updateCartCount(0);
-
-                    } catch (error) {
-                        clearInterval(progressInterval);
-                        loadingOverlay.classList.add('hidden');
-                        alert(error.message || 'An error occurred. Please try again.');
-                    } finally {
-                        submitButton.disabled = false;
-                        submitButton.innerHTML = originalButtonText;
-                    }
-                });
-            });
         });
-    </script>
+    });
+</script>
 </x-app-layout>

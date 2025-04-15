@@ -24,7 +24,7 @@
                         </div>
                         <div>
                             <h3 class="text-sm font-medium text-gray-500">Total Amount</h3>
-                            <p class="text-sm font-medium text-gray-900">${{ number_format($order->total, 2) }}</p>
+                            <p class="text-sm font-medium text-gray-900">₱{{ number_format($order->total, 2) }}</p>
                         </div>
                         <div>
                             <h3 class="text-sm font-medium text-gray-500">Payment Method</h3>

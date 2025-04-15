@@ -11,10 +11,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->foreignId('order_id')->nullable()->constrained()->onDelete('set null'); // Note the nullable() before constrained()
-            $table->integer('rating')->unsigned()->between(1, 5);
+            $table->foreignId('order_id')->nullable()->constrained()->onDelete('set null');
+            $table->integer('rating')->unsigned()->check('rating >= 1 AND rating <= 5');
             $table->timestamps();
-
             $table->unique(['user_id', 'product_id', 'order_id']);
         });
     }

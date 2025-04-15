@@ -9,6 +9,7 @@
     <title>{{ config('app.name', 'ShopEase') }}</title>
 
     <!-- Fonts -->
+    <link rel="icon" href="{{ asset('images/cube alt spin.png') }}">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
@@ -16,7 +17,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        /* Flash Message Styles */
+
         .flash-container {
             position: fixed;
             top: 1rem;
@@ -26,7 +27,7 @@
             flex-direction: column;
             gap: 0.75rem;
             width: 20rem;
-            /* Fixed width for consistency */
+
         }
 
         .flash-message {
@@ -205,12 +206,12 @@
         document.addEventListener('DOMContentLoaded', () => {
             const flashMessages = document.querySelectorAll('.flash-message');
             flashMessages.forEach((message) => {
-                // Show the message with animation
+
                 setTimeout(() => {
                     message.classList.add('show');
-                }, 10); // Slight delay for smooth entry
+                }, 10);
 
-                // Auto-close after 3 seconds
+
                 setTimeout(() => {
                     closeFlash(message);
                 }, 3000);

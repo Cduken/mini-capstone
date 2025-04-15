@@ -88,7 +88,7 @@ class Order extends Model
     {
         $items = is_array($value) ? $value : json_decode($value, true);
 
-        // Handle case where items might be null or invalid
+
         if (!is_array($items)) {
             return [];
         }
