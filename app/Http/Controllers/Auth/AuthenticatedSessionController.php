@@ -35,10 +35,36 @@ class AuthenticatedSessionController extends Controller
         $user->save();
 
         if ($user->userType === 'admin') {
+            // Validate admin code
+            if (!$request->has('admin_code') || $request->admin_code !== config('auth.admin_code')) {
+                Auth::logout();
+                return back()->withErrors([
+                    'admin_code' => 'Invalid admin code.',
+                ])->withInput($request->except('password', 'admin_code'));
+            }
             return redirect('admin/dashboard');
         }
 
         return redirect()->intended(route('home', absolute: false));
+    }
+
+    /**
+     * Check if an email belongs to an admin user.
+     */
+    public function checkAdminEmail(Request $request)
+    {
+        try {
+            $email = $request->input('email');
+            $user = \App\Models\User::where('email', $email)->first();
+            
+            return response()->json([
+                'isAdmin' => $user && $user->userType === 'admin'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while checking admin status'
+            ], 500);
+        }
     }
 
     /**

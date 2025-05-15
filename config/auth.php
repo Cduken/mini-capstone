@@ -42,6 +42,8 @@ return [
         ],
     ],
 
+    'admin_code' => env('ADMIN_CODE', 'ADMIN123'), // Default admin code, should be changed in .env
+
     /*
     |--------------------------------------------------------------------------
     | User Providers

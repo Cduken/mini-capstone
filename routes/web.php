@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,9 @@ use Illuminate\Support\Facades\Route;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Check admin email
+Route::post('/check-admin-email', [AuthenticatedSessionController::class, 'checkAdminEmail'])->name('check.admin.email');
 
 // Product Display
 Route::get('/products', [ProductPageController::class, 'index'])->name('products.index');

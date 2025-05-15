@@ -40,6 +40,20 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-600" />
         </div>
 
+        <!-- Admin Code (Hidden by default) -->
+        <div id="admin-code-container" class="hidden">
+            <div class="flex items-center justify-between relative">
+                <x-input-label for="admin_code" :value="__('Admin Code')" class="block text-sm font-medium text-gray-700" />
+                <i class='bx bx-key absolute right-2 top-[40px] z-10 text-gray-400'></i>
+            </div>
+            <div class="mt-1 relative rounded-md shadow-sm">
+                <x-text-input id="admin_code"
+                    class="block w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 input-focus transition duration-200"
+                    type="password" name="admin_code" placeholder="Enter admin code" />
+            </div>
+            <x-input-error :messages="$errors->get('admin_code')" class="mt-2 text-sm text-red-600" />
+        </div>
+
         <!-- Remember Me & Forgot Password -->
         <div class="flex items-center justify-between">
             <label for="remember_me" class="inline-flex items-center cursor-pointer">
@@ -71,6 +85,40 @@
             const lockIcon = document.getElementById('lock-icon');
             const toggleButton = document.getElementById('toggle-button');
             const eyeIcon = document.getElementById('eye-icon');
+            const emailInput = document.getElementById('email');
+            const adminCodeContainer = document.getElementById('admin-code-container');
+
+            // Check if email is admin email
+            emailInput.addEventListener('blur', async () => {
+                if (!emailInput.value) return;
+                
+                try {
+                    const response = await fetch('/check-admin-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ email: emailInput.value })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+                    if (data.isAdmin) {
+                        adminCodeContainer.classList.remove('hidden');
+                    } else {
+                        adminCodeContainer.classList.add('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error checking admin status:', error);
+                    // Hide admin code field on error
+                    adminCodeContainer.classList.add('hidden');
+                }
+            });
 
             // When password field gains focus
             passwordInput.addEventListener('focus', () => {
