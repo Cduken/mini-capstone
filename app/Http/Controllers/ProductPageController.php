@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class ProductPageController extends Controller
 {
@@ -145,5 +146,20 @@ class ProductPageController extends Controller
                 'message' => 'Failed to save rating. Please try again.'
             ], 500);
         }
+    }
+
+    public function setView(Request $request)
+    {
+        $request->validate([
+            'view' => 'required|in:grid,list',
+        ]);
+
+        // Store the view preference in the session
+        Session::put('view', $request->view);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'View preference updated.',
+        ]);
     }
 }

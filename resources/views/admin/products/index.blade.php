@@ -117,7 +117,7 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
-                                            ${{ number_format($product->price, 2) }}
+                                            ₱{{ number_format($product->price, 2) }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span
@@ -176,12 +176,12 @@
         </div>
     </div>
 
-    <!-- Add Product Modal (Redesigned) -->
+    <!-- Add Product Modal -->
     <div id="add-product-modal"
         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-xl hidden transition-opacity duration-300">
         <div class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-md transform transition-all duration-300 scale-95 opacity-0 glow"
             id="add-product-modal-content">
-            <!-- Modal Header -->
+
             <div
                 class="bg-gradient-to-r from-blue-600 to-indigo-700 px-5 py-4 flex items-center justify-between rounded-t-2xl">
                 <div class="flex items-center space-x-3">
@@ -270,7 +270,7 @@
                                     class="w-full pl-10 pr-3 py-2 text-sm bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
                                     placeholder="0.00">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class='bx bx-dollar text-gray-400 text-sm'></i>
+                                    <span class="text-gray-400 text-sm">₱</span>
                                 </div>
                             </div>
                             @error('price')
@@ -426,7 +426,7 @@
                                     class="w-full pl-10 pr-3 py-2 text-sm bg-gray-700 text-white border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
                                     placeholder="0.00">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class='bx bx-dollar text-gray-400 text-sm'></i>
+                                    <span class="text-gray-400 text-sm">₱</span>
                                 </div>
                             </div>
                         </div>

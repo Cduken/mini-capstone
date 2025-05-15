@@ -47,7 +47,7 @@
                         </div>
                     </td>
                     <td class="py-4 px-5 font-semibold text-white">
-                        ${{ number_format($order->total, 2) }}
+                        ₱{{ number_format($order->total, 2) }}
                     </td>
                     <td class="py-4 px-5">
                         <span

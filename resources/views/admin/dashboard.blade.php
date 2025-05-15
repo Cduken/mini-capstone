@@ -178,7 +178,7 @@
                                     <p class="text-[10px] font-semibold text-cyan-200 uppercase tracking-wider">Avg.
                                         Order</p>
                                     <p class="text-xl font-bold text-white drop-shadow-md">
-                                        ${{ number_format($averageOrderValue, 1) }}</p>
+                                        ₱{{ number_format($averageOrderValue, 1) }}</p>
                                 </div>
                                 <div class="text-cyan-400 opacity-30 self-start mt-1">
                                     <i
@@ -634,7 +634,7 @@
 
                 // Format amounts
                 document.getElementById('modalOrderTotal').textContent =
-                    `$${parseFloat(order.total || 0).toFixed(2)}`;
+                    `₱${parseFloat(order.total || 0).toFixed(2)}`;
 
                 // Shipping information
                 const addressParts = [
@@ -701,12 +701,12 @@
                                     <i class='bx bx-cube mr-1 glow'></i> Qty: ${product.quantity}
                                 </p>
                                 <p class="text-xs text-purple-200 flex items-center">
-                                    $${parseFloat(product.price).toFixed(2)} each
+                                    ₱${parseFloat(product.price).toFixed(2)} each
                                 </p>
                             </div>
                         </div>
                         <p class="ml-4 text-base font-semibold text-purple-300 drop-shadow-md">
-                            $${parseFloat(product.total).toFixed(2)}
+                            ₱${parseFloat(product.total).toFixed(2)}
                         </p>
                     </div>
                 </div>

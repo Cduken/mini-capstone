@@ -38,6 +38,9 @@ Route::prefix('cart')->group(function () {
     Route::post('/add/{product}', [CartController::class, 'add'])->name('cart.add');
 });
 
+// In web.php, under Public Routes
+Route::post('/products/set-view', [ProductPageController::class, 'setView'])->name('products.set-view');
+
 /*
 |--------------------------------------------------------------------------
 | Authenticated User Routes

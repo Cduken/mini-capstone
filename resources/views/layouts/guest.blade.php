@@ -46,7 +46,7 @@
 
 <body class="font-sans text-gray-300 antialiased">
     <div class="min-h-screen bg-auth-gradient flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-        <!-- Animated background elements for dark theme with purple accents -->
+
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
             <div class="absolute top-40 right-20 w-64 h-64 rounded-full purple-glow"></div>
             <div class="absolute -bottom-20 -left-20 w-96 h-96 rounded-full purple-glow"></div>
@@ -57,7 +57,7 @@
             <!-- Logo at the top -->
             <div class="mb-8 flex justify-center">
                 <div class="flex items-center gap-1">
-                    <box-icon name='cube-alt' color="purple" size="md" class="h-7 w-7"></box-icon>
+                    <box-icon name='cube-alt' color="purple" size="md" class="h-7 w-7 animate-spin"></box-icon>
 
                     <span class="text-xl font-sans">
                         <span class="font-semibold text-white">Shop</span><span class="font-thin text-white">Ease</span>

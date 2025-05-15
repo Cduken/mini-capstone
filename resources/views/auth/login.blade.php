@@ -60,7 +60,7 @@
         <div>
             <x-primary-button
                 class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-200">
-                <i class='bx bx-log-in-circle mr-2'></i> {{ __('Sign In') }}
+                <i class='bx bx-log-in-circle mr-2 '></i> {{ __('Sign In') }}
             </x-primary-button>
         </div>
     </form>
